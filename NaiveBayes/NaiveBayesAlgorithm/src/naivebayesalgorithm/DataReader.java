@@ -22,13 +22,23 @@ public class DataReader {
     // variable to store file name
     private final String file_name;
     // array storing information on the data of the form
-    // { class_count, attribute_count, set_size, example_count }
+    // { num_classes, num_attributes, subset_size, num_examples }
     private final int[] data_summary = new int[4];
-    // array to store the examples
-    private Example[] examples;
+    // array storing the number of bins for a corresponding attribute
+    // num_bins[0] corresponds to the number of bins for the 0th attribute of a class
+    private int[] num_bins;
+    // array storing class names. in our input files, 
+    // classes are assigned to a number from 0 up to c,
+    // the number of classes. The string can be
+    // accessed using this array
+    private String[] class_names;
+    // variable to store number of subsets
+    private int num_subset = 10;
+    // array to store the subsets
+    private Subset[] subsets = new Subset[num_subset];
 
     /**
-     * 
+     * Constructor to take input from file file_name
      * @param file_name 
      */
     DataReader(String file_name){
@@ -53,25 +63,50 @@ public class DataReader {
         // populate global array data_summary with appropriate values
         String line = br.readLine();
         String[] split_line = line.split(",");
-        for (int i = 0; i < 4; i++){ data_summary[i] = Integer.parseInt(split_line[i]); }
+        for (int i = 0; i < 4; i++){ this.data_summary[i] = Integer.parseInt(split_line[i]); }
         
-        // TODO: write code to count number of attribute options
+        // declare and instantiate variables for set class
+        int num_classes = getNumClasses();
+        int num_attributes = getNumAttributes();
+        int num_examples = getNumExamples();
         
-        // initialize examples array to correct size
-        int example_count = data_summary[3];
-        examples = new Example[example_count];
+        // initialize num_bins array to correct size
+        this.num_bins = new int[num_attributes];
+        
+        // populate global array num_bins with appropriate values
+        line = br.readLine();
+        split_line = line.split(",");
+        for (int i = 0; i < num_attributes; i++){ this.num_bins[i] = Integer.parseInt(split_line[i]); }
+        
+        // initialize num_bins array to correct size
+        this.class_names = new String[num_classes];
+        
+        // populate global array class_names with appropriate values
+        line = br.readLine();
+        split_line = line.split(",");
+        for (int i = 0; i < num_classes; i++){ this.class_names[i] = split_line[i]; }
+        
+        // initialize each value in the subsets array
+        for (int i = 0; i < this.num_subset; i ++){
+            this.subsets[i] = new Subset(num_classes, num_attributes, this.num_bins, this.class_names); }
         
         // iterate through file line-by-line to populate examples array
-        for (int i = 0; i < example_count; i++){
+        for (int i = 0; i < num_examples; i++){
             line = br.readLine();
-            examples[i] = new Example(line);
+            Example temp = new Example(line, num_examples);
+            this.subsets[temp.getSubsetIndex()].addExample(temp);
         }
+        
+        br.close();
     }
     
-    // getter methods for relevant values
-    public int getClassCount(){ return data_summary[0]; }
-    public int getAttributeCount(){ return data_summary[1]; }
-    public int getSetSize(){ return data_summary[2]; }
-    public Example[] getExamples(){ return examples; }
+    // getter methods for relevant variables
+    public int getNumClasses(){ return this.data_summary[0]; }
+    public int getNumAttributes(){ return this.data_summary[1]; }
+    public int getSubsetSize(){ return this.data_summary[2]; }
+    public int getNumExamples(){ return this.data_summary[3]; }
+    public int[] getNumBin(){ return this.num_bins; }
+    public String[] getClassNames(){ return this.class_names; }
+    public Subset[] getSubsets(){ return this.subsets; }
     
 }

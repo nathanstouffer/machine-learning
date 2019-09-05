@@ -31,7 +31,7 @@ public class NaiveBayes {
      * test further sets using test().
      * @param training_sets The training sets to train the algorithm with.
      */
-    public void train(Set[] training_sets, int num_class, int num_attr) {
+    public void train(Subset[] training_sets, int num_class, int num_attr) {
         table = new int[num_class][num_attr]; //Initialize table used for algorithm with all zeros
         for(int i = 0; i < training_sets.length; i++) { //Train with each set
             
@@ -43,7 +43,7 @@ public class NaiveBayes {
      * for loss metrics.
      * @param test_sets The test sets to test the algorithm with.
      */
-    public void test(Set[] test_sets) {
+    public void test(Subset[] test_sets) {
         for(int i = 0; i < test_sets.length; i++) { //Test with each set
             
         }
