@@ -40,7 +40,7 @@ public class Set {
      * constructor to instantiate a Set out of just one subset
      * @param subset 
      */
-    Set(Subset subset){
+    Set(Set subset){
         // initialize global variables
         this.num_classes = subset.getNumClasses();
         this.num_attributes = subset.getNumAttributes();
@@ -56,7 +56,7 @@ public class Set {
      * @param subsets
      * @param exclude 
      */
-    Set(Subset[] subsets, int exclude){
+    Set(Set[] subsets, int exclude){
         // initialize global final variables
         this.num_classes = subsets[0].getNumClasses();
         this.num_attributes = subsets[0].getNumAttributes();
@@ -70,7 +70,7 @@ public class Set {
                 // add subset to set if subset should not be excluded
                 if (exclude != i){
                     // assign variable to current subset
-                    Subset curr = subsets[i];
+                    Set curr = subsets[i];
                     
                     // update num_examples
                     int curr_num_examples = curr.getNumExamples();
