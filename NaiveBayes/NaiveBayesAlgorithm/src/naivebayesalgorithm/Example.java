@@ -11,4 +11,8 @@ package naivebayesalgorithm;
  */
 public class Example {
     
+    Example(String input){
+        
+    }
+    
 }
