@@ -49,7 +49,7 @@ public class NaiveBayes {
     /**
      * Trains the algorithm with given training set(s), after which, you can
      * test further sets using test().
-     * @param training_sets The training sets to train the algorithm with.
+     * @param training_set The training sets to train the algorithm with.
      */
     public void train(Set training_set) {
         //Find totals of examples in each class
@@ -94,7 +94,7 @@ public class NaiveBayes {
     /**
      * Tests the algorithm with given testing set(s) and outputs the data used
      * for loss metrics.
-     * @param test_sets The test sets to test the algorithm with.
+     * @param test_set The test sets to test the algorithm with.
      */
     public void test(Set test_set) {
         ArrayList<Example> examples = test_set.getExamples();
@@ -112,7 +112,13 @@ public class NaiveBayes {
                 Cs[classid] = Q[classid] * product;
             }
             //Choose the class based on the maximum value of C in Cs.
-            //int classification = MAX(Cs);
+            int classification = 0;
+            for(int i = 1; i < Cs.length; i++) {
+                if(Cs[i] > Cs[classification]){
+                    classification = i;
+                }
+            }
+            System.out.println("Class is: " + classification); //OUTPUT CLASSIFICATION
         }
     }
     
