@@ -29,6 +29,13 @@ public class Set {
     // Arraylist with examples that make up the set
     private ArrayList<Example> examples = new ArrayList<Example>();
     
+    Set(int num_classes, int num_attributes, int[] num_bins, String[] class_names){
+        this.num_classes = num_classes;
+        this.num_attributes = num_attributes;
+        this.num_bins = num_bins;
+        this.class_names = class_names;
+    }
+    
     /**
      * constructor to instantiate a Set out of just one subset
      * @param subset 
@@ -72,17 +79,28 @@ public class Set {
                     // iterate through examples in a subset and add examples to the set
                     ArrayList<Example> to_add = curr.getExamples();
                     for (int j = 0; j < curr_num_examples; j++){
-                        this.examples.add(to_add.get(j));
+                        this.addExample(to_add.get(j));
                     }
                 }
             }
         }
         else{ System.out.println("exclude parameter must be 0 <= exclude < 10"); }
     }
-        
+    
+    /**
+     * method to add example to examples ArrayList
+     * @param ex 
+     */
+    public void addExample(Example ex){
+        this.examples.add(ex);
+        this.num_examples++;
+    }
+    
     // getter methods
     public int getNumClasses(){ return this.num_classes; }
     public int getNumAttributes(){ return this.num_attributes; }
     public int getNumExamples(){ return this.num_examples; }
+    public int[] getNumBins(){ return this.num_bins; }
+    public String[] getClassNames(){ return this.class_names; }
     public ArrayList<Example> getExamples(){ return this.examples; }
 }

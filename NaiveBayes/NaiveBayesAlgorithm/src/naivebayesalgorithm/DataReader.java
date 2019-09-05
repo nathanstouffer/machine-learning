@@ -22,8 +22,8 @@ public class DataReader {
     // variable to store file name
     private final String file_name;
     // array storing information on the data of the form
-    // { num_classes, num_attributes, subset_size, num_examples }
-    private final int[] data_summary = new int[4];
+    // { num_classes, num_attributes, num_examples }
+    private final int[] data_summary = new int[3];
     // array storing the number of bins for a corresponding attribute
     // num_bins[0] corresponds to the number of bins for the 0th attribute of a class
     private int[] num_bins;
@@ -35,7 +35,7 @@ public class DataReader {
     // variable to store number of subsets
     private int num_subset = 10;
     // array to store the subsets
-    private Subset[] subsets = new Subset[num_subset];
+    private Set[] subsets = new Set[num_subset];
 
     /**
      * Constructor to take input from file file_name
@@ -63,7 +63,7 @@ public class DataReader {
         // populate global array data_summary with appropriate values
         String line = br.readLine();
         String[] split_line = line.split(",");
-        for (int i = 0; i < 4; i++){ this.data_summary[i] = Integer.parseInt(split_line[i]); }
+        for (int i = 0; i < 3; i++){ this.data_summary[i] = Integer.parseInt(split_line[i]); }
         
         // declare and instantiate variables for set class
         int num_classes = getNumClasses();
@@ -88,7 +88,7 @@ public class DataReader {
         
         // initialize each value in the subsets array
         for (int i = 0; i < this.num_subset; i ++){
-            this.subsets[i] = new Subset(num_classes, num_attributes, this.num_bins, this.class_names); }
+            this.subsets[i] = new Set(num_classes, num_attributes, this.num_bins, this.class_names); }
         
         // iterate through file line-by-line to populate examples array
         for (int i = 0; i < num_examples; i++){
@@ -103,10 +103,9 @@ public class DataReader {
     // getter methods for relevant variables
     public int getNumClasses(){ return this.data_summary[0]; }
     public int getNumAttributes(){ return this.data_summary[1]; }
-    public int getSubsetSize(){ return this.data_summary[2]; }
-    public int getNumExamples(){ return this.data_summary[3]; }
+    public int getNumExamples(){ return this.data_summary[2]; }
     public int[] getNumBin(){ return this.num_bins; }
     public String[] getClassNames(){ return this.class_names; }
-    public Subset[] getSubsets(){ return this.subsets; }
+    public Set[] getSubsets(){ return this.subsets; }
     
 }
