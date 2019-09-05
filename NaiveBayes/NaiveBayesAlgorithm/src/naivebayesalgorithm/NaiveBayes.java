@@ -1,6 +1,7 @@
 package naivebayesalgorithm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -37,9 +38,9 @@ public class NaiveBayes {
     
     //private ArrayList<ArrayList<ArrayList<Double>>> yeet;
     
-    private double[][][] classes;
-    private double[][] attr;
-    private double[] attr_values;
+    private int num_classes;
+    private int num_attributes;
+    private int[] num_attribute_bins;
     
     public NaiveBayes() {
         
@@ -52,37 +53,37 @@ public class NaiveBayes {
      */
     public void train(Set training_set) {
         //Find totals of examples in each class
-        Example[] examples = training_set.getExamples();
-        Nc = new int[training_set.numClasses()];
+        ArrayList<Example> examples = training_set.getExamples();        
+        Nc = new int[training_set.getNumClasses()];
         for (Example example : examples) {
-            Nc[example.getClassNum()]++;
+            Nc[example.getClassType()]++;
         }
         //Find Q by dividing Nc by total number of examples
         Q = new double[Nc.length];
         for(int i = 0; i < Q.length; i++) {
-            Q[i] = Nc[i] / training_set.numExamples();
+            Q[i] = Nc[i] / training_set.getNumExamples();
         }
         
         //Initialize F
         //int max_bins = Arrays. IfsjdhflajhdfljksahfJKHDFKLJHDLJ
         int max_bins = 2;
-        F = new double[training_set.numClasses()][training_set.numAttr()][max_bins];
+        F = new double[training_set.getNumClasses()][training_set.getNumAttributes()][max_bins];
         //Calculate F for each attribute in/for each class
         //Start by counting examples that match
-        for(int c = 0; c < training_set.numClasses(); c++) { //Iterate through the classes
+        for(int c = 0; c < training_set.getNumClasses(); c++) { //Iterate through the classes
             for(Example e : examples) { //Find all examples in that class
-                if(e.getClassnum() == c) {
-                   for(int a = 0; a < e.getAttributes().length; a++) { //Access all the example's attributes
-                       F[c][a][e.getAttributes()[a]]++; //Add one to the count of that attribute
+                if(e.getClassType() == c) {
+                   for(int a = 0; a < training_set.getNumAttributes(); a++) { //Access all the example's attributes
+                       F[c][a][e.getAttributes().get(a)]++; //Add one to the count of that attribute
                    }
                 }
             }
         }
         //Finish calculating F by adding 1 and dividing by (#examples in the class + # attributes)
-        for(int c = 0; c < training_set.numClasses(); c++) { //Iterate through the classes
-            for(int a = 0; a < e.getAttributes().length; a++) { //Iterate through the attributes
-                for(int a_value = 0; a_value < NUM_ATTR_BINS[a]; a_value++) { //Iterate through the possible values of the attributes
-                    F[c][a][a_value] = (F[c][a][a_value] + 1) / (Nc[c] + ATTRIBUTES);
+        for(int c = 0; c < training_set.getNumClasses(); c++) { //Iterate through the classes
+            for(int a = 0; a < training_set.getNumAttributes(); a++) { //Iterate through the attributes
+                for(int a_value = 0; a_value < training_set.getNumBins()[a]; a_value++) { //Iterate through the possible values of the attributes
+                    F[c][a][a_value] = (F[c][a][a_value] + 1) / (Nc[c] + training_set.getNumAttributes());
                 }
             }
         }
@@ -96,15 +97,22 @@ public class NaiveBayes {
      * @param test_sets The test sets to test the algorithm with.
      */
     public void test(Set test_set) {
-        Example[] examples = test_set.getExamples();
+        ArrayList<Example> examples = test_set.getExamples();
         for(Example example : examples) { //Classify each example in the set
             // C = Q * the product of all relevant F
-            double product = 1;
-            int[] attributes = example.getAttributes();
-            //Find the product of all relevant F of each attribute
-            for(int a = 0; a < attributes.length; a++) {
-                product *= F[]
+            ArrayList<Integer> attributes = example.getAttributes();
+            double[] Cs = new double[num_classes];
+            //Calculate C of each class
+            for(int classid = 0; classid < num_classes; classid++) {
+                int product = 1;
+                //Find the product of all relevant F of each attribute
+                for(int attrid = 0; attrid < num_attributes; attrid++) {
+                    product *= F[classid][attrid][attributes.get(attrid)];
+                }
+                Cs[classid] = Q[classid] * product;
             }
+            //Choose the class based on the maximum value of C in Cs.
+            //int classification = MAX(Cs);
         }
     }
     
