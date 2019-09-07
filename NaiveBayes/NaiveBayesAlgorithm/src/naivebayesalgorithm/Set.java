@@ -29,6 +29,13 @@ public class Set {
     // Arraylist with examples that make up the set
     private ArrayList<Example> examples = new ArrayList<Example>();
     
+    /**
+     * constructor to instantiate an empty set object
+     * @param num_classes
+     * @param num_attributes
+     * @param num_bins
+     * @param class_names 
+     */
     Set(int num_classes, int num_attributes, int[] num_bins, String[] class_names){
         this.num_classes = num_classes;
         this.num_attributes = num_attributes;
