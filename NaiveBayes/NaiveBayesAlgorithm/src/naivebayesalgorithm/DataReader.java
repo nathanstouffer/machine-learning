@@ -41,7 +41,7 @@ public class DataReader {
      * Constructor to take input from file file_name
      * @param file_name 
      */
-    DataReader(String file_name){
+    public DataReader(String file_name){
         // populate global variable file_name
         this.file_name = file_name;
         
@@ -55,7 +55,8 @@ public class DataReader {
     
     private void readFile() throws IOException {
         // construct file to be read
-        File file = new File("../../../../Preprocessing/DataFiles/" + file_name);
+        //File file = new File("../../../../Preprocessing/DataFiles/" + file_name);
+        File file = new File("../Preprocessing/DataFiles/" + file_name);
         
         // construct the buffered reader
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -76,7 +77,7 @@ public class DataReader {
         // populate global array num_bins with appropriate values
         line = br.readLine();
         split_line = line.split(",");
-        for (int i = 0; i < num_attributes; i++){ this.num_bins[i] = Integer.parseInt(split_line[i]); }
+        for (int i = 0; i < num_attributes; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
         
         // initialize num_bins array to correct size
         this.class_names = new String[num_classes];
