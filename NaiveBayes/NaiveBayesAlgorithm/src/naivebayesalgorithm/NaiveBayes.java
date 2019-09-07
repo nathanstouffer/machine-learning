@@ -55,7 +55,7 @@ public class NaiveBayes {
         num_classes = training_set.getNumClasses();
         num_attributes = training_set.getNumAttributes();
         num_attribute_bins = training_set.getNumBins();
-        //Find totals of examples in each class
+        //Find total number of examples in each class
         ArrayList<Example> examples = training_set.getExamples();        
         Nc = new int[num_classes];
         for(Example example : examples) {
@@ -64,7 +64,7 @@ public class NaiveBayes {
         //Find Q by dividing Nc by total number of examples
         Q = new double[Nc.length];
         for(int i = 0; i < Q.length; i++) {
-            Q[i] = Nc[i] / training_set.getNumExamples();
+            Q[i] = (double) Nc[i] / (double) training_set.getNumExamples();
         }
         
         //Initialize F storage
@@ -76,6 +76,7 @@ public class NaiveBayes {
             for(Example e : examples) { //Find all examples in that class
                 if(e.getClassType() == c) {
                    for(int a = 0; a < num_attributes; a++) { //Access all the example's attributes
+                       //System.out.println("c:" + c + "a:" + a + "ab:" + e.getAttributes().get(a));
                        F[c][a][e.getAttributes().get(a)]++; //Add one to the count of that attribute
                    }
                 }
@@ -85,7 +86,7 @@ public class NaiveBayes {
         for(int c = 0; c < num_classes; c++) { //Iterate through the classes
             for(int a = 0; a < num_attributes; a++) { //Iterate through the attributes
                 for(int a_value = 0; a_value < num_attribute_bins[a]; a_value++) { //Iterate through the possible values of the attributes
-                    F[c][a][a_value] = (F[c][a][a_value] + 1) / (Nc[c] + num_attributes);
+                    F[c][a][a_value] = (double)(F[c][a][a_value] + 1) / (double)(Nc[c] + num_attributes);
                 }
             }
         }
@@ -99,20 +100,20 @@ public class NaiveBayes {
      * for loss metrics.
      * @param test_set The test sets to test the algorithm with.
      * @return int[] An array, indexed by example in the test set, with integers
-     * representing their classifications.
+     * representing their predicted classifications.
      */
     public int[] test(Set test_set) {
         // Initialize array to hold the resulting classifications of the test set examples
-        int[] classification = new int[test_set.getNumExamples()];
+        int[] predictions = new int[test_set.getNumExamples()];
         
         //Begin testing
         ArrayList<Example> examples = test_set.getExamples();
-        for(Example example : examples) { //Classify each example in the set
-            ArrayList<Integer> attributes = example.getAttributes();
+        for(int index = 0; index < examples.size(); index++) {//Classify each example in the set
+            ArrayList<Integer> attributes = examples.get(index).getAttributes();
             double[] Cs = new double[num_classes];
             //Calculate C of each class. C = Q * the product of all relevant F
             for(int classid = 0; classid < num_classes; classid++) {
-                int product = 1;
+                double product = 1;
                 //Find the product of all relevant F of each attribute
                 for(int attrid = 0; attrid < num_attributes; attrid++) {
                     product *= F[classid][attrid][attributes.get(attrid)];
@@ -126,11 +127,12 @@ public class NaiveBayes {
                     ex_class = i;
                 }
             }
-            System.out.println("Class is: " + ex_class); //OUTPUT CLASSIFICATION
+            predictions[index] = ex_class;
+            //System.out.println("Class is: " + ex_class); //OUTPUT CLASSIFICATION
         }
         
         System.out.println("Naive Bayes tested with " + test_set.getNumExamples() + " examples.");
-        return classification;
+        return predictions;
     }
     
     /**

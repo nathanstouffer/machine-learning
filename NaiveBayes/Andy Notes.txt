@@ -1,0 +1,6 @@
+preprocessing
+
+-y's on house vote data (bc its missing?)
+-incorrect attribute # of values if not binning, i changed that
+-change how we do missing vals?
+-can we edit # of bins?

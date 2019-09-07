@@ -34,19 +34,20 @@ class data:
             fixedcolumns.append(i)
         df.columns = fixedcolumns
         df.insert(1, "Sets", sets)
-        
+
+        if missing:
+            df = df.replace(to_replace ='?', value = choice(['1', '0']))
+            df = df.replace(to_replace ='y', value = '1')
+            df = df.replace(to_replace = 'n', value = '0')
+
         if binning:
             for i in range(len(df.columns)-2):
                 df[i] = pd.qcut(df[i], 2, labels=False, duplicates='drop')
                 bins.append('2')
         else:
             for i in range(len(df.columns)-2):
-                bins.append(df[i].max())
-        
-        if missing:
-            df = df.replace(to_replace ='?', value = choice(['1', '0']))
-            df = df.replace(to_replace ='y', value = '1')
-            df = df.replace(to_replace = 'n', value = '0')
+                bins.append(str(int(df[i].max()) + 1))  # ANDI added 1 here (so that it is values 0-max)
+
         header = str(df['Class'].nunique()) + "," + str(len(df.columns)-2) + "," + str(len(df)) + '\n' # ANDI CHANGED IT TO col - 2 to fix
         classes = (df.Class.unique())
         for i in range(len(classes)):

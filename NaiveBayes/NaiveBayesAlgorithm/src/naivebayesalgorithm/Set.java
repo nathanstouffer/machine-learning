@@ -17,7 +17,6 @@ public class Set {
     // global variables to store set variables
     private final int num_classes;
     private final int num_attributes;
-    private int num_examples = 0;
     // num_bins[0] corresponds to the number of bins for the 0th attribute of a class
     private int[] num_bins;
     // array storing class names. in our input files, 
@@ -53,7 +52,6 @@ public class Set {
         this.num_attributes = subset.getNumAttributes();
         this.num_bins = subset.getNumBins();
         this.class_names = subset.getClassNames();
-        this.num_examples = subset.getNumExamples();
         this.examples = subset.getExamples();
     }
     
@@ -78,10 +76,7 @@ public class Set {
                 if (exclude != i){
                     // assign variable to current subset
                     Set curr = subsets[i];
-                    
-                    // update num_examples
                     int curr_num_examples = curr.getNumExamples();
-                    this.num_examples += curr_num_examples;
                     
                     // iterate through examples in a subset and add examples to the set
                     ArrayList<Example> to_add = curr.getExamples();
@@ -100,13 +95,12 @@ public class Set {
      */
     public void addExample(Example ex){
         this.examples.add(ex);
-        this.num_examples++;
     }
     
     // getter methods
     public int getNumClasses(){ return this.num_classes; }
     public int getNumAttributes(){ return this.num_attributes; }
-    public int getNumExamples(){ return this.num_examples; }
+    public int getNumExamples(){ return this.examples.size(); }
     public int[] getNumBins(){ return this.num_bins; }
     public String[] getClassNames(){ return this.class_names; }
     public ArrayList<Example> getExamples(){ return this.examples; }

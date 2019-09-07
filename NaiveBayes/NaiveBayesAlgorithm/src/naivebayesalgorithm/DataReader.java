@@ -79,7 +79,6 @@ public class DataReader {
         split_line = line.split(",");
         for (int i = 0; i < num_attr; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
 
-        System.out.println(split_line);
         for (int i = 0; i < num_attr; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
         
         // initialize class_names array to correct size
@@ -96,6 +95,7 @@ public class DataReader {
         // iterate through file line-by-line to populate examples array
         for (int i = 0; i < num_examples; i++){
             line = br.readLine();
+            br.readLine(); // Dummy read for buffered reader
             Example temp = new Example(line, num_attr);
             this.subsets[temp.getSubsetIndex()].addExample(temp);
         }

@@ -33,7 +33,7 @@ public class Example {
         // split the input line into a String array
         String[] data = line.split(",");
         
-        // populate class type and subset_index
+        // populate class type and subset_index;
         this.class_type = Integer.parseInt(data[0]);
         this.subset_index = Integer.parseInt(data[1]);
         
