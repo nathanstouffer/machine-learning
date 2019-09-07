@@ -22,7 +22,7 @@ public class DataReader {
     // variable to store file name
     private final String file_name;
     // array storing information on the data of the form
-    // { num_classes, num_attributes, num_examples }
+    // { num_classes, num_attr, num_examples }
     private final int[] data_summary = new int[3];
     // array storing the number of bins for a corresponding attribute
     // num_bins[0] corresponds to the number of bins for the 0th attribute of a class
@@ -68,18 +68,18 @@ public class DataReader {
         
         // declare and instantiate variables for set class
         int num_classes = getNumClasses();
-        int num_attributes = getNumAttributes();
+        int num_attr = getNumAttributes();
         int num_examples = getNumExamples();
         
         // initialize num_bins array to correct size
-        this.num_bins = new int[num_attributes];
+        this.num_bins = new int[num_attr];
         
         // populate global array num_bins with appropriate values
         line = br.readLine();
         split_line = line.split(",");
-        for (int i = 0; i < num_attributes; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
+        for (int i = 0; i < num_attr; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
         
-        // initialize num_bins array to correct size
+        // initialize class_names array to correct size
         this.class_names = new String[num_classes];
         
         // populate global array class_names with appropriate values
@@ -88,13 +88,12 @@ public class DataReader {
         for (int i = 0; i < num_classes; i++){ this.class_names[i] = split_line[i]; }
         
         // initialize each value in the subsets array
-        for (int i = 0; i < this.num_subset; i ++){
-            this.subsets[i] = new Set(num_classes, num_attributes, this.num_bins, this.class_names); }
+        for (int i = 0; i < this.num_subset; i ++){ this.subsets[i] = new Set(num_classes, num_attr, this.num_bins, this.class_names); }
         
         // iterate through file line-by-line to populate examples array
         for (int i = 0; i < num_examples; i++){
             line = br.readLine();
-            Example temp = new Example(line, num_examples);
+            Example temp = new Example(line, num_attr);
             this.subsets[temp.getSubsetIndex()].addExample(temp);
         }
         
