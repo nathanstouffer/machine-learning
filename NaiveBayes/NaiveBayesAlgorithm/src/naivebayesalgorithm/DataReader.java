@@ -78,6 +78,9 @@ public class DataReader {
         line = br.readLine();
         split_line = line.split(",");
         for (int i = 0; i < num_attr; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
+
+        System.out.println(split_line);
+        for (int i = 0; i < num_attr; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
         
         // initialize class_names array to correct size
         this.class_names = new String[num_classes];

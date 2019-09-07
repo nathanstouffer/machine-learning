@@ -47,10 +47,10 @@ class data:
             df = df.replace(to_replace ='?', value = choice(['1', '0']))
             df = df.replace(to_replace ='y', value = '1')
             df = df.replace(to_replace = 'n', value = '0')
-        header = str(df['Class'].nunique()) + "," + str(len(df.columns)-1) + "," + str(len(df)) + '\n'
+        header = str(df['Class'].nunique()) + "," + str(len(df.columns)-2) + "," + str(len(df)) + '\n' # ANDI CHANGED IT TO col - 2 to fix
         classes = (df.Class.unique())
         for i in range(len(classes)):
-            df['Class'] = df['Class'].replace(classes[i], i+100)
+            df['Class'] = df['Class'].replace(classes[i], i)  # KEVIN WHY U PUT i + 100 here?
         template = header + '*,*,' + ','.join(map(str, bins)) + "\n" + ','.join(map(str, classes)) + "\n"
         with open('Datafiles\\' + filename + '.csv', 'w') as fp:
             fp.write(template)
