@@ -77,6 +77,7 @@ public class DataReader {
         // populate global array num_bins with appropriate values
         line = br.readLine();
         split_line = line.split(",");
+        System.out.println(split_line);
         for (int i = 0; i < num_attributes; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
         
         // initialize num_bins array to correct size
