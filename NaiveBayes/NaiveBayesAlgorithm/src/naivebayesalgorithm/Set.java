@@ -93,9 +93,7 @@ public class Set {
      * method to add example to examples ArrayList
      * @param ex 
      */
-    public void addExample(Example ex){
-        this.examples.add(ex);
-    }
+    public void addExample(Example ex){ this.examples.add(ex); }
     
     // getter methods
     public int getNumClasses(){ return this.num_classes; }
