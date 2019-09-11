@@ -14,6 +14,7 @@ public class ConfusionMatrix {
     int[][] matrix; // Holds the confusion matrix, 
                     // indexed by matrix[<prediction>][<actual>]
     
+    double mse; //Holds the mean squared error
     /**
      * 
      * @param test_set The set that was tested.
@@ -31,6 +32,24 @@ public class ConfusionMatrix {
         for(int i = 0; i < examples.size(); i++) {
             matrix[predictions[i]][examples.get(i).getClassType()]++;
         }
+        
+        //---------------------------------------------------------------
+        //Calculate the mean squared error
+        //Start by adding up the class predictions and the actual classes
+        int[] actual_class_totals = new int[test_set.getNumClasses()];
+        int[] pred_class_totals = new int[test_set.getNumClasses()];
+        for(int i = 0; i < examples.size(); i++) {
+            actual_class_totals[examples.get(i).getClassType()]++;
+            pred_class_totals[predictions[i]]++;
+        }
+        //Find the difference
+        double distances_sum = 0;
+        for(int i = 0; i < actual_class_totals.length; i++) {
+            distances_sum += Math.pow((pred_class_totals[i] - actual_class_totals[i]), 2);
+        }
+        //Take the average
+        mse = distances_sum / test_set.getNumClasses();
+        
     }
     
     /**
@@ -47,8 +66,14 @@ public class ConfusionMatrix {
         return (double) correct / (double) num_examples;
     }
     
-    public double getClassPrecision(int classid) {
-        return 0.0;
+    /**
+     * 
+     * @return The Mean Squared Error, i.e., subtract the number of actual
+     * examples in each class from the number predicted, square it, then add
+     * the squares, taking the average.
+     */ 
+    public double getMSE() {
+        return mse;
     }
     
     
