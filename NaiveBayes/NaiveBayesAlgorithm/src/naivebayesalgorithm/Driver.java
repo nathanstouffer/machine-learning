@@ -12,7 +12,9 @@ public class Driver {
         
         // Make the list of data files we want to work with
         String[] datafiles = {"glass.csv", "iris.csv", "house-votes-84.csv", 
-            "soybean-small.csv", "wdbc.csv"};
+            "soybean-small.csv", "wdbc.csv", "glassscrambled.csv", 
+            "irisscrambled.csv", "house-votes-84scrambled.csv",
+            "soybean-smallscrambled.csv", "wdbcscrambled.csv"};
 
         // Iterate through each data file
         for(int f = 0; f < datafiles.length; f++) {
@@ -27,7 +29,7 @@ public class Driver {
             double mse_sum = 0;
             
             for(int i = 0; i < 10; i++) { // Perform 10-fold cross validation
-                System.out.println("Test " + (i+1));
+                //System.out.println("Test " + (i+1));
 
                 Set training_set = new Set(reader.getSubsets(), i); // Combine 9 of the subsets
 
@@ -43,13 +45,13 @@ public class Driver {
                 double mse = m.getMSE();
                 mse_sum += mse;
                 // Output information about the metrics
-                System.out.println("The accuracy was: " + 
+                /* System.out.println("The accuracy was: " + 
                         new DecimalFormat("###.##").format(accuracy*100)
                         + "%");
                 System.out.println("The MSE was: " + 
                         new DecimalFormat("###.##").format(mse));
 
-                System.out.println();
+                System.out.println(); */
             }
             // Output information about the loss metrics to the console
             System.out.println("Average accuracy for " + datafiles[f] + " was " 
