@@ -42,8 +42,8 @@ class data:
 
         if binning:
             for i in range(len(df.columns)-2):
-                df[i] = pd.qcut(df[i], 2, labels=False, duplicates='drop')
-                bins.append('2')
+                df[i] = pd.qcut(df[i], 5, labels=False, duplicates='drop')
+                bins.append('5')
         else:
             for i in range(len(df.columns)-2):
                 bins.append(str(int(df[i].max()) + 1))  # ANDI added 1 here (so that it is values 0-max)

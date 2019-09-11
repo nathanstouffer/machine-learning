@@ -91,7 +91,7 @@ public class NaiveBayes {
             }
         }
         
-        System.out.println("Naive Bayes trained with " + training_set.getNumExamples() + " examples.");
+        //System.out.println("Naive Bayes trained with " + training_set.getNumExamples() + " examples.");
         //Training complete!
     }
     
@@ -131,7 +131,7 @@ public class NaiveBayes {
             //System.out.println("Class is: " + ex_class); //OUTPUT CLASSIFICATION
         }
         
-        System.out.println("Naive Bayes tested with " + test_set.getNumExamples() + " examples.");
+        //System.out.println("Naive Bayes tested with " + test_set.getNumExamples() + " examples.");
         return predictions;
     }
     
