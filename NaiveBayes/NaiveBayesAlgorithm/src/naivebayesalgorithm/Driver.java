@@ -1,5 +1,8 @@
 package naivebayesalgorithm;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 
 /**
@@ -7,8 +10,10 @@ import java.text.DecimalFormat;
  * @author natha
  */
 public class Driver {
-
-    public static void main(String[] args) {
+    
+    public static final String OUTPUT_FILEPATH = "../output.txt";
+    
+    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
         
         // Make the list of data files we want to work with
         String[] datafiles = {"glass.csv", "iris.csv", "house-votes-84.csv", 
@@ -16,9 +21,13 @@ public class Driver {
             "irisscrambled.csv", "house-votes-84scrambled.csv",
             "soybean-smallscrambled.csv", "wdbcscrambled.csv"};
 
+        // Open the output file
+        PrintWriter writer = new PrintWriter(OUTPUT_FILEPATH, "UTF-8");
+        
         // Iterate through each data file
         for(int f = 0; f < datafiles.length; f++) {
             System.out.println("--- Handling " + datafiles[f] + " data set ---");
+            writer.println("--- Handling " + datafiles[f] + " data set ---");
             // Create the data reader to read in our preprocessed files
             DataReader reader = new DataReader(datafiles[f]); 
             // Initialize the object that will be runnning our algorithm on the data
@@ -60,7 +69,16 @@ public class Driver {
             System.out.println("Average MSE for " + datafiles[f] + " was " 
                     + new DecimalFormat("###.##").format(mse_sum/10));
             System.out.println("----------------------------------------------");
+            // Output information about the loss metrics to a file
+            writer.println("Average accuracy for " + datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(accuracy_sum/10*100)
+                        + "%");
+            writer.println("Average MSE for " + datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(mse_sum/10));
+            writer.println("----------------------------------------------");
         }
+        
+        writer.close(); //Close output file
     }
     
 }
