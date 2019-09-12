@@ -52,7 +52,13 @@ The hypothesis is that scrambling a given data set will not significantly change
 
 \section{Algorithm}
 
--It be what it do \newline
+\paragraph{Naive Bayes}Naive Bayes is a low cost classifying algorithm that utilizes a probabilistic model based in Bayesian Decision Theory \citep{nbPaper:2014}. Given an example $x \in X$ with attributes $a_1, a_2, ..., a_d$ and belonging to class $c \in C$, the algorithm will classify $x$ by choosing the maximum probability $P(c|a_1, a_2, ..., a_d)$ from all $c \in C$.
+
+\paragraph{Using the probability}Calculating this probability becomes more apparent when rewritten using Bayes Theorem:
+
+$$P(c|a_1, a_2, ..., a_d) = \frac{P(a_1, a_2, ..., a_d | c)P(c)}{P(a_1, a_2, ..., a_d)} $$
+
+\paragraph{} Because the algorithm chooses a classification $c = argmax_{c \in C}P(c|a_1, a_2, ..., a_d)$, the classification is still equivalent to
 
 \section{Experimental Design}
 
