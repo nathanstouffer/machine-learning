@@ -120,7 +120,6 @@ Thus, the minimum number of bins required to produce a satisfactory model is 5.
 
 The results indicate that the hypothesis that scrambling a given data set will not significantly change the performance of the Naive Bayes Algorithm is true.
 The results of the experiment are displayed in Table \ref{tab:metrics}.
-
 \begin{table}[h]
 	\centering
 	\caption{Loss Function Metrics} \label{tab:metrics}
@@ -138,7 +137,8 @@ The results of the experiment are displayed in Table \ref{tab:metrics}.
 		wdbc                     & 94.02\%  & 4    \\ \hline
 		wdbc-scrambled           & 93.85\%  & 3.3  \\ \hline
 	\end{tabular}
-\end{table}
+\end{table}\\\\
+Interestingly, the performance of Naive Bayes on the soybean-small data set did not change with scrambled data. This could mean that the scrambled attributes do not define each classification in the soybean-small data set.
 
 \section{Summary}
 
