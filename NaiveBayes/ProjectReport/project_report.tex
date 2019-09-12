@@ -61,10 +61,15 @@ Because the algorithm chooses a classification $c = argmax_{c \in C}P(c|a_1, a_2
 $$c = argmax_{c \in C}P(a_1, a_2, ..., a_d | c)P(c)$$
 
 Naive Bayes assumes all attributes $a \in A$ are conditionally independent given the class, simplifying the classification decision to 
-$$c = argmax_{c \in C}P(c)\sum_{i = 1}^{d}P(a_i | e)$$
+$$c = argmax_{c \in C}P(c)\sum_{i = 1}^{d}P(a_i | c)$$
 
 These probabilities are calculated when the algorithm is trained with a given set of examples $X_{test} \subset X$. During training, $P(c)$, is calculated for all classes by
-$$P(c) = \frac{|x \in c|}{|X_{test}|}$$ 
+$$P(c) = \frac{|x \in c|}{|X_{test}|}$$
+and $P(a_i | c)$ is calculated with
+$$P(a_i | c) = \frac{|(x \in c) \cap (x_{a_i} = a_i)| + 1}{|x \in c| + d}$$
+where $d$ is the number of examples in the class. 
+
+	Once the algorithm has been trained, all probabilities $P(c)$ and $P(a_i | c)$ have been calculated and stored for future reference. Classification of a new example will be selected quickly with little further computation.
 
 \section{Experimental Design}
 
