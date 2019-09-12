@@ -5,9 +5,10 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Dua and Graff(2017)]{Dua:2019}
-Dheeru Dua and Casey Graff.
-\newblock {UCI} machine learning repository, 2017.
-\newblock URL \url{http://archive.ics.uci.edu/ml}.
+\bibitem[Kaur and Oberai(2014)]{nbPaper:2014}
+Gurneet Kaur and Neelam Oberai.
+\newblock A review article on naive bayes classifier with various smoothing
+  techniques.
+\newblock 2014.
 
 \end{thebibliography}
