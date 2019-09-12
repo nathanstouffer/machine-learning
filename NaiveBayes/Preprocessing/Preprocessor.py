@@ -32,7 +32,6 @@ class data:
         #iterators for assigning sets
         a = 0
         i = 0
-        
         df = pd.read_csv('..\\DataFiles\\' + filename + '.data', header = None)
         #create list of iterating values from 0-9 distrubeted equally across rows
         while(i < len(df)):
@@ -56,10 +55,10 @@ class data:
         
         #assign sets to examples   
         df.insert(1, 'Sets', sets)
-        #replace missing values with random value
+        #replace missing values with third variable
         #replace y with 1 and n with 0
         if missing:
-            df = df.replace(to_replace ='?', value = choice(['1', '0']))
+            df = df.replace(to_replace ='?', value = '2')
             df = df.replace(to_replace ='y', value = '1')
             df = df.replace(to_replace = 'n', value = '0')
         #Quantile-based discretization into five bins
@@ -101,7 +100,7 @@ class data:
         for column in columnscramble:
             df[column] = df[column].sample(frac=1).reset_index(drop=True)
         #outputting to .csv
-        with open('Datafiles\\' + name + 'scrambled.csv', 'w') as fp:
+        with open('Datafiles\\' + name + '-scrambled.csv', 'w') as fp:
             fp.write(header)
             fp.write((df.to_csv(index=False, header = False)))
             
