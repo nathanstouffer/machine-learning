@@ -18,8 +18,7 @@
 
 \section{Introduction}
 
-Naive Bayes is a simple algorithm and a nice introduction into machine learning. It works surprisingly well at classification learning. A classification algorithm takes a given set of classes and attributes, and determines the probability of that a given class has said attributes. The reason Naive Bayes is so simple is due to the very powerful assumption that our attribute set is conditionally independent. This assumption, although probably untrue for most sets, is what allows the Naive Bayes classifier to do what it does, and do it relatively well for how simple it is. In this paper we go over our process of training the Naive Bayes classifier on various data sets, and the results of each trial. \\\\
-The paper is organized as follows. Section 2 goes over the problem we had to solve. Section 3 takes a look at the actual classification algorithm. Section 4 goes over our design process and each step we took to get our end results.
+Classification is an important aspect of machine learning. A classification algorithm takes a given set of attributes, called examples, and places them in a class. One popular classification algorithm is Naive Bayes. Of particular interest is the process of training the Naive Bayes classifier on various data sets and the key factors of its performance.
 
 \section{Problem Statement}
 
@@ -137,6 +136,11 @@ In Table \ref{tab:metrics5}, where there are 5 bins, the accuracy ranges from $7
 \end{table}
 
 \section{Summary}
+
+For its relative cost and simplicity, Naive Bayes is a powerful model for classification. A surprising level of performance was noted given the small size of the data sets used. Although considered a more primitive algorithm, Naive Bayes may be further enhanced with appropriate smoothing techniques and tuning parameters. Knowing the characteristics of the data sets, including the level of attribute conditional independence and relevance, allows for further optimization. 
+
+Drawbacks of Naive Bayes include the costliness of optimizing tuning parameters such as discrete bin size and attribute weights (if implemented). The model must be trained and tested in order to compare these parameters. Additionally, the algorithm is only designed to represent examples with conditionally independent attributes, which requires careful planning when deciding included attributes.
+
 
 \bibliography{nbBib}
 
