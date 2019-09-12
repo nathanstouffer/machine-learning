@@ -1,15 +1,6 @@
 \documentclass[twoside,11pt]{article}
 \usepackage{jmlr2e}
 
-% Heading arguments are {volume}{year}{pages}{date submitted}{date published}{paper id}{author-full-names}
-
-
-\jmlrheading{1}{2019}{INSERT PAGE STUFF}{9/19}{DATE PUBLISHED}{PAPER ID}{Andrew Kirby, Kevin Browder, Nathan Stouffer, Eric Kempf}
-
-% TODO insert page information when done
-% TODO figure out date published
-% TODO figure out paper id
-
 \begin{document}
 
 \title{Learning with Naive Bayes}
@@ -18,20 +9,12 @@
 		\name Kevin Browder \email browderkevin54@gmail.com \AND
 		\name Nathan Stouffer \email nathanstouffer1999@gmail.com \AND
 		\name Eric Kempf \email erickempf123@gmail.com }
-
-\editor{}
-
-% TODO figure out editor
 	
 \maketitle
 
 \begin{abstract}
 	
 \end{abstract}
-
-\begin{keywords}
-	% TODO insert 5 keywords
-\end{keywords}
 
 \section{Introduction}
 
@@ -40,7 +23,7 @@ The paper is organized as follows. Section 2 goes over the problem we had to sol
 
 \section{Problem Statement}
 
-+The problem is a classification problem. Given an input file that contains examples (each example consists of a list of attributes and an associated classification), the task is to implement a learning algorithm that is trained to classify examples. The algorithm is called Naive Bayes. The performance of the learning algorithm will be evaluated by two metrics and 10-fold cross validation. Specifically, the metrics are accuracy and mean squared error. 
+The problem is a classification problem. Given an input file that contains examples (each example consists of a list of attributes and an associated classification), the task is to implement a learning algorithm that is trained to classify examples. The algorithm is called Naive Bayes. The performance of the learning algorithm will be evaluated by two metrics and 10-fold cross validation. Specifically, the metrics are accuracy and mean squared error. 
 
 \subsection{Variables}
 
@@ -73,10 +56,9 @@ where $d$ is the number of examples in the class.
 
 \section{Experimental Design}
 
-\subsection{Set Up}
+\subsection{Pre-processing}
 
-% TODO insert issues with input files
-% TODO scrambling
+The pre-processing is done using the pandas library in Python. The class column is moved before all of the attributes for a consistent output between datasets. Next the examples are randomly shuffled. A new column is added after the class column and each example is assigned to one of 10 sets that are used in the 10 fold cross validation. If the data is continuous, it is discretized into 5 bins with each bin containing an equal number of examples. Non numerical data is changed to integers because the algorithm can only read integers, this includes the class names. Before output three lines of data are generated, the first line includes the number of classes, number of attributes and the number of examples. The second line includes the number of bins for each attribute. The third line include the class names so the algorithm can convert back from numerical class names to the original string names. After these lines are generated they are outputted to the first three lines of the .csv file and the pre-processed data is outputted starting on the fourth line. After this data is outputted ten percent of the attributes are randomly chosen and the data in each of these attributes is randomly shuffled. This shuffled data is then outputted to a new .csv with the same header as the first file.  
 
 \subsection{Tuning}
 
