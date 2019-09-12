@@ -65,8 +65,9 @@ class data:
         #also generates list with number of bins for each attribute
         if binning:
             for i in range(len(df.columns)-2):
-                df[i] = pd.qcut(df[i], 5, labels=False, duplicates='drop')
-                bins.append('5')
+                num_bins = 5
+                df[i] = pd.qcut(df[i], num_bins, labels=False, duplicates='drop')
+                bins.append(str(num_bins))
         #generate list with number of bins for each attribute when data is pre discritized
         else:
             for i in range(len(df.columns)-2):

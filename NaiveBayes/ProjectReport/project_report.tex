@@ -76,6 +76,8 @@ Experimenting w/ using different attributes
 
 \section{Results}
 
+
+
 \begin{table}[h]
 	\centering
 	\caption{Loss Function Metrics} \label{tab:metrics}
@@ -98,5 +100,50 @@ Experimenting w/ using different attributes
 \section{Summary}
 
 \bibliography{nbBib}
+
+% TODO insert these tables into Tuning
+
+
+\begin{table}[h]
+	\centering
+	\caption{Loss Function Metrics for bin\_size = 2} \label{tab:metrics2}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Dataset                  & Accuracy & MSE  \\ \hline
+		glass                    & 69.11\%  & 5    \\ \hline
+		iris                     & 70.67\%  & 7.8  \\ \hline
+		house-votes-84           & 89.66\%  & 4.3  \\ \hline
+		soybean-small            & 79\%     & 0.65 \\ \hline
+		wdbc                     & 91.92\%  & 7.4  \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Loss Function Metrics for bin\_size = 5} \label{tab:metrics5}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Dataset                  & Accuracy & MSE  \\ \hline
+		glass                    & 80.78\%  & 2.9  \\ \hline
+		iris                     & 92.67\%  & 0.73 \\ \hline
+		house-votes-84           & 90.13\%  & 6.1  \\ \hline
+		soybean-small            & 79.50\%  & 0.9  \\ \hline
+		wdbc                     & 94.02\%  & 4    \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[]
+	\centering
+	\caption{Loss Function Metrics for bin\_size = 1000} \label{tab:metrics1000}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Dataset                  & Accuracy & MSE    \\ \hline
+		glass                    & 5.13\%   & 80.67  \\ \hline
+		iris                     & 92.67\%  & 0.87   \\ \hline
+		house-votes-84           & 89.66\%  & 7.9    \\ \hline
+		soybean-small            & 83.50\%  & 0.6    \\ \hline
+		wdbc                     & 39.54\%  & 1191.4 \\ \hline
+	\end{tabular}
+\end{table}
 
 \end{document}
