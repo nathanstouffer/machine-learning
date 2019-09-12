@@ -19,7 +19,7 @@
 		\name Nathan Stouffer \email nathanstouffer1999@gmail.com \AND
 		\name Eric Kempf \email erickempf123@gmail.com }
 
-\editor{Kevin Browder}
+\editor{}
 
 % TODO figure out editor
 	
@@ -35,15 +35,20 @@
 
 \section{Introduction}
 
+Naive Bayes is a simple algorithm and a nice introduction into machine learning. It works surprisingly well at classification learning. A classification algorithm takes a given set of classes and attributes, and determines the probability of that a given class has said attributes. The reason Naive Bayes is so simple is due to the very powerful assumption that our attribute set is conditionally independent. This assumption, although probably untrue for most sets, is what allows the Naive Bayes classifier to do what it does, and do it relatively well for how simple it is. In this paper we go over our process of training the Naive Bayes classifier on various data sets, and the results of each trial. \\\\
+The paper is organized as follows. Section 2 goes over the problem we had to solve. Section 3 takes a look at the actual classification algorithm. Section 4 goes over our design process and each step we took to get our end results.
+
 \section{Problem Statement}
 
-The problem that we must solve is a classification problem. Given an input file that contains examples (each example consists of a list of attributes and an associated classification), our task is to implement a learning algorithm that is trained to classify examples. The algorithm we will implement is called Naive Bayes. The performance of our learning algorithm will be evaluated by two metrics of our choosing and 10-fold cross validation.
-% TODO insert metrics that we chose
-When we have implemented the algorithm, we then perform our experiment. We are tasked with testing whether scrambling values in $10\%$ of the features will affect the performance of Naive Bayes. This effectively eliminates the usefulness of $10\%$ of features in a given data set.
++The problem is a classification problem. Given an input file that contains examples (each example consists of a list of attributes and an associated classification), the task is to implement a learning algorithm that is trained to classify examples. The algorithm is called Naive Bayes. The performance of the learning algorithm will be evaluated by two metrics and 10-fold cross validation. Specifically, the metrics are accuracy and mean squared error. 
+
+\subsection{Variables}
+
+The independent variable is whether the data is scrambled or not. Scrambling is described as follows. First, $10\%$ of the attributes in a given data set are randomly selected. Then, within each attribute, the values are randomly swapped between examples. Now the data set is scrambled. The dependent variable is how well the algorithm performs.
 
 \subsection{Hypothesis}
 
-We predict that scrambling $10\%$ of features will marginally affect performance.
+The hypothesis is that scrambling a given data set will not significantly change the performance of the Naive Bayes Algorithm. In essence, scrambling renders $10\%$ of attributes useless. Any pattern that existed before scrambling is no longer discernible within those attributes. However, there remains $90\%$ of the data that persists with the original pattern. Naive Bayes chooses a classification based on the relative probability that a given example is in a class. The order of the relative probabilities will stay constant even when the original pattern is lost in $10\%$ of the attributes.
 
 \section{Algorithm}
 
@@ -63,8 +68,8 @@ $$P(c) = \frac{|x \in c|}{|X_{test}|}$$
 
 \section{Experimental Design}
 
-\subsection{Pre-processing}
-The pre-processing is done using the pandas library in Python. The class column is moved before all of the attributes for a consistent output between datasets. Next the examples are randomly shuffled. A new column is added after the class column and each example is assigned to one of 10 sets that are used in the 10 fold cross validation. If the data is continuous, it is discretized into 5 bins with each bin containing an equal number of examples. Non numerical data is changed to integers because the algorithm can only read integers, this includes the class names. Before output three lines of data are generated, the first line includes the number of classes, number of attributes and the number of examples. The second line includes the number of bins for each attribute. The third line include the class names so the algorithm can convert back from numerical class names to the original string names. After these lines are generated they are outputted to the first three lines of the .csv file and the pre-processed data is outputted starting on the fourth line. After this data is outputted ten percent of the attributes are randomly chosen and the data in each of these attributes is randomly shuffled. This shuffled data is then outputted to a new .csv with the same header as the first file.  
+\subsection{Set Up}
+
 % TODO insert issues with input files
 % TODO scrambling
 
