@@ -95,7 +95,6 @@ public class DataReader {
         // iterate through file line-by-line to populate examples array
         for (int i = 0; i < num_examples; i++){
             line = br.readLine();
-            br.readLine(); // Dummy read for buffered reader
             Example temp = new Example(line, num_attr);
             this.subsets[temp.getSubsetIndex()].addExample(temp);
         }

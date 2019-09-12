@@ -29,7 +29,7 @@ public class Example {
     Example(String line, int num_attr){
         // initialize size of attr array
         this.attr = new ArrayList<Integer>(num_attr);
-        
+
         // split the input line into a String array
         String[] data = line.split(",");
         
