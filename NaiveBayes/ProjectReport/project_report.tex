@@ -62,10 +62,9 @@ $$P(c|a_1, a_2, ..., a_d) = \frac{P(a_1, a_2, ..., a_d | c)P(c)}{P(a_1, a_2, ...
 
 \section{Experimental Design}
 
-\subsection{Set Up}
+\subsection{Pre-processing}
 
-% TODO insert issues with input files
-% TODO scrambling
+The pre-processing is done using the pandas library in Python. The class column is moved before all of the attributes for a consistent output between datasets. Next the examples are randomly shuffled. A new column is added after the class column and each example is assigned to one of 10 sets that are used in the 10 fold cross validation. If the data is continuous, it is discretized into 5 bins with each bin containing an equal number of examples. Non numerical data is changed to integers because the algorithm can only read integers, this includes the class names. Before output three lines of data are generated, the first line includes the number of classes, number of attributes and the number of examples. The second line includes the number of bins for each attribute. The third line include the class names so the algorithm can convert back from numerical class names to the original string names. After these lines are generated they are outputted to the first three lines of the .csv file and the pre-processed data is outputted starting on the fourth line. After this data is outputted ten percent of the attributes are randomly chosen and the data in each of these attributes is randomly shuffled. This shuffled data is then outputted to a new .csv with the same header as the first file.  
 
 \subsection{Tuning}
 
