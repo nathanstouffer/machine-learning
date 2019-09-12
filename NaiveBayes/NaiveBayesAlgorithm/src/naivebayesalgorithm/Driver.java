@@ -25,7 +25,7 @@ public class Driver {
         // Open the output file
         PrintWriter writer = new PrintWriter(OUTPUT_FILEPATH, "UTF-8");
         
-        writer.println(",Accuracy,MSE");
+        writer.println("Dataset,Accuracy,MSE");
         
         // Iterate through each data file
         for(int f = 0; f < datafiles.length; f++) {
