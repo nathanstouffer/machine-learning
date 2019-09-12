@@ -52,13 +52,19 @@ The hypothesis is that scrambling a given data set will not significantly change
 
 \section{Algorithm}
 
-\paragraph{Naive Bayes}Naive Bayes is a low cost classifying algorithm that utilizes a probabilistic model based in Bayesian Decision Theory \citep{nbPaper:2014}. Given an example $x \in X$ with attributes $a_1, a_2, ..., a_d$ and belonging to class $c \in C$, the algorithm will classify $x$ by choosing the maximum probability $P(c|a_1, a_2, ..., a_d)$ from all $c \in C$.
+Naive Bayes is a low cost classifying algorithm that utilizes a probabilistic model based in Bayesian Decision Theory \citep{nbPaper:2014}. Given an example $x \in X$ with attributes $a_1, a_2, ..., a_d$ and belonging to class $c \in C$, the algorithm will classify $x$ by choosing the maximum probability $P(c|a_1, a_2, ..., a_d)$ from all $c \in C$.
 
-\paragraph{Using the probability}Calculating this probability becomes more apparent when rewritten using Bayes Theorem:
-
+Calculating this probability becomes more apparent when rewritten using Bayes Theorem:
 $$P(c|a_1, a_2, ..., a_d) = \frac{P(a_1, a_2, ..., a_d | c)P(c)}{P(a_1, a_2, ..., a_d)} $$
 
-\paragraph{} Because the algorithm chooses a classification $c = argmax_{c \in C}P(c|a_1, a_2, ..., a_d)$, the classification is still equivalent to
+Because the algorithm chooses a classification $c = argmax_{c \in C}P(c|a_1, a_2, ..., a_d)$, the classification is equivalent to
+$$c = argmax_{c \in C}P(a_1, a_2, ..., a_d | c)P(c)$$
+
+Naive Bayes assumes all attributes $a \in A$ are conditionally independent given the class, simplifying the classification decision to 
+$$c = argmax_{c \in C}P(c)\sum_{i = 1}^{d}P(a_i | e)$$
+
+These probabilities are calculated when the algorithm is trained with a given set of examples $X_{test} \subset X$. During training, $P(c)$, is calculated for all classes by
+$$P(c) = \frac{|x \in c|}{|X_{test}|}$$ 
 
 \section{Experimental Design}
 
