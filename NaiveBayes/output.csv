@@ -1,0 +1,11 @@
+,Accuracy,MSE
+glass.csv,80.78%,2.9
+glass-scrambled.csv,78.03%,3.17
+iris.csv,92.67%,0.73
+iris-scrambled.csv,90.67%,1
+house-votes-84.csv,90.13%,6.1
+house-votes-84-scrambled.csv,89.9%,4.2
+soybean-small.csv,79.5%,0.9
+soybean-small-scrambled.csv,79.5%,0.9
+wdbc.csv,94.02%,4
+wdbc-scrambled.csv,93.85%,3.3
