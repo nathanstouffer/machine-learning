@@ -67,10 +67,9 @@ Set information is included in the first three lines of the processed data. The 
 
 \subsection{Tuning}
 
-There is only one parameter in need of tuning. It is the number of bins used when discretizing an attribute with continuous output. Tuning is done by changing the number of bins and then evaluating the loss functions for the different values.
-As seen in Table \ref{tab:metrics2}, for 2 bins, the Accuracy ranges from $69.11\%$ to $91.92\%$ and the Mean Squared Error ranges from $0.65$ to $7.8$. This range is decent but not ideal.
-In Table \ref{tab:metrics5}, where there are 5 bins, the accuracy ranges from $79.50\%$ to $94.02\%$ and the Mean Squared Error ranges from $0.73$ to $6.1$.
-
+The most pertinent parameter to tune is the number of bins used when discretizing an attribute with continuous output.
+Tuning is done by changing the number of bins and then evaluating the loss functions for the different values. \\\\
+As seen in Table \ref{tab:metrics2}, for 2 bins, the Accuracy ranges from $69.11\%$ to $91.92\%$ and the Mean Squared Error ranges from $0.65$ to $7.8$. This begins process of testing different numbers of bins to produce the best lost function.
 \begin{table}[h]
 	\centering
 	\caption{Loss Function Metrics for num\_bins = 2} \label{tab:metrics2}
@@ -83,8 +82,8 @@ In Table \ref{tab:metrics5}, where there are 5 bins, the accuracy ranges from $7
 		soybean-small            & 79\%     & 0.65 \\ \hline
 		wdbc                     & 91.92\%  & 7.4  \\ \hline
 	\end{tabular}
-\end{table}
-
+\end{table} \\\\
+In Table \ref{tab:metrics5}, where there are 5 bins, the Accuracy ranges from $79.50\%$ to $94.02\%$ and the Mean Squared Error ranges from $0.73$ to $6.1$.
 \begin{table}[h]
 	\centering
 	\caption{Loss Function Metrics for num\_bins = 5} \label{tab:metrics5}
@@ -97,9 +96,13 @@ In Table \ref{tab:metrics5}, where there are 5 bins, the accuracy ranges from $7
 		soybean-small            & 79.50\%  & 0.9  \\ \hline
 		wdbc                     & 94.02\%  & 4    \\ \hline
 	\end{tabular}
-\end{table}
-
-\begin{table}[]
+\end{table} \\\\
+With 5 bins, the minimum bound for accuracy increases by $10.49\%$ and the range of the Mean Squared Error slightly decreases.
+This means that 5 bins performs better than 2 bins. \\\\
+More testing shows that as the number of bins increases past 5, the performance of Naive Bayes stays consistent. The number of bins where the performance begins to drop is not known. \\\\
+However, viewing Table \ref{tab:metrics1000}, it is clear that 1000 bins does not produce a good model for all data sets.
+The Accuracy ranges from $5.13\%$ to $92.67$ and the Mean Squared Error ranges from $0.6$ to $1191.4$.
+\begin{table}[h]
 	\centering
 	\caption{Loss Function Metrics for num\_bins = 1000} \label{tab:metrics1000}
 	\begin{tabular}{|l|l|l|}
@@ -111,7 +114,8 @@ In Table \ref{tab:metrics5}, where there are 5 bins, the accuracy ranges from $7
 		soybean-small            & 83.50\%  & 0.6    \\ \hline
 		wdbc                     & 39.54\%  & 1191.4 \\ \hline
 	\end{tabular}
-\end{table}
+\end{table} \\\\
+Thus, the minimum number of bins required to produce a satisfactory model is 5.
 
 \section{Results}
 
