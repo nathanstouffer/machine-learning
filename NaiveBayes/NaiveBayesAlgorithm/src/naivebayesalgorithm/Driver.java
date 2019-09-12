@@ -17,9 +17,9 @@ public class Driver {
         
         // Make the list of data files we want to work with
         String[] datafiles = {"glass.csv", "iris.csv", "house-votes-84.csv", 
-            "soybean-small.csv", "wdbc.csv", "glassscrambled.csv", 
-            "irisscrambled.csv", "house-votes-84scrambled.csv",
-            "soybean-smallscrambled.csv", "wdbcscrambled.csv"};
+            "soybean-small.csv", "wdbc.csv", "glass-scrambled.csv", 
+            "iris-scrambled.csv", "house-votes-84-scrambled.csv",
+            "soybean-small-scrambled.csv", "wdbc-scrambled.csv"};
 
         // Open the output file
         PrintWriter writer = new PrintWriter(OUTPUT_FILEPATH, "UTF-8");

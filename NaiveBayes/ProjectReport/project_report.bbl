@@ -5,12 +5,9 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[Einstein(1905)]{einstein}
-Albert Einstein.
-\newblock {Zur Elektrodynamik bewegter K{\"o}rper}. ({German}) [{On} the
-  electrodynamics of moving bodies].
-\newblock \emph{Annalen der Physik}, 322\penalty0 (10):\penalty0 891--921,
-  1905.
-\newblock \doi{http://dx.doi.org/10.1002/andp.19053221004}.
+\bibitem[Dua and Graff(2017)]{Dua:2019}
+Dheeru Dua and Casey Graff.
+\newblock {UCI} machine learning repository, 2017.
+\newblock URL \url{http://archive.ics.uci.edu/ml}.
 
 \end{thebibliography}

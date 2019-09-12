@@ -37,20 +37,24 @@
 
 \section{Problem Statement}
 
-The problem that we must solve is a classification problem. Given an input file that contains examples (each example consists of a list of attributes and a classification), our task is to implement a learning algorithm that is trained to classify examples. The algorithm we will implement is called Naive Bayes. The learning algorithm will be tested using 10-fold cross validation and evaluating two metrics. Additionally, we will be testing how scrambling the values of different features will affect the performance of the learning algorithm.
+The problem that we must solve is a classification problem. Given an input file that contains examples (each example consists of a list of attributes and an associated classification), our task is to implement a learning algorithm that is trained to classify examples. The algorithm we will implement is called Naive Bayes. The performance of our learning algorithm will be evaluated by two metrics of our choosing and 10-fold cross validation.
+% TODO insert metrics that we chose
+When we have implemented the algorithm, we then perform our experiment. We are tasked with testing whether scrambling values in $10\%$ of the features will affect the performance of Naive Bayes. This effectively eliminates the usefulness of $10\%$ of features in a given data set.
 
 \subsection{Hypothesis}
+
+We predict that scrambling $10\%$ of features will marginally affect performance.
 
 \section{Algorithm}
 
 -It be what it do \newline
-
 
 \section{Experimental Design}
 
 \subsection{Set Up}
 
 % TODO insert issues with input files
+% TODO scrambling
 
 \subsection{Tuning}
 
@@ -62,6 +66,8 @@ Experimenting w/ using different attributes
 -Bin size \newline
 -Number of attributes used \newline
 -Which attributes used? \newline
+
+\section{Results}
 
 \section{Summary}
 
