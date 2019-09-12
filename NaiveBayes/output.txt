@@ -1,0 +1,40 @@
+--- Handling glass.csv data set ---
+Average accuracy for glass.csv was 80.78%
+Average MSE for glass.csv was 2.9
+----------------------------------------------
+--- Handling iris.csv data set ---
+Average accuracy for iris.csv was 92.67%
+Average MSE for iris.csv was 0.73
+----------------------------------------------
+--- Handling house-votes-84.csv data set ---
+Average accuracy for house-votes-84.csv was 90.13%
+Average MSE for house-votes-84.csv was 6.1
+----------------------------------------------
+--- Handling soybean-small.csv data set ---
+Average accuracy for soybean-small.csv was 79.5%
+Average MSE for soybean-small.csv was 0.9
+----------------------------------------------
+--- Handling wdbc.csv data set ---
+Average accuracy for wdbc.csv was 94.02%
+Average MSE for wdbc.csv was 4
+----------------------------------------------
+--- Handling glass-scrambled.csv data set ---
+Average accuracy for glass-scrambled.csv was 78.03%
+Average MSE for glass-scrambled.csv was 3.17
+----------------------------------------------
+--- Handling iris-scrambled.csv data set ---
+Average accuracy for iris-scrambled.csv was 90.67%
+Average MSE for iris-scrambled.csv was 1
+----------------------------------------------
+--- Handling house-votes-84-scrambled.csv data set ---
+Average accuracy for house-votes-84-scrambled.csv was 89.9%
+Average MSE for house-votes-84-scrambled.csv was 4.2
+----------------------------------------------
+--- Handling soybean-small-scrambled.csv data set ---
+Average accuracy for soybean-small-scrambled.csv was 79.5%
+Average MSE for soybean-small-scrambled.csv was 0.9
+----------------------------------------------
+--- Handling wdbc-scrambled.csv data set ---
+Average accuracy for wdbc-scrambled.csv was 93.85%
+Average MSE for wdbc-scrambled.csv was 3.3
+----------------------------------------------

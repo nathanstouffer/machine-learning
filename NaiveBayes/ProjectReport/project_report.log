@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6800 64-bit) (preloaded format=pdflatex 2018.8.31)  12 SEP 2019 08:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6800 64-bit) (preloaded format=pdflatex 2018.8.31)  12 SEP 2019 10:25
 entering extended mode
 **./project_report.tex
 (project_report.tex
@@ -277,23 +277,20 @@ LaTeX Info: Redefining \nameref on input line 13.
 \@outlinefile=\write3
 \openout3 = `project_report.out'.
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 42.
 
+Underfull \hbox (badness 10000) in paragraph at lines 38--40
+
+ []
+
+LaTeX Font Info:    Try loading font information for U+msa on input line 47.
 ("C:\Users\natha\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 42.
+LaTeX Font Info:    Try loading font information for U+msb on input line 47.
 ("C:\Users\natha\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 52--53
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 68--71
-
- []
+Underfull \vbox (badness 2221) has occurred while \output is active []
 
 
 Overfull \hbox (4.59187pt too wide) has occurred while \output is active
@@ -301,35 +298,48 @@ Overfull \hbox (4.59187pt too wide) has occurred while \output is active
  Submitted 9/19; Published DATE PUBLISHED
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 71.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 52.
 ("C:\Users\natha\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 71.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 52.
 
 [1{C:/Users/natha/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 ]
-(project_report.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 78.
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--74
+
+ []
+
+(project_report.bbl
+
+Package natbib Warning: Empty `thebibliography' environment on input line 8.
+
+)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 81.
  [2]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 78.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 81.
  (project_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 78.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 78.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 81.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 81.
 Package rerunfilecheck Info: File `project_report.out' has not changed.
-(rerunfilecheck)             Checksum: 8094282C072DB08D0C3DD76676968780;526.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 78.
+(rerunfilecheck)             Checksum: 53AA0BE98989C0A70A61661289EB0C0F;586.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 81.
  ) 
 Here is how much of TeX's memory you used:
- 5756 strings out of 492973
- 84713 string characters out of 3126692
- 172280 words of memory out of 3000000
- 9567 multiletter control sequences out of 15000+200000
- 11396 words of font info for 44 fonts, out of 3000000 for 9000
+ 5752 strings out of 492973
+ 84658 string characters out of 3126692
+ 173248 words of memory out of 3000000
+ 9564 multiletter control sequences out of 15000+200000
+ 11228 words of font info for 43 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,10n,29p,468b,391s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 39i,10n,29p,734b,391s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/natha/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb><C:/Users/natha/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmbx12.pfb><C:/Users/natha/AppData/Local/Programs/MiKTeX 2.9/f
@@ -338,11 +348,10 @@ s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/natha/AppData/L
 ocal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/nath
 a/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C
 :/Users/natha/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
-cmtt10.pfb><C:/Users/natha/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cm/cmtt8.pfb>
-Output written on project_report.pdf (2 pages, 121190 bytes).
+cmtt8.pfb>
+Output written on project_report.pdf (2 pages, 110793 bytes).
 PDF statistics:
- 99 PDF objects out of 1000 (max. 8388607)
+ 94 PDF objects out of 1000 (max. 8388607)
  15 named destinations out of 1000 (max. 500000)
- 81 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 89 words of extra memory for PDF output out of 10000 (max. 10000000)
 
