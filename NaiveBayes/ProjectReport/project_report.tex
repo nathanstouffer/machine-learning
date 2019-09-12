@@ -23,7 +23,11 @@ The paper is organized as follows. Section 2 goes over the problem we had to sol
 
 \section{Problem Statement}
 
-The problem is a classification problem. Given an input file that contains examples (each example consists of a list of attributes and an associated classification), the task is to implement a learning algorithm that is trained to classify examples.
+The problem is a classification problem.
+Given an input file that contains examples (each example consists of a list of attributes and an associated classification), the task is to implement a learning algorithm that is trained to classify examples.
+The algorithm is called Naive Bayes.
+The performance of the learning algorithm will be evaluated by two metrics and 10-fold cross validation.
+Specifically, the metrics are accuracy and mean squared error. 
 
 \subsection{Variables}
 
@@ -31,46 +35,94 @@ The independent variable is whether the data is scrambled or not. Scrambling is 
 
 \subsection{Hypothesis}
 
-The hypothesis is that scrambling a given data set will not significantly change the performance of the Naive Bayes Algorithm. In essence, scrambling renders $10\%$ of attributes useless. Any pattern that existed before scrambling is no longer discernible within those attributes. However, there remains $90\%$ of the data that persists with the original pattern. Naive Bayes chooses a classification based on the relative probability that a given example is in a class. The order of the relative probabilities will vary little even when the original pattern is lost in $10\%$ of the attributes, yielding similar performance.
+The hypothesis is that scrambling a given data set will not significantly change the performance of the Naive Bayes Algorithm. In essence, scrambling renders $10\%$ of attributes useless. Any pattern that existed before scrambling is no longer discernible within those attributes. However, there remains $90\%$ of the data that persists with the original pattern. Naive Bayes chooses a classification based on the relative probability that a given example is in a class. The order of the relative probabilities will stay constant even when the original pattern is lost in $10\%$ of the attributes.
 
-\section{Naive Bayes}
+\section{Algorithm}
 
 Naive Bayes is a low cost classifying algorithm that utilizes a probabilistic model based in Bayesian Decision Theory \citep{nbPaper:2014}. Given an example $x \in X$ with attributes $a_1, a_2, ..., a_d$ and belonging to class $c \in C$, the algorithm will classify $x$ by choosing the maximum probability $P(c|a_1, a_2, ..., a_d)$ from all $c \in C$.
-\\\\Calculating this probability becomes more apparent when rewritten using Bayes Theorem:
+
+Calculating this probability becomes more apparent when rewritten using Bayes Theorem:
 $$P(c|a_1, a_2, ..., a_d) = \frac{P(a_1, a_2, ..., a_d | c)P(c)}{P(a_1, a_2, ..., a_d)} $$
-\\\\Because the algorithm chooses a classification $c = argmax_{c \in C}P(c|a_1, a_2, ..., a_d)$, the classification is equivalent to
+
+Because the algorithm chooses a classification $c = argmax_{c \in C}P(c|a_1, a_2, ..., a_d)$, the classification is equivalent to
 $$c = argmax_{c \in C}P(a_1, a_2, ..., a_d | c)P(c)$$
-\\\\Naive Bayes assumes all attributes $a \in A$ are conditionally independent given the class, simplifying the classification decision to 
+
+Naive Bayes assumes all attributes $a \in A$ are conditionally independent given the class, simplifying the classification decision to 
 $$c = argmax_{c \in C}P(c)\sum_{i = 1}^{d}P(a_i | c)$$
-\\\\These probabilities are calculated when the algorithm is trained with a given set of examples $X_{test} \subset X$. During training, $P(c)$, is calculated for all classes by
+
+These probabilities are calculated when the algorithm is trained with a given set of examples $X_{test} \subset X$. During training, $P(c)$, is calculated for all classes by
 $$P(c) = \frac{|x \in c|}{|X_{test}|}$$
 and $P(a_i | c)$ is calculated with
 $$P(a_i | c) = \frac{|(x \in c) \cap (x_{a_i} = a_i)| + 1}{|x \in c| + d}$$
 where $d$ is the number of examples in the class. 
-\\\\Once the algorithm has been trained, all probabilities $P(c)$ and $P(a_i | c)$ have been calculated and stored for future reference. Classification of a new example will be selected quickly with little further computation.
+
+	Once the algorithm has been trained, all probabilities $P(c)$ and $P(a_i | c)$ have been calculated and stored for future reference. Classification of a new example will be selected quickly with little further computation.
 
 \section{Experimental Design}
 
 The implementation of Naive Bayes will be trained and tested using ten-fold cross validation. First, the original data sets will be used for the cross validation, then 10\% of their attributes are shuffled (to introduce noise) and put through cross validation. The performance of the learning algorithm will be evaluated by two loss function metrics, accuracy and mean squared error. 
-
-
+             a chosen number of                                                                                                                                                      for ease of use with the algorithm. The data sets used do not have any m   s   g va     , so                                                                    the processed data. T                                                                                                                                                                                     s                                                                                                                                           ,                                                                                                                                                               ,
 \subsection{Pre-processing}
 
-All pre-processing is done using the pandas library in Python. The class column is moved before all of the attributes for a consistent output between datasets. Next the examples are randomly shuffled. A new column is added after the class column and each example is assigned to one of 10 sets that are used in the 10 fold cross validation. If the data is continuous, it is discretized into a chosen number of bins with each bin containing an equal number of examples. Non numerical data is changed to integers for ease of use with the algorithm. The data sets used do not have any missing values, so the preprocessing did not need to handle this \citep{Dua:2019}.
-\\\\Set information is included in the first three lines of the processed data. The first line includes the number of classes, number of attributes and the number of examples. The second line includes the number of bins for each attribute. The third line includes the class names so the algorithm can convert back from numerical class names to the original string names. After these lines are generated, they are outputted to the first three lines of the .csv file and the pre-processed data is outputted starting on the fourth line. After this data is outputted, ten percent of the attributes are randomly chosen and the data in each of these attributes is randomly shuffled. This shuffled data is then outputted to a new .csv with the same header as the first file.  
+The pre-processing is done using the pandas library in Python. The class column is moved before all of the attributes for a consistent output between datasets. Next the examples are randomly shuffled. A new column is added after the class column and each example is assigned to one of 10 sets that are used in the 10 fold cross validation. If the data is continuous, it is discretized into 5 bins with each bin containing an equal number of examples. Non numerical data is changed to integers because the algorithm can only read integers, this includes the class names. Before output three lines of data are generated, the first line includes the number of classes, number of attributes and the number of examples. The second line includes the number of bins for each attribute. The third line include the class names so the algorithm can convert back from numerical class names to the original string names. After these lines are generated they are outputted to the first three lines of the .csv file and the pre-processed data is outputted starting on the fourth line. After this data is outputted ten percent of the attributes are randomly chosen and the data in each of these attributes is randomly shuffled. This shuffled data is then outputted to a new .csv with the same header as the first file.  
 
 \subsection{Tuning}
 
-Add stuff about bin size, what else? \newline
-Experimenting w/ using different attributes
+There is only one parameter in need of tuning. It is the number of bins used when discretizing an attribute with continuous output. Tuning is done by changing the number of bins and then evaluating the loss functions for the different values.
+As seen in Table \ref{tab:metrics2}, for 2 bins, the Accuracy ranges from $69.11\%$ to $91.92\%$ and the Mean Squared Error ranges from $0.65$ to $7.8$. This range is decent but not ideal.
+In Table \ref{tab:metrics5}, where there are 5 bins, the accuracy ranges from $79.50\%$ to $94.02\%$ and the Mean Squared Error ranges from $0.73$ to $6.1$.
+
+\begin{table}[h]
+	\centering
+	\caption{Loss Function Metrics for num\_bins = 2} \label{tab:metrics2}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Dataset                  & Accuracy & MSE  \\ \hline
+		glass                    & 69.11\%  & 5    \\ \hline
+		iris                     & 70.67\%  & 7.8  \\ \hline
+		house-votes-84           & 89.66\%  & 4.3  \\ \hline
+		soybean-small            & 79\%     & 0.65 \\ \hline
+		wdbc                     & 91.92\%  & 7.4  \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Loss Function Metrics for num\_bins = 5} \label{tab:metrics5}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Dataset                  & Accuracy & MSE  \\ \hline
+		glass                    & 80.78\%  & 2.9  \\ \hline
+		iris                     & 92.67\%  & 0.73 \\ \hline
+		house-votes-84           & 90.13\%  & 6.1  \\ \hline
+		soybean-small            & 79.50\%  & 0.9  \\ \hline
+		wdbc                     & 94.02\%  & 4    \\ \hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[]
+	\centering
+	\caption{Loss Function Metrics for num\_bins = 1000} \label{tab:metrics1000}
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Dataset                  & Accuracy & MSE    \\ \hline
+		glass                    & 5.13\%   & 80.67  \\ \hline
+		iris                     & 92.67\%  & 0.87   \\ \hline
+		house-votes-84           & 89.66\%  & 7.9    \\ \hline
+		soybean-small            & 83.50\%  & 0.6    \\ \hline
+		wdbc                     & 39.54\%  & 1191.4 \\ \hline
+	\end{tabular}
+\end{table}
+
+\subsection{Final Parameters}
 
 -Bin size \newline
 -Number of attributes used \newline
 -Which attributes used? \newline
 
+
+
 \section{Results}
-
-
 
 \begin{table}[h]
 	\centering
@@ -94,50 +146,5 @@ Experimenting w/ using different attributes
 \section{Summary}
 
 \bibliography{nbBib}
-
-% TODO insert these tables into Tuning
-
-
-\begin{table}[h]
-	\centering
-	\caption{Loss Function Metrics for bin\_size = 2} \label{tab:metrics2}
-	\begin{tabular}{|l|l|l|}
-		\hline
-		Dataset                  & Accuracy & MSE  \\ \hline
-		glass                    & 69.11\%  & 5    \\ \hline
-		iris                     & 70.67\%  & 7.8  \\ \hline
-		house-votes-84           & 89.66\%  & 4.3  \\ \hline
-		soybean-small            & 79\%     & 0.65 \\ \hline
-		wdbc                     & 91.92\%  & 7.4  \\ \hline
-	\end{tabular}
-\end{table}
-
-\begin{table}[h]
-	\centering
-	\caption{Loss Function Metrics for bin\_size = 5} \label{tab:metrics5}
-	\begin{tabular}{|l|l|l|}
-		\hline
-		Dataset                  & Accuracy & MSE  \\ \hline
-		glass                    & 80.78\%  & 2.9  \\ \hline
-		iris                     & 92.67\%  & 0.73 \\ \hline
-		house-votes-84           & 90.13\%  & 6.1  \\ \hline
-		soybean-small            & 79.50\%  & 0.9  \\ \hline
-		wdbc                     & 94.02\%  & 4    \\ \hline
-	\end{tabular}
-\end{table}
-
-\begin{table}[]
-	\centering
-	\caption{Loss Function Metrics for bin\_size = 1000} \label{tab:metrics1000}
-	\begin{tabular}{|l|l|l|}
-		\hline
-		Dataset                  & Accuracy & MSE    \\ \hline
-		glass                    & 5.13\%   & 80.67  \\ \hline
-		iris                     & 92.67\%  & 0.87   \\ \hline
-		house-votes-84           & 89.66\%  & 7.9    \\ \hline
-		soybean-small            & 83.50\%  & 0.6    \\ \hline
-		wdbc                     & 39.54\%  & 1191.4 \\ \hline
-	\end{tabular}
-\end{table}
 
 \end{document}
