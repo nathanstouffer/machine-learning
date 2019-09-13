@@ -139,7 +139,8 @@ The results support the hypothesis that scrambling a given data set will not sig
 		wdbc                     & 94.02\%  & 4    \\ \hline
 		wdbc-scrambled           & 93.85\%  & 3.3  \\ \hline
 	\end{tabular}
-\end{table}\\\\
+\end{table}
+
 Interestingly, the performance of Naive Bayes on the soybean-small data set did not change with scrambled data. This could mean that the scrambled attributes do not define each classification in the soybean-small data set.
 
 Naive Bayes tends to perform better on datasets that allowed them to have a larger training set. As a probabilistic model, this is expected because the probabilities will become more representative (statistically relevant) as more data points are fed to the model. The \emph{soybean-small} dataset is hard to build a sufficient model for because it is very small. Also note that as the number of attributes increase, the amount of data needed to train the algorithm effectively increases.
