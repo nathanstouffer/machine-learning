@@ -14,7 +14,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
- *
+ * Class to take in a file containing a dataset and
+ * store its values in memory.
+ * Specifically, each example in the file is stored 
+ * the appropriate Set (also based on the input file)
+ * 
+ * The input file is assumed to have an agreed upon format
+ * so that DataReader can work off a template
  * @author natha
  */
 public class DataReader {
@@ -53,6 +59,10 @@ public class DataReader {
         }
     }
     
+    /**
+     * method to read in each example in a dataset file
+     * @throws IOException 
+     */
     private void readFile() throws IOException {
         // construct file to be read
         //File file = new File("../../../../Preprocessing/DataFiles/" + file_name);
@@ -102,11 +112,12 @@ public class DataReader {
         br.close();
     }
     
-    // getter methods for relevant variables
-    public int getNumClasses(){ return this.data_summary[0]; }
-    public int getNumAttributes(){ return this.data_summary[1]; }
-    public int getNumExamples(){ return this.data_summary[2]; }
-    public int[] getNumBin(){ return this.num_bins; }
+    // private getter methods for relevant variables
+    private int getNumClasses(){ return this.data_summary[0]; }
+    private int getNumAttributes(){ return this.data_summary[1]; }
+    private int getNumExamples(){ return this.data_summary[2]; }
+    
+    // public getter methods
     public String[] getClassNames(){ return this.class_names; }
     public Set[] getSubsets(){ return this.subsets; }
     

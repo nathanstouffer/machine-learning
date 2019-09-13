@@ -9,7 +9,8 @@ package naivebayesalgorithm;
 import java.util.ArrayList;
 
 /**
- *
+ * Class that represents a set of examples from a dataset
+ * Set can be constructed with no values or from existing sets
  * @author natha
  */
 public class Set {
@@ -43,19 +44,6 @@ public class Set {
     }
     
     /**
-     * constructor to instantiate a Set out of just one subset
-     * @param subset 
-     */
-    Set(Set subset){
-        // initialize global variables
-        this.num_classes = subset.getNumClasses();
-        this.num_attributes = subset.getNumAttributes();
-        this.num_bins = subset.getNumBins();
-        this.class_names = subset.getClassNames();
-        this.examples = subset.getExamples();
-    }
-    
-    /**
      * constructor to instantiate a Set from an array of subsets
      * while excluding the subset at the index 'exclude'
      * @param subsets
@@ -69,9 +57,9 @@ public class Set {
         this.class_names = subsets[0].getClassNames();
         
         // ensure that the subset to be excluded is a valid subset
-        if (exclude >= 0 && exclude < 10){
+        if (exclude >= 0 && exclude < subsets.length){
             // iterate through subsets
-            for (int i = 0; i < 10; i++){
+            for (int i = 0; i < subsets.length; i++){
                 // add subset to set if subset should not be excluded
                 if (exclude != i){
                     // assign variable to current subset

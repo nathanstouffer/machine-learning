@@ -9,7 +9,9 @@ package naivebayesalgorithm;
 import java.util.ArrayList;
 
 /**
- *
+ * Class that represents one example in a dataset
+ * Each example has a class type, a subset that it belongs to,
+ * and a list of attributes
  * @author natha
  */
 public class Example {
