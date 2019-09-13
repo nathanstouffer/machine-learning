@@ -9,11 +9,11 @@
 		\name Kevin Browder \email browderkevin54@gmail.com \AND
 		\name Nathan Stouffer \email nathanstouffer1999@gmail.com \AND
 		\name Eric Kempf \email erickempf123@gmail.com }
-	
+
 \maketitle
 
 \begin{abstract}
-	The Naive Bayes classifier is a probabilistic model used for classification problems in machine learning. The ease of implementation of the algorithm and basis in Bayesian Decision Theory facilitates its popularity. This experiment shows that introducing noise by scrambling attributes does not significantly change the performance of the algorithm, demonstrating the surprising leniency of the algorithm. 
+	The Naive Bayes classifier is a probabilistic model used for classification problems in machine learning. The ease of implementation of the algorithm and basis in Bayesian Decision Theory facilitates its popularity. This experiment shows that introducing noise by scrambling attributes does not significantly change the performance of the algorithm, demonstrating the surprising leniency of the algorithm.
 \end{abstract}
 
 \section{Problem Statement}
@@ -38,7 +38,7 @@ $$P(c|a_1, a_2, ..., a_d) = \frac{P(a_1, a_2, ..., a_d | c)P(c)}{P(a_1, a_2, ...
 Because the algorithm chooses a classification $c = argmax_{c \in C}P(c|a_1, a_2, ..., a_d)$, the classification is equivalent to
 $$c = argmax_{c \in C}P(a_1, a_2, ..., a_d | c)P(c)$$
 
-Naive Bayes assumes all attributes $a \in A$ are conditionally independent given the class, simplifying the classification decision to 
+Naive Bayes assumes all attributes $a \in A$ are conditionally independent given the class, simplifying the classification decision to
 $$c = argmax_{c \in C}P(c)\prod_{i = 1}^{d}P(a_i | c)$$
 
 These probabilities are calculated when the algorithm is trained with a given set of examples $X_{test} \subset X$. During training, $P(c)$, is calculated for all classes by
@@ -51,14 +51,14 @@ Once the algorithm has been trained, all probabilities $P(c)$ and $P(a_i | c)$ h
 
 \section{Experimental Design}
 
-The implementation of Naive Bayes will be trained and tested using ten-fold cross validation. First, the original data sets will be used for the cross validation, then 10\% of their attributes are shuffled (to introduce noise) and used for another cross validation. The performance of the learning algorithm will be evaluated by two loss function metrics, accuracy and mean squared error. 
+The implementation of Naive Bayes will be trained and tested using ten-fold cross validation. First, the original data sets will be used for the cross validation, then 10\% of their attributes are shuffled (to introduce noise) and used for another cross validation. The performance of the learning algorithm will be evaluated by two loss function metrics, accuracy and mean squared error.
 
 
 \subsection{Pre-processing}
 
 All pre-processing is done using the pandas library in Python. The class column is moved before all of the attributes for a consistent output between datasets. Next the examples are randomly shuffled. A new column is added after the class column and each example is assigned to one of 10 sets that are used in the 10 fold cross validation. If the data is continuous, it is discretized into a chosen number of bins with each bin containing an equal number of examples. Non numerical data is changed to integers for ease of use with the algorithm. The data sets used do not have any missing values, so the preprocessing did not need to handle this \citep{datasets}.
 
-Set information is included in the first three lines of the processed data. The first line includes the number of classes, number of attributes and the number of examples. The second line includes the number of bins for each attribute. The third line includes the class names so the algorithm can convert back from numerical class names to the original string names. After these lines are generated, they are outputted to the first three lines of the .csv file and the pre-processed data is outputted starting on the fourth line. After this data is outputted, ten percent of the attributes are randomly chosen and the data in each of these attributes is randomly shuffled. This shuffled data is then outputted to a new .csv with the same header as the first file.  
+Set information is included in the first three lines of the processed data. The first line includes the number of classes, number of attributes and the number of examples. The second line includes the number of bins for each attribute. The third line includes the class names so the algorithm can convert back from numerical class names to the original string names. After these lines are generated, they are outputted to the first three lines of the .csv file and the pre-processed data is outputted starting on the fourth line. After this data is outputted, ten percent of the attributes are randomly chosen and the data in each of these attributes is randomly shuffled. This shuffled data is then outputted to a new .csv with the same header as the first file.
 
 \subsection{Tuning}
 
@@ -139,7 +139,8 @@ The results support the hypothesis that scrambling a given data set will not sig
 		wdbc                     & 94.02\%  & 4    \\ \hline
 		wdbc-scrambled           & 93.85\%  & 3.3  \\ \hline
 	\end{tabular}
-\end{table}
+\end{table}\\\\
+Interestingly, the performance of Naive Bayes on the soybean-small data set did not change with scrambled data. This could mean that the scrambled attributes do not define each classification in the soybean-small data set.
 
 Naive Bayes tends to perform better on datasets that allowed them to have a larger training set. As a probabilistic model, this is expected because the probabilities will become more representative (statistically relevant) as more data points are fed to the model. The \emph{soybean-small} dataset is hard to build a sufficient model for because it is very small. Also note that as the number of attributes increase, the amount of data needed to train the algorithm effectively increases.
 
@@ -147,7 +148,7 @@ Of particular note is the effect of scrambling 10\% of the attributes in the dat
 
 \section{Summary}
 
-For its relative cost and simplicity, Naive Bayes is a powerful model for classification. A surprising level of performance was noted given the small size of the data sets used. Although considered a more primitive algorithm, Naive Bayes may be further enhanced with appropriate smoothing techniques and tuning parameters. Knowing the characteristics of the data sets, including the level of attribute conditional independence and relevance, allows for further optimization. 
+For its relative cost and simplicity, Naive Bayes is a powerful model for classification. A surprising level of performance was noted given the small size of the data sets used. Although considered a more primitive algorithm, Naive Bayes may be further enhanced with appropriate smoothing techniques and tuning parameters. Knowing the characteristics of the data sets, including the level of attribute conditional independence and relevance, allows for further optimization.
 
 Drawbacks of Naive Bayes include the costliness of optimizing tuning parameters such as discrete bin size and attribute weights (if implemented). The model must be trained and tested in order to compare these parameters. Additionally, the algorithm is only designed to represent examples with conditionally independent attributes, which requires careful planning when deciding included attributes.
 
