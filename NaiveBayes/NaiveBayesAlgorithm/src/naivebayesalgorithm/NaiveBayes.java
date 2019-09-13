@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- *
+ * Class to perform Naive Bayes on a given data set
+ * 
+ * After constructing a NaiveBayes object, clients
+ * must use the train(Set training_set) method
+ * to train the algorithm. A client then can test
+ * the learner using the test(Set test_set) method
+ * 
  * @author andy-
  */
 public class NaiveBayes {

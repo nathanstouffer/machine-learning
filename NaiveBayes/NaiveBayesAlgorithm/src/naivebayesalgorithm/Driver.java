@@ -6,7 +6,12 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 
 /**
- *
+ * Class to perform the Naive Bayes algorithm
+ * 
+ * This class contains the main method and will
+ * perform Naive Bayes on different data sets
+ * and output the results into a file
+ * 
  * @author natha
  */
 public class Driver {

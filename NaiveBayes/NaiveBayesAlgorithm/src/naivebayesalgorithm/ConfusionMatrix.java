@@ -3,7 +3,11 @@ package naivebayesalgorithm;
 import java.util.ArrayList;
 
 /**
- *
+ * Class to create and store a Confusion Matrix for analysis purposes
+ * The object will store a confusion matrix and a client will be able
+ * to access the accuracy and mean squared error for the sent into the
+ * constructor
+ * 
  * @author andy-
  */
 public class ConfusionMatrix {
