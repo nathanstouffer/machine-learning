@@ -32,7 +32,7 @@ class data:
         #iterators for assigning sets
         a = 0
         i = 0
-        df = pd.read_csv('..\\DataFiles\\' + filename + '.data', header = None)
+        df = pd.read_csv('..\\OrigDataFiles\\' + filename + '.data', header = None)
         #create list of iterating values from 0-9 distrubeted equally across rows
         while(i < len(df)):
             sets.append(a)
@@ -83,7 +83,7 @@ class data:
     #export original processed data to .csv file
     def exportOriginal(self):
         #outputting to .csv
-        with open('Datafiles\\' + name + '.csv', 'w') as fp:
+        with open('ProcessedDataFiles\\' + name + '.csv', 'w') as fp:
             fp.write(header)
             fp.write((df.to_csv(index=False, header = False)))
     #export processed data with 10% of the attributes scrambled
@@ -101,7 +101,7 @@ class data:
         for column in columnscramble:
             df[column] = df[column].sample(frac=1).reset_index(drop=True)
         #outputting to .csv
-        with open('Datafiles\\' + name + '-scrambled.csv', 'w') as fp:
+        with open('ProcessedDataFiles\\' + name + '-scrambled.csv', 'w') as fp:
             fp.write(header)
             fp.write((df.to_csv(index=False, header = False)))
             
