@@ -1,4 +1,4 @@
-package naivebayesalgorithm;
+package nearestneighboralgorithm;
 
 import java.util.ArrayList;
 
