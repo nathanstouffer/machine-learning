@@ -46,6 +46,8 @@ public class Example {
     // getter methods
     public int getClassType(){ return this.class_type; }
     public int getSubsetIndex(){ return this.subset_index; }
-    public ArrayList<Integer> getAttributes(){ return this.attr; }
+    // method to return a clone of the attributes
+    // a client of an Example object should only be able to view the information, not edit
+    public ArrayList<Integer> getAttributes(){ return (ArrayList<Integer>)this.attr.clone(); }
     
 }
