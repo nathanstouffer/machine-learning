@@ -31,26 +31,49 @@ public class ConfusionMatrix {
         // Initialize the matrix with all 0s
         matrix = new int[test_set.getNumClasses()][test_set.getNumClasses()];
         
+        // populate confusion matrix with totals
+        int i = 0;
+        for (Example ex: test_set){ matrix[predictions[i++]][ex.getClassType()]++; }
+        
+        // outdated code since implementing Interable interface in Set class
+        /*
         ArrayList<Example> examples = test_set.getExamples();
         // Populate the confusion matrix with totals
         for(int i = 0; i < examples.size(); i++) {
             matrix[predictions[i]][examples.get(i).getClassType()]++;
         }
+        */
         
         //---------------------------------------------------------------
         //Calculate the mean squared error
         //Start by adding up the class predictions and the actual classes
         int[] actual_class_totals = new int[test_set.getNumClasses()];
         int[] pred_class_totals = new int[test_set.getNumClasses()];
+        i = 0;
+        for (Example ex: test_set){
+            actual_class_totals[ex.getClassType()]++;
+            pred_class_totals[predictions[i++]]++;
+        }
+        // outdated code since implementing Iterable interface in Set class
+        /*
         for(int i = 0; i < examples.size(); i++) {
             actual_class_totals[examples.get(i).getClassType()]++;
             pred_class_totals[predictions[i]]++;
         }
+        */
         //Find the difference
         double distances_sum = 0;
+        i = 0;
+        for (Example ex: test_set){
+            distances_sum += Math.pow((pred_class_totals[i] - actual_class_totals[i]), 2);
+            i++;
+        }
+        // outdated code since implementing Iterable interface in Set class
+        /*
         for(int i = 0; i < actual_class_totals.length; i++) {
             distances_sum += Math.pow((pred_class_totals[i] - actual_class_totals[i]), 2);
         }
+        */
         //Take the average
         mse = distances_sum / test_set.getNumClasses();
         

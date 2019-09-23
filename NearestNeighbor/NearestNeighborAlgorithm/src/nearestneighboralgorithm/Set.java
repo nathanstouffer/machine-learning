@@ -6,6 +6,7 @@
 package nearestneighboralgorithm;
 
 // import libraries
+import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * Set can be constructed with no values or from existing sets
  * @author natha
  */
-public class Set {
+public class Set implements Iterable<Example> {
     
     // global variables to store set variables
     private final int num_classes;
@@ -64,17 +65,23 @@ public class Set {
                 if (exclude != i){
                     // assign variable to current subset
                     Set curr = subsets[i];
-                    int curr_num_examples = curr.getNumExamples();
+                    
+                    // iterate through examples in a subset and add examples to the set
+                    for (Example ex: curr){ this.addExample(ex); }
+                    
+                    // outdated code before iterable interface
+                    /*int curr_num_examples = curr.getNumExamples();
                     
                     // iterate through examples in a subset and add examples to the set
                     ArrayList<Example> to_add = curr.getExamples();
                     for (int j = 0; j < curr_num_examples; j++){
                         this.addExample(to_add.get(j));
-                    }
+                    } 
+                    */
                 }
             }
         }
-        else{ System.out.println("exclude parameter must be 0 <= exclude < 10"); }
+        else{ System.out.println(String.format("exclude argument must be 0 <= exclude < %d", subsets.length)); }
     }
     
     /**
@@ -83,11 +90,21 @@ public class Set {
      */
     public void addExample(Example ex){ this.examples.add(ex); }
     
+    /**
+     * method to return an iterator over the examples in the Set
+     * @return 
+     */
+    @Override
+    public Iterator<Example> iterator() { return examples.iterator(); }
+    
     // getter methods
     public int getNumClasses(){ return this.num_classes; }
     public int getNumAttributes(){ return this.num_attributes; }
     public int getNumExamples(){ return this.examples.size(); }
     public int[] getNumBins(){ return this.num_bins; }
     public String[] getClassNames(){ return this.class_names; }
-    public ArrayList<Example> getExamples(){ return this.examples; }
+    // outdated getter method to return examples
+    // we now use iterator interface
+    // public ArrayList<Example> getExamples(){ return this.examples; }
+
 }
