@@ -11,6 +11,6 @@ package nearestneighboralgorithm;
  */
 public interface IMetric {
     
-    public double computeDist(Example ex1, Example ex2);
-    
+    public double dist(Example ex1, Example ex2);
+
 }

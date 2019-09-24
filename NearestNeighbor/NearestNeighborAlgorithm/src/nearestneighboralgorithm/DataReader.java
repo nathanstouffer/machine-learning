@@ -81,14 +81,13 @@ public class DataReader {
         int num_attr = getNumAttributes();
         int num_examples = getNumExamples();
         
+        // code to deal with bins, which is not used in the Nearest Neighbor Project
         // initialize num_bins array to correct size
         this.num_bins = new int[num_attr];
         
         // populate global array num_bins with appropriate values
         line = br.readLine();
         split_line = line.split(",");
-        for (int i = 0; i < num_attr; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
-
         for (int i = 0; i < num_attr; i++){ this.num_bins[i] = Integer.parseInt(split_line[i + 2]); }
         
         // initialize class_names array to correct size
@@ -100,7 +99,7 @@ public class DataReader {
         for (int i = 0; i < num_classes; i++){ this.class_names[i] = split_line[i]; }
         
         // initialize each value in the subsets array
-        for (int i = 0; i < this.num_subset; i ++){ this.subsets[i] = new Set(num_classes, num_attr, this.num_bins, this.class_names); }
+        for (int i = 0; i < this.num_subset; i++){ this.subsets[i] = new Set(num_classes, num_attr, this.num_bins, this.class_names); }
         
         // iterate through file line-by-line to populate examples array
         for (int i = 0; i < num_examples; i++){
