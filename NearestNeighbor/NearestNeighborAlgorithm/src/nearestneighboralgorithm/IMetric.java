@@ -10,7 +10,7 @@ package nearestneighboralgorithm;
  * @author natha
  */
 public interface IMetric {
-    
+
     public double dist(Example ex1, Example ex2);
 
 }
