@@ -11,7 +11,7 @@ package nearestneighboralgorithm;
  */
 public class KNNClassifier implements IKNearestNeighbor {
 
-    private IMetric dist_metric; // The metric that will be used to measure
+    private IDistMetric dist_metric; // The metric that will be used to measure
                                  // distance between examples
     
     private Set model; // The set of examples that the K-NN will come from
@@ -27,7 +27,7 @@ public class KNNClassifier implements IKNearestNeighbor {
     }
     
     @Override
-    public void setDistMetric(IMetric metric) {
+    public void setDistMetric(IDistMetric metric) {
         dist_metric = metric;
     }
 

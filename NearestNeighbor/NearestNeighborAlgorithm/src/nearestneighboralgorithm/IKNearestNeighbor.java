@@ -8,7 +8,7 @@ package nearestneighboralgorithm;
  */
 public interface IKNearestNeighbor {
     
-    public void setDistMetric(IMetric metric);
+    public void setDistMetric(IDistMetric metric);
     
     public void train(Set training_set);
     

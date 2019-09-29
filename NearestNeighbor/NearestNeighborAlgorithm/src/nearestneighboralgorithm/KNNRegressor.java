@@ -7,7 +7,7 @@ package nearestneighboralgorithm;
 public class KNNRegressor implements IKNearestNeighbor {
 
     @Override
-    public void setDistMetric(IMetric metric) {
+    public void setDistMetric(IDistMetric metric) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
