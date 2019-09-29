@@ -91,6 +91,18 @@ public class Set implements Iterable<Example> {
     public void addExample(Example ex){ this.examples.add(ex); }
     
     /**
+     * overloaded method to delete an example in a set
+     * @param index 
+     */
+    public void delExample(int index){ this.examples.remove(index); }
+    
+    /**
+     * overloaded method to delete an example in a set
+     * @param ex 
+     */
+    public void delExample(Example ex){ this.examples.remove(ex); }
+    
+    /**
      * method to return an iterator over the examples in the Set
      * @return 
      */
