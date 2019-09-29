@@ -10,6 +10,7 @@ package nearestneighboralgorithm;
  * method called dist. This method should compute a distance
  * between two elements of a data set using a type of
  * distance metric specified by the realizing class
+ * 
  * @author natha
  */
 public interface IDistMetric {
