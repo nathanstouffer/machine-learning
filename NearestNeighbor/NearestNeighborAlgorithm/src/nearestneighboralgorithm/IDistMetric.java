@@ -6,10 +6,13 @@
 package nearestneighboralgorithm;
 
 /**
- *
+ * Interface that requires realizing classes to provide a 
+ * method called dist. This method should compute a distance
+ * between two elements of a data set using a type of
+ * distance metric specified by the realizing class
  * @author natha
  */
-public interface IMetric {
+public interface IDistMetric {
 
     public double dist(Example ex1, Example ex2);
 

@@ -21,7 +21,7 @@ public class Example {
     // global variable to store which subset an example belongs to
     private final int subset_index;
     // global array to store values of each attribute for the example
-    private ArrayList<Integer> attr;
+    private ArrayList<Double> attr;
     
     /**
      * Constructor to populate global variables
@@ -30,7 +30,7 @@ public class Example {
      */
     Example(String line, int num_attr){
         // initialize size of attr array
-        this.attr = new ArrayList<Integer>(num_attr);
+        this.attr = new ArrayList<Double>(num_attr);
 
         // split the input line into a String array
         String[] data = line.split(",");
@@ -40,7 +40,7 @@ public class Example {
         this.subset_index = Integer.parseInt(data[1]);
         
         // populate attr ArrayList with attribute values
-        for (int i = 0; i < num_attr; i++){ this.attr.add(Integer.parseInt(data[i+2])); }
+        for (int i = 0; i < num_attr; i++){ this.attr.add(Double.parseDouble(data[i+2])); }
     }
     
     // getter methods
@@ -48,6 +48,6 @@ public class Example {
     public int getSubsetIndex(){ return this.subset_index; }
     // method to return a clone of the attributes
     // a client of an Example object should only be able to view the information, not edit
-    public ArrayList<Integer> getAttributes(){ return (ArrayList<Integer>)this.attr.clone(); }
+    public ArrayList<Double> getAttributes(){ return (ArrayList<Double>)this.attr.clone(); }
     
 }
