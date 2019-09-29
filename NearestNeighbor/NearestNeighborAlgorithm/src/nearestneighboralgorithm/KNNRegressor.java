@@ -20,5 +20,10 @@ public class KNNRegressor implements IKNearestNeighbor {
     public double[] test(Set testing_set) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void setK(int new_k) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
