@@ -39,7 +39,8 @@ public class Edited implements IDataReducer {
     Edited(int k, IDistMetric metric, Set validation_set){
         this.k = k;
         this.metric = metric;
-        learner = new KNNClassifier(k);
+        learner = new KNNClassifier();
+        learner.setK(k);
         learner.setDistMetric(metric);
         
         this.validation_set = validation_set;
