@@ -37,8 +37,10 @@ public class DataReader {
     private String[] class_names;
     // variable to store number of subsets
     private int num_subset = 10;
-    // array to store the subsets
+    // array to store the subsets used in 10-fold cross validation
     private Set[] subsets = new Set[num_subset];
+    // Set class to store the validation set
+    private Set validation_set;
 
     /**
      * Constructor to take input from file file_name
@@ -112,5 +114,6 @@ public class DataReader {
     // public getter methods
     public String[] getClassNames(){ return this.class_names; }
     public Set[] getSubsets(){ return this.subsets; }
+    public Set getValidationSet(){ return this.validation_set; }
     
 }
