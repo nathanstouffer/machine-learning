@@ -81,7 +81,7 @@ public class KNNClassifier implements IKNearestNeighbor {
      * @param example The example to classify.
      * @return double The predicted class that the example belongs to.
      */
-    private double classify(Example example) {
+    public double classify(Example example) {
         // Initialize two arrays to track the nearest neighbors. Only the class
         // and distance of the k-nn are necessary to hold on to.
         double[] nn_classes = new double[k];
