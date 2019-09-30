@@ -19,7 +19,7 @@ public class EuclideanSquared implements IDistMetric {
     /**
      * empty constructor
      */
-    EuclideanSquared(){}
+    public EuclideanSquared(){}
     
     /**
      * method to compute the squared distance between two points
