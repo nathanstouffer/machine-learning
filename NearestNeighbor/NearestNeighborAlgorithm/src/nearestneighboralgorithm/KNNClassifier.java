@@ -9,12 +9,13 @@ import java.util.Iterator;
  * 
  * The K-NN classifier is a K-Nearest Neighbor algorithm implementation that
  * works with classification data sets.
- * Given a set of examples as a model, any new examples will be classified 
+ * Given a set of examples, any new examples will be classified by a popular 
+ * vote amongst its k nearest neighbors.
  */
 public class KNNClassifier implements IKNearestNeighbor {
 
     private IDistMetric dist_metric; // The metric that will be used to measure
-                                 // distance between examples
+                                     // distance between examples
     
     private Set neighbors; // The set of examples that the K-NN will come from
     
@@ -112,9 +113,11 @@ public class KNNClassifier implements IKNearestNeighbor {
         // Now that the k-nn have been found, find the most frequent class
         // among them.
         int num_classes = neighbors.getNumClasses();
-        int[] class_freq = new int[num_classes]; // Create a histogram for each class
+        int[] class_freq = new int[num_classes]; // Create a histogram with each class
         for(int i = 0; i < k; i++) { // Populate the histogram
-            class_freq[(int)nn_classes[i]]++;
+            if(nn_classes[i] != -1) { // Make sure there were an appropriate # of nn
+                class_freq[(int)nn_classes[i]]++;
+            }
         }
         int classification = 0;
         for(int i = 0; i < num_classes; i++) { // Find the most frequent in the histogram
