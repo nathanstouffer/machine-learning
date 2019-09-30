@@ -103,7 +103,7 @@ public class KNNClassifier implements IKNearestNeighbor {
             for(int i = 0; i < k; i++) {
                 if(dist < nn_distances[i]) {
                     // If closer, then overwrite the k-nn
-                    nn_classes[i] = neighbor.getValue();            //THIS (.getClassType()  SHOULD BE MODIFIED IN THE FUTURE SO IT SUPPORTS DOUBLE VALUESSSSSSSS
+                    nn_classes[i] = neighbor.getValue();
                     nn_distances[i] = dist;
                     break; // Exit for-loop
                 } //Otherwise, check next k-nn
