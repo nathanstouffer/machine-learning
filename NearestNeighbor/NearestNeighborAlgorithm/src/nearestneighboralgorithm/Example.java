@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Example {
     
     // global variable to store the type of class an example is in
-    private final int value;
+    private final double value;
     // global variable to store which subset an example belongs to
     private final int subset_index;
     // global array to store values of each attribute for the example
@@ -44,7 +44,7 @@ public class Example {
     }
     
     // getter methods
-    public int getValue(){ return this.value; }
+    public double getValue(){ return this.value; }
     public int getSubsetIndex(){ return this.subset_index; }
     // method to return a clone of the attributes
     // a client of an Example object should only be able to view the information, not edit
