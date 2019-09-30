@@ -55,12 +55,12 @@ public class Edited implements IDataReducer {
      * @param orig
      * @return 
      */
-    public Set reduce(Set porig){
+    public Set reduce(Set orig){
         // clone porig
-        Set orig = porig.clone();
+        Set clone = orig.clone();
         
-        // train learner with orig
-        learner.train(orig);
+        // train learner with clone
+        learner.train(clone);
         
         boolean edit = true;
         do {
@@ -68,10 +68,10 @@ public class Edited implements IDataReducer {
             double orig_acc = computeAccuracy();
             
             // get misclassifed examples in the data set
-            ArrayList<Example> misclassified = findMisclassified(orig);
+            ArrayList<Example> misclassified = findMisclassified(clone);
             
             // delete missclassified examples from orig
-            for (Example ex: misclassified){ orig.delExample(ex); }
+            for (Example ex: misclassified){ clone.delExample(ex); }
             
             // learner accesses orig in memory
             // so the data in learner has been edited
@@ -83,7 +83,7 @@ public class Edited implements IDataReducer {
             if (edited_acc < orig_acc){ edit = false; }
         } while (edit);
         
-        return orig;
+        return clone;
     }
     
     /**
