@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Set can be constructed with no values or from existing sets
  * @author natha
  */
-public class Set implements Iterable<Example> {
+public class Set implements Iterable<Example>, Cloneable {
     
     // global variables to store set variables
     private final int num_classes;
@@ -82,6 +82,21 @@ public class Set implements Iterable<Example> {
             }
         }
         else{ System.out.println(String.format("exclude argument must be 0 <= exclude < %d", subsets.length)); }
+    }
+    
+    /**
+     * method to return a clone of the object this method is called from
+     * @param orig
+     * @return 
+     */
+    public Set clone(){
+        // initialize new Set object
+        Set clone = new Set(this.num_classes, this.num_attributes, this.num_bins, this.class_names);
+        
+        // add each example in this to clone
+        for (Example ex: examples){ clone.addExample(ex); }
+        
+        return clone;
     }
     
     /**

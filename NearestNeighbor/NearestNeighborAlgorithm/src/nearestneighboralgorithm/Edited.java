@@ -5,6 +5,8 @@
  */
 package nearestneighboralgorithm;
 
+import java.util.ArrayList;
+
 /**
  * class to reduce the size of a data set for the use of 
  * a Nearest Neighbor algorithm.
@@ -22,6 +24,8 @@ public class Edited implements IDataReducer {
     private int k;
     // metric that the reduciing algorithm should use
     private IDistMetric metric;
+    // learner used for reducing puruposes
+    private KNNClassifier learner;
     // set that exists for validation purposes to test
     // whether the reducing algorithm should be terminated
     private Set validation_set;    
@@ -35,36 +39,82 @@ public class Edited implements IDataReducer {
     Edited(int k, IDistMetric metric, Set validation_set){
         this.k = k;
         this.metric = metric;
+        learner = new KNNClassifier(k);
+        learner.setDistMetric(metric);
+        
         this.validation_set = validation_set;
     }
     
     /**
-     * method to recursively reduce the size of a set for
-     * the use of k-nearest neighbors as long as performance
-     * does not degrade. This will be determined using
+     * method to reduce the size of a set for the use of k-nearest
+     * neighbors as long as performance does not degrade.
+     * This will be determined using
      * the accuracy metric since Edited Nearest Neighbors is
      * used only on classification problems
      * @param orig
      * @return 
      */
-    public Set reduce(Set orig){
-        // assume that 
+    public Set reduce(Set porig){
+        // clone porig
+        Set orig = porig.clone();
+        
+        // train learner with orig
+        learner.train(orig);
+        
+        boolean edit = true;
+        do {
+            // compute accuracy for the original learner using validation_set
+            double orig_acc = computeAccuracy();
+            
+            // get misclassifed examples in the data set
+            ArrayList<Example> misclassified = findMisclassified(orig);
+            
+            // delete missclassified examples from orig
+            for (Example ex: misclassified){ orig.delExample(ex); }
+            
+            // learner accesses orig in memory
+            // so the data in learner has been edited
+            
+            // compute accuracy for edited learner using validation_set
+            double edited_acc = computeAccuracy();
+            
+            // stop editing set when performance degrades
+            if (edited_acc < orig_acc){ edit = false; }
+        } while (edit);
+        
+        return orig;
     }
     
-    private Set reduce_rec(Set orig, double orig_accuracy){
-        // initialize a learner with the original set
-        Classifier orig_learner = new Classifier(this.k, orig, this.metric); // TODO: edit meet Andy's constructor
+    /**
+     * method to compute the accuracy of a learner using the
+     * global variable validation_set
+     * @param learner
+     * @return 
+     */
+    private double computeAccuracy(){
+        double [] pred = learner.test(validation_set);
         
-        // using orig_learner, classify all points in orig
+        // TODO: fix once EvaluateExperiment exists
+        return 0.0;
+    }
+    
+    /**
+     * method to find the misclassified examples using k-NN
+     * @param orig
+     * @return 
+     */
+    private ArrayList<Example> findMisclassified(Set orig){
+        ArrayList<Example> misclassified = new ArrayList<Example>();
+        // using learner, classify all points in orig
         for (Example ex: orig){
-            // remove point if missclassified
+            double real = ex.getValue();
+            double pred = learner.classify(ex);
+
+            // if incorrect classification, add ex to misclassified ArrayList
+            if (pred != real){ misclassified.add(ex); }
         }
         
-        // initialize a new learner
-        
-        // evaluate both learners with validation set
-        
-        // compare accuracies and act accordingly
+        return misclassified;
     }
     
 }
