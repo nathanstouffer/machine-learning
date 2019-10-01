@@ -26,7 +26,6 @@ public class Set implements Iterable<Example>, Cloneable {
      * constructor to instantiate an empty set object
      * @param num_classes
      * @param num_attributes
-     * @param num_bins
      * @param class_names 
      */
     Set(int num_attributes, int num_classes, String[] class_names){
@@ -37,11 +36,14 @@ public class Set implements Iterable<Example>, Cloneable {
     
     /**
      * constructor to instantiate a Set from an array of subsets
-     * while excluding the subset at the index 'exclude'
+     * while excluding the subset at the index 'exclude'.
+     * if validation_set is passed as true, the constructor assumes
+     * that the 0th element in subsets will be used as the validation set
      * @param subsets
      * @param exclude 
+     * @param validation_set
      */
-    Set(Set[] subsets, int exclude){
+    Set(Set[] subsets, int exclude, boolean validation_set){
         // initialize global final variables
         this.num_attributes = subsets[0].getNumAttributes();
         this.num_classes = subsets[0].getNumClasses();
@@ -49,11 +51,16 @@ public class Set implements Iterable<Example>, Cloneable {
         
         // ensure that the subset to be excluded is a valid subset
         if (exclude >= 0 && exclude < subsets.length){
+            // i represents the index in subsets
+            // begin at the 0th element in subsets
+            int i = 0;
+            // ignore the 0th element in subsets if a validation set is needed
+            if (validation_set){ i = 1; }
             // iterate through subsets
-            for (int i = 0; i < subsets.length; i++){
+            for (i = 0; i < subsets.length; i++){
                 // add subset to set if subset should not be excluded
                 if (exclude != i){
-                    // assign variable to current subset
+                    // assign curr to current subset
                     Set curr = subsets[i];
                     
                     // iterate through examples in a subset and add examples to the set
