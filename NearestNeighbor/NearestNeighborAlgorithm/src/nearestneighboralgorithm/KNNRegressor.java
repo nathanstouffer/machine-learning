@@ -97,7 +97,7 @@ public class KNNRegressor implements IKNearestNeighbor {
             for(int i = 0; i < k; i++) {
                 if(dist < nn_distances[i]) {
                     // If closer, then overwrite the k-nn
-                    nn_values[i] = neighbor.getClassType();            //THIS (.getClassType()  SHOULD BE MODIFIED IN THE FUTURE SO IT SUPPORTS DOUBLE VALUESSSSSSSS
+                    nn_values[i] = neighbor.getValue();
                     nn_distances[i] = dist;
                     break; // Exit for-loop
                 } //Otherwise, check next k-nn

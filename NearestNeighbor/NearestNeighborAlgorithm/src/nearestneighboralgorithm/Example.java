@@ -36,7 +36,7 @@ public class Example {
         String[] data = line.split(",");
         
         // populate class type and subset_index;
-        this.value = Integer.parseInt(data[0]);
+        this.value = Double.parseDouble(data[0]);
         this.subset_index = Integer.parseInt(data[1]);
         
         // populate attr ArrayList with attribute values
