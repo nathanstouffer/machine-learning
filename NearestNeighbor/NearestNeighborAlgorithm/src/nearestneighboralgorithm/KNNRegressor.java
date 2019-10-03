@@ -5,6 +5,11 @@ import java.util.Iterator;
 /**
  * K-NN with Regression
  * @author andy-
+ * 
+ * The K-NN regressor is a K-Nearest Neighbor algorithm implementation that
+ * works with regression data sets.
+ * Given a set of examples, any new examples' values will be predicted by the  
+ * mean value of its k nearest neighbors.
  */
 public class KNNRegressor implements IKNearestNeighbor {
 
