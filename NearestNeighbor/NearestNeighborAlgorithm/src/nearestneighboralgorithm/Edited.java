@@ -39,9 +39,9 @@ public class Edited implements IDataReducer {
     Edited(int k, IDistMetric metric, Set validation_set){
         this.k = k;
         this.metric = metric;
-        learner = new KNNClassifier();
-        learner.setK(k);
-        learner.setDistMetric(metric);
+        this.learner = new KNNClassifier();
+        this.learner.setK(k);
+        this.learner.setDistMetric(metric);
         
         this.validation_set = validation_set;
     }
@@ -93,10 +93,15 @@ public class Edited implements IDataReducer {
      * @return 
      */
     private double computeAccuracy(){
-        double[] pred = learner.test(validation_set);
+        double[] pred = this.learner.test(this.validation_set);
         
-        // TODO: fix once EvaluateExperiment exists
-        return 0.0;
+        // create evaluator object
+        ClassificationEvaluator eval = new ClassificationEvaluator(pred, this.validation_set);
+        // compute accuracy
+        double acc = eval.getAccuracy();
+        
+        // return accuracy
+        return acc;
     }
     
     /**

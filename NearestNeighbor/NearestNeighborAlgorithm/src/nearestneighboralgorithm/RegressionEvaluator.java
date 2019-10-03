@@ -6,7 +6,7 @@ import java.util.Iterator;
  *
  * @author andy-
  */
-public class RegressionValidator implements IValidator{
+public class RegressionEvaluator implements IEvaluator{
     
     double mse; //Holds the mean squared error
     
@@ -14,7 +14,7 @@ public class RegressionValidator implements IValidator{
     
     double me; //Holds the mean error
     
-    public RegressionValidator(double[] predicted, Set actual) {
+    public RegressionEvaluator(double[] predicted, Set actual) {
         int num_examples = actual.getNumExamples();
         
         mse = 0;

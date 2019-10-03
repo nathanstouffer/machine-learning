@@ -6,13 +6,13 @@ import java.util.Iterator;
  *
  * @author andy-
  */
-public class ClassificationValidator implements IValidator {
+public class ClassificationEvaluator implements IEvaluator {
     
     double accuracy; //Holds the accuracy
     
     double mse; //Holds the mean squared error
     
-    public ClassificationValidator(double[] predicted, Set actual) {
+    public ClassificationEvaluator(double[] predicted, Set actual) {
         int num_examples = actual.getNumExamples();
         
         //---------------------------------------------------------------
@@ -65,12 +65,12 @@ public class ClassificationValidator implements IValidator {
 
     @Override
     public double getMAE() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public double getME() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
