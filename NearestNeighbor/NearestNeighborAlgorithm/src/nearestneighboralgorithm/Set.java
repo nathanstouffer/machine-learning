@@ -122,6 +122,7 @@ public class Set implements Iterable<Example>, Cloneable {
     public Iterator<Example> iterator() { return examples.iterator(); }
     
     // getter methods
+    public Example getExample(int index){return this.examples.get(index); }
     public int getNumClasses(){ return this.num_classes; }
     public int getNumAttributes(){ return this.num_attributes; }
     public int getNumExamples(){ return this.examples.size(); }
