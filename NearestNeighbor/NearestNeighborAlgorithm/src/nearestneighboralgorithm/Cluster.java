@@ -13,18 +13,19 @@ public class Cluster {
 
     private Example representative;
 
+    private IDistMetric metric;
+    
     private Set cluster;
     
-    private EuclideanSquared euclidean;
-    
-    Cluster(Example example, int num_attributes, int num_classes, String[] class_names) {
-        this.representative = example;
+    Cluster(Example rep, IDistMetric metric, int num_attributes, int num_classes, String[] class_names) {
+        this.representative = rep;
+        this.metric = metric;
         this.cluster = new Set(num_attributes, num_classes, class_names);
     }
     public double distortion(){
         double distortion = 0;
         for (Example ex : cluster){
-            distortion += euclidean.dist(ex, representative);
+            distortion += metric.dist(ex, representative);
         }
         return distortion;
     }

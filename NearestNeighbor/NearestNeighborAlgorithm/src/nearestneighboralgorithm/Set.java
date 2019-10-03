@@ -50,7 +50,19 @@ public class Set implements Iterable<Example>, Cloneable {
         this.class_names = subsets[0].getClassNames();
         
         // ensure that the subset to be excluded is a valid subset
-        if (exclude >= 0 && exclude < subsets.length){
+        boolean valid_index = false;
+        if (validation_set){
+            if (exclude >= 1 && exclude < subsets.length){
+                valid_index = true;
+            }
+        }
+        else{
+            if (exclude >= 0 && exclude < subsets.length){
+                valid_index = true;
+            }
+        }
+        
+        if (valid_index){
             // i represents the index in subsets
             // begin at the 0th element in subsets
             int i = 0;
@@ -122,7 +134,7 @@ public class Set implements Iterable<Example>, Cloneable {
     public Iterator<Example> iterator() { return examples.iterator(); }
     
     // getter methods
-    public Example getExample(int index){return this.examples.get(index); }
+    public Example getExample(int index){ return this.examples.get(index); }
     public int getNumClasses(){ return this.num_classes; }
     public int getNumAttributes(){ return this.num_attributes; }
     public int getNumExamples(){ return this.examples.size(); }
