@@ -41,7 +41,7 @@ public class Manhattan implements IDistMetric{
             dist += diff;
         }
         
-        // return the distance squared
+        // return the manhattan distance
         return dist;
     }
     

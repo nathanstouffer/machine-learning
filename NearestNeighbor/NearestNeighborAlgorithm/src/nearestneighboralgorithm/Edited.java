@@ -93,7 +93,7 @@ public class Edited implements IDataReducer {
      * @return 
      */
     private double computeAccuracy(){
-        double [] pred = learner.test(validation_set);
+        double[] pred = learner.test(validation_set);
         
         // TODO: fix once EvaluateExperiment exists
         return 0.0;
