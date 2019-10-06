@@ -8,7 +8,7 @@ package nearestneighboralgorithm;
 import java.util.ArrayList;
 
 /**
- * class that implements code to compute the distance
+ * Class that implements code to compute the distance
  * between two examples using the square of the 
  * Euclidean Metric
  * 
@@ -16,16 +16,15 @@ import java.util.ArrayList;
  */
 public class EuclideanSquared implements IDistMetric {
     
-    /**
-     * empty constructor
-     */
-    public EuclideanSquared(){}
+    private SimilarityMatrix[] sim_matr;
     
     /**
-     * method to compute the squared distance between two points
-     * 
-     * this method exists for computation efficiency of finding
-     * the minimum distance 
+     * constructor to initialize global variable
+     */
+    EuclideanSquared(SimilarityMatrix[] sim_matr){ this.sim_matr = sim_matr; }
+    
+    /**
+     * method to compute the squared Euclidean distance between two examples
      * 
      * @param ex1
      * @param ex2
@@ -36,19 +35,47 @@ public class EuclideanSquared implements IDistMetric {
         ArrayList<Double> attr1 = ex1.getAttributes();
         ArrayList<Double> attr2 = ex2.getAttributes();
         
-        double sqrd_dist = 0;
+        double sqrd_dist = 0.0;
         // iterate through attribute arrays
         for (int i = 0; i < attr2.size(); i++){
-            // compute the difference between corresponding values
-            double diff = (double)(attr2.get(i) - attr1.get(i));
-            // square the difference
-            double sqrd_diff = (diff * diff);
-            // add sqrd_diff to a running total
+            // variable to store difference in attributes
+            double diff = 0.0;
+            // test if attribute is categorical
+            int cat_index = this.categoricalIndex(i);
+            if (cat_index > -1){
+                // convert inputs to integer indices for a SimilarityMatrix
+                int option1 = (int)Math.round(attr1.get(i));
+                int option2 = (int)Math.round(attr2.get(i));
+                
+                // call categorical dist function (computes difference between corresponding values)
+                diff = Categorical.dist(option1, option2, this.sim_matr[cat_index]);
+            }
+            else{
+                // compute the difference between corresponding values
+                diff = (double)(attr2.get(i) - attr1.get(i));
+            }
+            
+            // square diff
+            double sqrd_diff = Math.pow(diff, 2);
+            // add dist to a running total
             sqrd_dist += sqrd_diff;
         }
         
-        // return the distance squared
+        // return the squared Euclidean distance
         return sqrd_dist;
     }
     
+    /**
+     * method to determine whether a given attribute contains
+     * categorical data
+     * @param index
+     * @return 
+     */
+    public int categoricalIndex(int index){
+        for (int i = 0; i < this.sim_matr.length; i++){
+            if (index == this.sim_matr[i].getAttrIndex()){ return i; }
+        }
+        return -1;
+    }
+   
 }
