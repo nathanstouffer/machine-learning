@@ -8,26 +8,29 @@ package nearestneighboralgorithm;
 import java.util.ArrayList;
 
 /**
- * class to reduce the size of a data set for the use of 
+ * Class to reduce the size of a data set for the use of 
  * a Nearest Neighbor algorithm.
  * 
- * The algorithm (Edited Nearest Neighbor) edits examples
- * out of the data set that the surrounding k-nearest examples
- * misclassify
+ * The Edited Nearest Neighbor (E-NN) algorithm edits removes examples
+ * from the data set that are misclassified by their k-nearest
+ * neighbors. This process is iteratively repeated until performance
+ * on a validation set decreases.
  * 
  * @author natha
  */
 public class Edited implements IDataReducer {
     
-    // variable to determine how many neighbors the reducing
-    // algorithm should view
+    // variable to determine how many neighbors the learning
+    // algorithm will view
     private int k;
-    // metric that the reduciing algorithm should use
+    // metric that the reduciing algorithm will use
     private IDistMetric metric;
-    // learner used for reducing puruposes
+    // learner used for reducing purposes
+    // learner must be of type KNNClassifier since Edited 
+    // Nearest Neighbor is limited to classification problems
     private KNNClassifier learner;
     // set that exists for validation purposes to test
-    // whether the reducing algorithm should be terminated
+    // whether E-NN algorithm should be terminated
     private Set validation_set;    
     
     /**
@@ -39,9 +42,9 @@ public class Edited implements IDataReducer {
     Edited(int k, IDistMetric metric, Set validation_set){
         this.k = k;
         this.metric = metric;
-        learner = new KNNClassifier();
-        learner.setK(k);
-        learner.setDistMetric(metric);
+        this.learner = new KNNClassifier();
+        this.learner.setK(k);
+        this.learner.setDistMetric(metric);
         
         this.validation_set = validation_set;
     }
@@ -56,34 +59,42 @@ public class Edited implements IDataReducer {
      * @return 
      */
     public Set reduce(Set orig){
-        // clone porig
-        Set clone = orig.clone();
-        
-        // train learner with clone
-        learner.train(clone);
+        // clone orig
+        Set excessive = orig.clone();
+        // declare the edited set
+        Set edited;
         
         boolean edit = true;
         do {
-            // compute accuracy for the original learner using validation_set
-            double orig_acc = computeAccuracy();
+            // train learner with excessive
+            this.learner.train(excessive);
+            // compute accuracy for excessive learner (uses validation_set)
+            double excessive_acc = computeAccuracy();
             
             // get misclassifed examples in the data set
-            ArrayList<Example> misclassified = findMisclassified(clone);
+            ArrayList<Example> misclassified = findMisclassified(excessive);
             
-            // delete missclassified examples from orig
-            for (Example ex: misclassified){ clone.delExample(ex); }
+            // initialize edited set
+            edited = excessive.clone();
+            // delete missclassified examples from edited
+            for (Example ex: misclassified){ edited.delExample(ex); }
             
-            // learner accesses orig in memory
-            // so the data in learner has been edited
-            
-            // compute accuracy for edited learner using validation_set
+            // train learner with edited data set
+            this.learner.train(edited);
+            // compute accuracy for edited learner (uses validation_set)
             double edited_acc = computeAccuracy();
             
             // stop editing set when performance degrades
-            if (edited_acc < orig_acc){ edit = false; }
+            if (edited_acc < excessive_acc){
+                edit = false;
+                // we have edited too far, and must revert one iteration
+                edited = excessive;
+            }
+            // otherwise, run another iteration of the editing process
+            else{ excessive = edited; }
         } while (edit);
         
-        return clone;
+        return edited;
     }
     
     /**
@@ -93,10 +104,15 @@ public class Edited implements IDataReducer {
      * @return 
      */
     private double computeAccuracy(){
-        double [] pred = learner.test(validation_set);
+        double[] pred = this.learner.test(this.validation_set);
         
-        // TODO: fix once EvaluateExperiment exists
-        return 0.0;
+        // create evaluator object
+        ClassificationEvaluator eval = new ClassificationEvaluator(pred, this.validation_set);
+        // compute accuracy
+        double acc = eval.getAccuracy();
+        
+        // return accuracy
+        return acc;
     }
     
     /**

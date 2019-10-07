@@ -71,6 +71,7 @@ public class KNNClassifier implements IKNearestNeighbor {
         int i = 0; //Track which example is being classified
         while(iterator.hasNext()) {
             classifications[i] = classify(iterator.next());
+            i++;
         }
         return classifications;
     }

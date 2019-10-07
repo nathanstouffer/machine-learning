@@ -10,8 +10,9 @@ import java.util.ArrayList;
 
 /**
  * Class that represents one example in a dataset
- * Each example has a class type, a subset that it belongs to,
+ * Each example has a value, a subset that it belongs to,
  * and a list of attributes
+ * 
  * @author natha
  */
 public class Example {
@@ -41,6 +42,12 @@ public class Example {
         
         // populate attr ArrayList with attribute values
         for (int i = 0; i < num_attr; i++){ this.attr.add(Double.parseDouble(data[i+2])); }
+    }
+    
+    Example(ArrayList<Double> attributes){
+        this.attr = attributes;
+        this.value = 0.0;
+        this.subset_index = 0;
     }
     
     // getter methods

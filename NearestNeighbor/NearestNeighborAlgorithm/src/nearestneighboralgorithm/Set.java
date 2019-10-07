@@ -29,6 +29,7 @@ public class Set implements Iterable<Example>, Cloneable {
      * @param class_names 
      */
     Set(int num_attributes, int num_classes, String[] class_names){
+        // populate final global variables
         this.num_attributes = num_attributes;
         this.num_classes = num_classes;
         this.class_names = class_names;
@@ -36,9 +37,13 @@ public class Set implements Iterable<Example>, Cloneable {
     
     /**
      * constructor to instantiate a Set from an array of subsets
-     * while excluding the subset at the index 'exclude'.
+     * while excluding the subset at the index 'exclude'. This constructor
+     * should be used when creating a single set to train with in 10-fold
+     * cross validation.
+     * 
      * if validation_set is passed as true, the constructor assumes
-     * that the 0th element in subsets will be used as the validation set
+     * that the 0th element in subsets will be used as a validation set
+     * 
      * @param subsets
      * @param exclude 
      * @param validation_set
@@ -50,14 +55,22 @@ public class Set implements Iterable<Example>, Cloneable {
         this.class_names = subsets[0].getClassNames();
         
         // ensure that the subset to be excluded is a valid subset
-        if (exclude >= 0 && exclude < subsets.length){
+        boolean valid_index = false;
+        if (validation_set){
+            // we will use subsets[0] as the validation set
+            // therefore it is not used in 10-fold cross validation
+            if (exclude >= 1 && exclude < subsets.length){ valid_index = true; }
+        }
+        else if (exclude >= 0 && exclude < subsets.length){ valid_index = true; }
+        
+        if (valid_index){
             // i represents the index in subsets
-            // begin at the 0th element in subsets
+            // i begins at the 0th element in subsets
             int i = 0;
             // ignore the 0th element in subsets if a validation set is needed
             if (validation_set){ i = 1; }
             // iterate through subsets
-            for (i = 0; i < subsets.length; i++){
+            for ( ; i < subsets.length; i++){
                 // add subset to set if subset should not be excluded
                 if (exclude != i){
                     // assign curr to current subset
@@ -82,7 +95,7 @@ public class Set implements Iterable<Example>, Cloneable {
     }
     
     /**
-     * method to return a clone of the object this method is called from
+     * method to return a clone of the object 'this'
      * @param orig
      * @return 
      */
@@ -103,7 +116,7 @@ public class Set implements Iterable<Example>, Cloneable {
     public void addExample(Example ex){ this.examples.add(ex); }
     
     /**
-     * overloaded method to delete an example in a set
+     * overloaded method to delete the ith example in a set
      * @param index 
      */
     public void delExample(int index){ this.examples.remove(index); }
@@ -114,6 +127,10 @@ public class Set implements Iterable<Example>, Cloneable {
      */
     public void delExample(Example ex){ this.examples.remove(ex); }
     
+    public void replaceExample(int index, Example ex){ this.examples.set(index, ex); }
+    
+    public void clearSet(){ this.examples.clear(); }
+    
     /**
      * method to return an iterator over the examples in the Set
      * @return 
@@ -122,7 +139,7 @@ public class Set implements Iterable<Example>, Cloneable {
     public Iterator<Example> iterator() { return examples.iterator(); }
     
     // getter methods
-    public Example getExample(int index){return this.examples.get(index); }
+    public Example getExample(int index){ return this.examples.get(index); }
     public int getNumClasses(){ return this.num_classes; }
     public int getNumAttributes(){ return this.num_attributes; }
     public int getNumExamples(){ return this.examples.size(); }

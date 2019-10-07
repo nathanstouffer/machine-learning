@@ -20,7 +20,7 @@ import java.io.IOException;
  * the appropriate Set (also based on the input file)
  * 
  * The input file is assumed to have an agreed upon format
- * so that DataReader can work off a template
+ * so that DataReader can be generalized
  * @author natha
  */
 public class DataReader {
@@ -29,11 +29,10 @@ public class DataReader {
     private final String file_name;
     // array storing information on the data of the form
     // { num_attr, num_examples, num_classes }
-    private final int[] data_summary = new int[3];
+    private final int[] data_summary = new int[4];
     // array storing class names. in our input files, 
-    // classes are assigned to a number from 0 up to c,
-    // the number of classes. The string can be
-    // accessed using this array
+    // classes are assigned to a number from 0 up to c, the number of
+    // classes. The string can be accessed using this array
     private String[] class_names;
     // variable to store number of subsets
     private int num_subset = 10;
@@ -41,6 +40,8 @@ public class DataReader {
     private Set[] subsets = new Set[num_subset];
     // Set class to store the validation set
     private Set validation_set;
+    // array of similarity matrices for computing categorical distances
+    private SimilarityMatrix[] sim_matr = null;
 
     /**
      * Constructor to take input from file file_name
@@ -59,13 +60,13 @@ public class DataReader {
     }
     
     /**
-     * method to read in each example in a dataset file
+     * method to read in the data from the file
      * @throws IOException 
      */
     private void readFile() throws IOException {
         // construct file to be read
         //File file = new File("../../../../Preprocessing/DataFiles/" + file_name);
-        File file = new File("../Preprocessing/DataFiles/" + file_name);
+        File file = new File("../Preprocessing/ProcessedDataFiles/" + file_name);
         
         // construct the buffered reader
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -73,12 +74,21 @@ public class DataReader {
         // populate global array data_summary with appropriate values
         String line = br.readLine();
         String[] split_line = line.split(",");
-        for (int i = 0; i < 3; i++){ this.data_summary[i] = Integer.parseInt(split_line[i]); }
+        for (int i = 0; i < 4; i++){ this.data_summary[i] = Integer.parseInt(split_line[i]); }
         
         // declare and instantiate variables for set class
-        int num_attr = getNumAttributes();
-        int num_examples = getNumExamples();
-        int num_classes = getNumClasses();
+        int num_attr = this.getNumAttributes();
+        int num_examples = this.getNumExamples();
+        int num_classes = this.getNumClasses();
+        int num_cat_attr = this.getNumCatAttributes();
+        
+        // instantiate sim_matr to correct size
+        this.sim_matr = new SimilarityMatrix[num_cat_attr];
+        // read in similarity matrices
+        for (int i = 0; i < num_cat_attr; i++){
+            try{ this.sim_matr[i] = readMatrix(br); }
+            catch(IOException e){ System.err.println("Unexpected end of file"); }
+        }
         
         // if num_classes is -1, then data set is regression
         if (num_classes == -1){ this.class_names = null; }
@@ -103,17 +113,52 @@ public class DataReader {
             this.subsets[temp.getSubsetIndex()].addExample(temp);
         }
         
+        // close buffered reader
         br.close();
+    }
+    
+    /**
+     * method to instantiate and populate a matrix directly 
+     * from the input file
+     * 
+     * returns the populated matrix
+     * 
+     * @param br
+     * @return
+     * @throws IOException 
+     */
+    private SimilarityMatrix readMatrix(BufferedReader br) throws IOException {
+        // read in matrix info
+        String line = br.readLine();
+        String[] data = line.split(",");
+        
+        int attr_index = Integer.parseInt(data[0]);
+        int num_options = Integer.parseInt(data[1]);
+        int num_bins = Integer.parseInt(data[2]);
+
+        // initialize matrix
+        SimilarityMatrix mtr = new SimilarityMatrix(attr_index, num_options, num_bins);
+
+        // populate matrix rows
+        for (int j = 0; j < num_options; j++){
+            line = br.readLine();
+            mtr.addRow(j, line);
+        }
+        
+        // return matrix
+        return mtr;
     }
     
     // private getter methods for relevant variables
     private int getNumAttributes(){ return this.data_summary[0]; }
     private int getNumExamples(){ return this.data_summary[1]; }
     private int getNumClasses(){ return this.data_summary[2]; }
+    private int getNumCatAttributes(){ return this.data_summary[3]; }
     
     // public getter methods
     public String[] getClassNames(){ return this.class_names; }
     public Set[] getSubsets(){ return this.subsets; }
     public Set getValidationSet(){ return this.validation_set; }
+    public SimilarityMatrix[] getSimMatrices(){ return this.sim_matr; }
     
 }
