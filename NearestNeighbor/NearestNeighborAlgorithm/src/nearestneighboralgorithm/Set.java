@@ -129,6 +129,8 @@ public class Set implements Iterable<Example>, Cloneable {
     
     public void replaceExample(int index, Example ex){ this.examples.set(index, ex); }
     
+    public void clearSet(){ this.examples.clear(); }
+    
     /**
      * method to return an iterator over the examples in the Set
      * @return 

@@ -33,4 +33,6 @@ public class Cluster {
     public void clusterAdd(Example example){ cluster.addExample(example); }
     public void clusterDelete(Example example){ cluster.delExample(example); };
     public void representativeChange(Example example){ representative = example; }
+    public Example getRepresentative(){ return this.representative; }
+    public void clearCluster(){ this.cluster.clearSet(); }
 }
