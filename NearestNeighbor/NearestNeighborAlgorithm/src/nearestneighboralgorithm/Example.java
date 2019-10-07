@@ -44,6 +44,12 @@ public class Example {
         for (int i = 0; i < num_attr; i++){ this.attr.add(Double.parseDouble(data[i+2])); }
     }
     
+    Example(ArrayList<Double> attributes){
+        this.attr = attributes;
+        this.value = 0.0;
+        this.subset_index = 0;
+    }
+    
     // getter methods
     public double getValue(){ return this.value; }
     public int getSubsetIndex(){ return this.subset_index; }
