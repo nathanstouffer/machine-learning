@@ -116,6 +116,7 @@ public class KNNClassifier implements IKNearestNeighbor {
         int num_classes = neighbors.getNumClasses();
         int[] class_freq = new int[num_classes]; // Create a histogram with each class
         for(int i = 0; i < k; i++) { // Populate the histogram
+            System.out.println("NN class: " + nn_classes[i]);
             if(nn_classes[i] != -1) { // Make sure there were an appropriate # of nn
                 class_freq[(int)nn_classes[i]]++;
             }
@@ -127,6 +128,8 @@ public class KNNClassifier implements IKNearestNeighbor {
             }
         }
         
+        System.out.println("Classification: " + classification);
+        System.out.println("Real value: " + example.getValue());
         return classification;
     }
     
