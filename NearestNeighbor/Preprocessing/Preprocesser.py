@@ -56,7 +56,7 @@ class data:
                 df['Class'] = df['Class'].replace(classes[i], i)
         else:
             backupclass = df['Class']
-            df['Class'] = pd.qcut(df[i], 10, labels=False, duplicates='drop')
+            df['Class'] = pd.cut(df[i], 10, labels=False)
         # assign sets to examples
         df.insert(1, 'Sets', sets)
         # converts all columns that are strings to integers starting at 0 and indexing by 1
@@ -77,17 +77,16 @@ class data:
             if categorical[i] == '0':
                 matrices += str(i) + ',' + str(len(df[i].unique())) + ',' + str(len(df.Class.unique())) + '\n'
                 for a in df[i].unique():
-                   for b in np.sort(df.Class.unique()):
-                       matrices += str(len(df[(df['Class'] == b) & (df[i] == a)])/len(df[df['Class'] == b])) + ','
-                   matrices += '\n'
-        print(matrices)
-
+                    for b in np.sort(df.Class.unique()):
+                        matrices += str(len(df[(df['Class'] == b) & (df[i] == a)]) / len(df[df['Class'] == b])) + ','
+                    matrices += '\n'
         # generate first two rows of formatted output
         if classification:
             header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
                 df['Class'].nunique()) + ',' + str(catfeat) + '\n' + ',,' + ','.join(
                 categorical) + '\n' + matrices + ','.join(map(str, classes)) + ',' + '\n'
         else:
+            df['Class'] = backupclass
             header = str(len(df.columns) - 1) + ',' + str(len(df)) + ',' + '-1' + ',' + '\n' + ',,' + ','.join(
                 categorical) + '\n' + matrices
         with open('ProcessedDataFiles\\' + name + '.csv', 'w') as fp:
