@@ -53,6 +53,7 @@ public class Condensed {
                     reduced.addExample(minEx);
                 }
             }
+            i++;
         }
         return reduced;
     }

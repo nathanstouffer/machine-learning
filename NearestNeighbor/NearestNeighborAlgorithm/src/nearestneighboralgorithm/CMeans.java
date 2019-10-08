@@ -22,6 +22,11 @@ public class CMeans implements IDataReducer{
     private IDistMetric metric;
     private KNNClassifier learner;
     
+    /**
+     * Constructor to initialize global variables
+     * @param k
+     * @param metric 
+     */
     CMeans(int k, IDistMetric metric){
         this.c = k;
         this.metric = metric;
@@ -31,6 +36,11 @@ public class CMeans implements IDataReducer{
         this.oldcenters = new ArrayList<>();
     }
    
+    /**
+     * Method to reduce the size of a Set for use with K nearest neighbors
+     * @param original
+     * @return 
+     */
     @Override
    public Set reduce(Set original){
        int maxIter = 1000;
@@ -38,26 +48,30 @@ public class CMeans implements IDataReducer{
        initializeClusters(original);
        populateClusters(original);
        boolean different = true;
-       while (i <= maxIter && different){
-           for (Cluster cluster : clusterList){
+       while (i <= maxIter && different){               //main loop for updating clusters
+           for (Cluster cluster : clusterList){         //creates an ArrayList to compare changes made each iteration
                oldcenters.add(cluster.getRepresentative());
            }
            updateCenters(original);
            populateClusters(original);
-           maxIter++;
-           for (int j = 0; j < clusterList.size(); j++){
+           i++;
+           for (int j = 0; j < clusterList.size(); j++){        //loops through all clusters amd checks if they have changed
                if (clusterList.get(j).getRepresentative().getAttributes().equals(oldcenters.get(j).getAttributes())){
                    different = false;
                }
            }
        }
-       Set reduced = new Set(original.getNumAttributes(), original.getNumClasses(), original.getClassNames());
+       Set reduced = new Set(original.getNumAttributes(), original.getNumClasses(), original.getClassNames());  //adds cluster centers to a set to return
        for (Cluster cluster : clusterList){
            reduced.addExample(cluster.getRepresentative());
        }
        return(reduced);
    }
    
+   /**
+    * Method for randomly initializing random points throughout the data set as new cluster centers
+    * @param original 
+    */
    public void initializeClusters(Set original){
        for (int i = 0; i < c; i++){
            Example center = original.getExample(rd.nextInt(original.getNumExamples()));
@@ -66,14 +80,18 @@ public class CMeans implements IDataReducer{
        }
    }
    
+   /**
+    * Method for populating clusters with examples from the original Set
+    * @param original 
+    */
    public void populateClusters(Set original){
-       for (Cluster cluster : clusterList){
+       for (Cluster cluster : clusterList){             //resets clusters so they can be repopulated if already filled
            cluster.clearCluster();
        }
        for(Example ex : original){
            double min = Double.MAX_VALUE;
            Cluster closestCluster = clusterList.get(0);
-           for (Cluster cluster : clusterList){
+           for (Cluster cluster : clusterList){                 //finds closest cluster to Example ex
                double dist = metric.dist(ex, cluster.getRepresentative());
                if (dist < min){
                    min = dist;
@@ -84,12 +102,16 @@ public class CMeans implements IDataReducer{
        }
    }
    
+   /**
+    * Method for updating cluster centers by taking average value of points in each cluster
+    * @param original 
+    */
    public void updateCenters(Set original){
        for (Cluster cluster : clusterList){
            Example center = cluster.getRepresentative();
-           ArrayList<Double> newAttributes = new ArrayList<>(center.getAttributes().size());
+           ArrayList<Double> newAttributes = new ArrayList<>(center.getAttributes().size());    //makes an ArrayList to calculate averages
            for (int i = 0; i < center.getAttributes().size(); i++){
-               for (Example ex : original){
+               for (Example ex : original){                                                     //gets the average of each attribute in the cluster
                    ArrayList<Double> exAttr = ex.getAttributes();
                    double currentsum = newAttributes.get(i) + exAttr.get(i);
                    newAttributes.set(i, currentsum);
@@ -97,7 +119,7 @@ public class CMeans implements IDataReducer{
                double average = newAttributes.get(i)/original.getNumExamples();
                newAttributes.set(i, average);
            }
-           Example newCenter = new Example(newAttributes);
+           Example newCenter = new Example(newAttributes);              //puts the averages into an example to save as the new center
            cluster.representativeChange(newCenter);
        }
     }
