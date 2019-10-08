@@ -27,11 +27,10 @@ public class Condensed {
  
     /**
      * Constructor to initialize a new instance of Condensed
-     * @param k
+
      * @param metric 
      */
-    Condensed(int k, IDistMetric metric){
-        this.k = k;
+    Condensed(IDistMetric metric){
         this.metric = metric;
     }
     
