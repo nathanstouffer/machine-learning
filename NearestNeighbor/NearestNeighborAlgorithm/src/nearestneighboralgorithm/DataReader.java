@@ -85,6 +85,7 @@ public class DataReader {
         // instantiate sim_matr to correct size
         this.sim_matr = new SimilarityMatrix[num_cat_attr];
         // read in similarity matrices
+        br.readLine();                                              //DUMMY READ IO SKIP 2nD LINE IN FILE -__ANDY PUT HERE
         for (int i = 0; i < num_cat_attr; i++){
             try{ this.sim_matr[i] = readMatrix(br); }
             catch(IOException e){ System.err.println("Unexpected end of file"); }
@@ -151,7 +152,7 @@ public class DataReader {
     
     // private getter methods for relevant variables
     private int getNumAttributes(){ return this.data_summary[0]; }
-    private int getNumExamples(){ return this.data_summary[1]; }
+    //private int getNumExamples(){ return this.data_summary[1]; }
     private int getNumClasses(){ return this.data_summary[2]; }
     private int getNumCatAttributes(){ return this.data_summary[3]; }
     
@@ -160,5 +161,6 @@ public class DataReader {
     public Set[] getSubsets(){ return this.subsets; }
     public Set getValidationSet(){ return this.validation_set; }
     public SimilarityMatrix[] getSimMatrices(){ return this.sim_matr; }
+    public int getNumExamples() { return this.data_summary[1]; };
     
 }

@@ -48,7 +48,7 @@ public class EuclideanSquared implements IDistMetric {
                 int option2 = (int)Math.round(attr2.get(i));
                 
                 // call categorical dist function (computes difference between corresponding values)
-                diff = Categorical.dist(option1, option2, this.sim_matr[cat_index]);
+                diff = ValueDifferenceMetric.dist(option1, option2, this.sim_matr[cat_index]);
             }
             else{
                 // compute the difference between corresponding values

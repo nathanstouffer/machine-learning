@@ -25,12 +25,14 @@ public class SimilarityMatrix {
     
     // this is the similarity matrix
     // it is a 2-dim array accessed first by the attribute value, then the class
-    private double[][] matrix = new double[this.num_options][this.num_bins];
+    private double[][] matrix; //= new double[this.num_options][this.num_bins]; ------BRUH STOUFF
     
     SimilarityMatrix(int attr_index, int num_options, int num_classes){
         this.attr_index = attr_index;
         this.num_options = num_options;
         this.num_bins = num_classes;
+        
+        matrix = new double[this.num_options][this.num_bins];
     }
     
     /**
