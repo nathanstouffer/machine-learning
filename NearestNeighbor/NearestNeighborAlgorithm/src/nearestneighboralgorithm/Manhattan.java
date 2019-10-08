@@ -52,6 +52,8 @@ public class Manhattan implements IDistMetric{
             else{
                 // compute the difference between corresponding values
                 diff = (double)(attr2.get(i) - attr1.get(i));
+                // regularize diff
+                diff = Math.pow(1 + Math.exp(-1 * diff), -1);
             }
             
             // add dist to a running total

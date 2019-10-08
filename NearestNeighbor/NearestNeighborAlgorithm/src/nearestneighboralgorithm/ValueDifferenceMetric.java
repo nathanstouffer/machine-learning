@@ -5,8 +5,6 @@
  */
 package nearestneighboralgorithm;
 
-import java.util.ArrayList;
-
 /**
  * Class to compute the distance between two categorical
  * attributes
