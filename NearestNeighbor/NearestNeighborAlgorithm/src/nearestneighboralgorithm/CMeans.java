@@ -21,33 +21,32 @@ public class CMeans implements IDataReducer{
 
     private IDistMetric metric;
     private KNNClassifier learner;
-    private Set original;    
     
-    CMeans(int k, IDistMetric metric, Set input){
+    CMeans(int k, IDistMetric metric){
         this.c = k;
         this.metric = metric;
         this.learner = new KNNClassifier();
         this.learner.setK(k);
         this.learner.setDistMetric(metric);
-        this.original = input;
-        this.oldcenters = new ArrayList<Example>();
+        this.oldcenters = new ArrayList<>();
     }
    
+    @Override
    public Set reduce(Set original){
        int maxIter = 1000;
        int i = 0;
-       initializeClusters();
-       populateClusters();
+       initializeClusters(original);
+       populateClusters(original);
        boolean different = true;
        while (i <= maxIter && different){
            for (Cluster cluster : clusterList){
                oldcenters.add(cluster.getRepresentative());
            }
-           updateCenters();
-           populateClusters();
+           updateCenters(original);
+           populateClusters(original);
            maxIter++;
            for (int j = 0; j < clusterList.size(); j++){
-               if (clusterList.get(j).getRepresentative() == oldcenters.get(j)){
+               if (clusterList.get(j).getRepresentative().getAttributes().equals(oldcenters.get(j).getAttributes())){
                    different = false;
                }
            }
@@ -59,7 +58,7 @@ public class CMeans implements IDataReducer{
        return(reduced);
    }
    
-   public void initializeClusters(){
+   public void initializeClusters(Set original){
        for (int i = 0; i < c; i++){
            Example center = original.getExample(rd.nextInt(original.getNumExamples()));
            Cluster cluster = new Cluster(center, metric, original.getNumAttributes(), original.getNumClasses(), original.getClassNames());
@@ -67,7 +66,7 @@ public class CMeans implements IDataReducer{
        }
    }
    
-   public void populateClusters(){
+   public void populateClusters(Set original){
        for (Cluster cluster : clusterList){
            cluster.clearCluster();
        }
@@ -85,10 +84,10 @@ public class CMeans implements IDataReducer{
        }
    }
    
-   public void updateCenters(){
+   public void updateCenters(Set original){
        for (Cluster cluster : clusterList){
            Example center = cluster.getRepresentative();
-           ArrayList<Double> newAttributes = new ArrayList<Double>(center.getAttributes().size());
+           ArrayList<Double> newAttributes = new ArrayList<>(center.getAttributes().size());
            for (int i = 0; i < center.getAttributes().size(); i++){
                for (Example ex : original){
                    ArrayList<Double> exAttr = ex.getAttributes();
