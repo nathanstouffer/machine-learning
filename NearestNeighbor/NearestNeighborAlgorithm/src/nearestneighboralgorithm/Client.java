@@ -29,7 +29,7 @@ public class Client {
         // ------------------ TEST K-NN ----------------------------------------
         // ---------------------------------------------------------------------
         // List the files we want to test
-        String[] knn_datafiles = {"abalone.csv"};
+        String[] knn_datafiles = {"abalone.csv", "car.csv", "forestfires.csv", "machine.csv", "segmentation.csv", "winequality-red.csv", "winequality-white.csv"};
         
         // Iterate through each data file
         for(int f = 0; f < knn_datafiles.length; f++) {
@@ -103,7 +103,13 @@ public class Client {
             
             writer.print(knn_datafiles[f] + "," + new DecimalFormat("###.##").format(accuracy_sum/10*100)+ "%,");
             writer.print(new DecimalFormat("###.##").format(mse_sum/10) + "\n");
-        }
+            
+        }   
+        // ---------------------------------------------------------------------
+        // ------------------ TEST K-CONDENSED ----------------------------------------
+        // ---------------------------------------------------------------------
+        String[] condensed_datafiles = {"abalone.csv", "car.csv", "forestfires.csv"};
+        
         
         writer.close(); //Close output file
     }

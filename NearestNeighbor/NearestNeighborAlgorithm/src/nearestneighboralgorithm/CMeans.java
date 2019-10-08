@@ -36,6 +36,7 @@ public class CMeans implements IDataReducer{
         this.c = k;
         this.metric = metric;
         this.oldcenters = new ArrayList<>();
+        this.clusterList = new ArrayList<>();
     }
    
     /**
