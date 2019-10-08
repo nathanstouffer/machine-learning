@@ -1,5 +1,7 @@
 \documentclass[twoside,11pt]{article}
+
 \usepackage{jmlr2e}
+\usepackage{spverbatim}
 
 \begin{document}
 
@@ -29,19 +31,44 @@ Kevin
 
 ANDY
 
-\subsection{Edited K-NN}
+\subsection{Distance Metrics}
 
-STOUUUUUFFFFFFF
+nn assumes there is a distance metric
 
-\subsection{Condensed K-NN}
+\subsection{Data Reducers}
+The K-Nearest Neighbor decision rule is a lazy algorithm where the performance is a function of the number of training examples. Therefore, in terms of a learner's computational efficiency, the most favorable training set is the smallest set.
+This is subject to the constraint that the model's performance is not compromised.
+
+Thus, the optimal training set for a K-NN learner is the smallest set that is able to correctly identify any query example.
+The purpose of the following four algorithms is to identify and remove unnecessary examples from the training set. Since K-NN is lazy by nature, this will improve the computation time of a learner.
+% should I talk about not decreasing performance? That is what we are testing right
+
+
+\subsubsection{Edited K-NN}
+The Edited K-Nearest Neighbor algorithm begins the discussion of algorithms that reduce the size of a training set. Edited K-NN begins with an initial set of training examples $D$ and classifies each example $e \in D$ using a K-NN algorithm. For each example $e$, K-NN returns the predicted class of $e$: $predclass(e)$. However, recall that $e$ is a training example, so the actual class of $e$, $class(e)$ is known. So, for each $e$ where $class(e) \neq predclass(e)$ (if $e$ was misclassified), the algorithm removes $e$ from $D$.
+
+This creates a new set $D^\prime$. 
+
+As a side note, since multiple steps of the algorithm relies on knowing the classification of $e$, Edited K-NN can only be used on classification problems.
+% TODO talk about the k used in edited k-nn
+
+% explain edited (cite paper)
+% metric for decisions (accuracy)
+
+% notes: edited paper has a good line of reasoning for the hypothesis
+% nn-d2l has information for tuning
+% remember to discuss lack of knowledge about overfitting in convergence based algorithms
+% TODO get rid of K-NN in reducing algorithm titles
+
+\subsubsection{Condensed K-NN}
 
 Eric
 
-\subsection{Kmeans K-NN}
+\subsubsection{Kmeans K-NN}
 
 Eric
 
-\subsection{PAM K-NN}
+\subsubsection{PAM K-NN}
 
 KEVVVVVIIIIINNNN
 
@@ -63,8 +90,6 @@ a few of us
 
 
 
-\section{References}
-
-
+\bibliography{report}
 
 \end{document}
