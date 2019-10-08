@@ -5,8 +5,9 @@
 # and a header that algorithm code need to run Naive Bayes. A second file scrambles
 # 10% of the attributes
 #############################################
-import pandas as pd
+import csv
 import numpy as np
+import pandas as pd
 import random
 
 
@@ -14,17 +15,12 @@ import random
 # and exports to .csv for use by a Naive Bayes
 class data:
     # class variables
-    df = pd.DataFrame()
-    header = ''
-    name = ''
 
     # contructor that reads in datafile as dataframe and formats for importing into Java Nieve Bayes algorithm
     # Prameters: int location of class column, bool if data contains missing data, bool if data is pre binned,
     # string filename
     def __init__(self, classloc, remove, missing, classification, filename, seperator):
-        global name
-        global header
-        global df
+        df = pd.DataFrame()
         name = filename
         # lists to assign sets and record bin #
         sets = []
@@ -41,74 +37,67 @@ class data:
                 a = 0
             i += 1
         # placing class column at 0 loc
+        df.rename(columns={classloc: 'Class'}, inplace=True)
+        cols_to_order = ['Class']
+        new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
+        df = df[new_columns]
+        # randomize all examples
+        df = df.sample(frac=1).reset_index(drop=True)
+        # rename attributes 0-num of attribues after moving class column to front
+        fixedcolumns = ['Class']
+        for i in range(len(df.columns) - 1):
+            fixedcolumns.append(i)
+        df.columns = fixedcolumns
+        # converted class names to ints for reading by algorithm
         if classification:
-            df.rename(columns={classloc: 'Class'}, inplace=True)
-            cols_to_order = ['Class']
-            new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
-            df = df[new_columns]
-            # randomize all examples
-            df = df.sample(frac=1).reset_index(drop=True)
-            # rename attributes 0-num of attribues after moving class column to front
-            fixedcolumns = ['Class']
-            for i in range(len(df.columns) - 1):
-                fixedcolumns.append(i)
-            df.columns = fixedcolumns
-            # converted class names to ints for reading by algorithm
             classes = (df.Class.unique())
             classes = np.sort(classes)
             for i in range(len(classes)):
                 df['Class'] = df['Class'].replace(classes[i], i)
-            # assign sets to examples
-            df.insert(1, 'Sets', sets)
         else:
-            # assign sets to examples
-            df.insert(0, 'Sets', sets)
-        #converts all columns that are strings to integers starting at 0 and indexing by 1
-        for i in range(len(df.columns)-2):
+            backupclass = df['Class']
+            df['Class'] = pd.qcut(df[i], 10, labels=False, duplicates='drop')
+        # assign sets to examples
+        df.insert(1, 'Sets', sets)
+        # converts all columns that are strings to integers starting at 0 and indexing by 1
+        categorical = []
+        catfeat = 0
+        for i in range(len(df.columns) - 2):
             if df[i].dtype == object:
                 original = df[i].unique()
                 replacedict = dict(zip(original, range(len(original))))
                 df[i] = df[i].map(replacedict)
+                categorical.append("0")
+                catfeat += 1
+            else:
+                categorical.append("1")
+        matrices = ''
+        print(np.sort(df.Class.unique()))
+        for i in range(len(categorical)):
+            if categorical[i] == '0':
+                matrices += str(i) + ',' + str(len(df[i].unique())) + ',' + str(len(df.Class.unique())) + '\n'
+                for a in df[i].unique():
+                   for b in np.sort(df.Class.unique()):
+                       matrices += str(len(df[(df['Class'] == b) & (df[i] == a)])/len(df[df['Class'] == b])) + ','
+                   matrices += '\n'
+        print(matrices)
+
         # generate first two rows of formatted output
         if classification:
-            header = str(len(df.columns) - 2) + "," + str(len(df)) + ',' + str(
-                df['Class'].nunique()) + "," + '\n' + ','.join(map(str, classes)) + '\n'
+            header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
+                df['Class'].nunique()) + ',' + str(catfeat) + '\n' + ',,' + ','.join(
+                categorical) + '\n' + matrices + ','.join(map(str, classes)) + ',' + '\n'
         else:
-            header = str(len(df.columns) - 1) + ',' + str(len(df)) + ',' + '-1' + ',' + '\n'
-
-    # export original processed data to .csv file
-    def exportOriginal(self):
-        # outputting to .csv
+            header = str(len(df.columns) - 1) + ',' + str(len(df)) + ',' + '-1' + ',' + '\n' + ',,' + ','.join(
+                categorical) + '\n' + matrices
         with open('ProcessedDataFiles\\' + name + '.csv', 'w') as fp:
             fp.write(header)
             fp.write((df.to_csv(index=False, header=False)))
-
-    # export processed data with 10% of the attributes scrambled
-    def exportScramble(self):
-        global df
-        # determine number of attributes to scramble, if less than 10 attributes 1 will be scrambled
-        numtoscramble = 0
-        if int((len(df.columns) - 2) / 10) < 1:
-            numtoscramble = 1
-        else:
-            numtoscramble = int((len(df.columns) - 2) / 10)
-        # randomly selecting which attributes to scramble
-        columnscramble = [random.randint(0, len(df.columns) - 3) for i in range(numtoscramble)]
-        # scrambling attributes
-        for column in columnscramble:
-            df[column] = df[column].sample(frac=1).reset_index(drop=True)
-        # outputting to .csv
-        with open('ProcessedDataFiles\\' + name + '-scrambled.csv', 'w') as fp:
-            fp.write(header)
-            fp.write((df.to_csv(index=False, header=False)))
+            fp.close
 
 
 # creating objects for each of the data files and outputting original and scrambled files
 files = [data(8, 0, False, True, 'abalone', ','), data(6, 0, False, True, 'car', ','),
-         data(0, 5, False, True, 'segmentation', ','), data(0, 1, False, False, 'forestfires', ','),
-         data(0, 0, False, False, 'machine', ','), data(0, 1, False, False, 'winequality-red', ';'),
-         data(0, 1, False, False, 'winequality-white', ';')]
-#for data in files:
-    #data.exportOriginal()
-    #data.exportScramble()
-
+         data(0, 5, False, True, 'segmentation', ','), data(12, 1, False, False, 'forestfires', ','),
+         data(8, 0, False, False, 'machine', ','), data(11, 1, False, False, 'winequality-red', ';'),
+         data(11, 1, False, False, 'winequality-white', ';')]
