@@ -5,6 +5,7 @@
  */
 package nearestneighboralgorithm;
 
+import java.lang.Double;
 /**
  *
  * @author erick
@@ -20,29 +21,41 @@ public class Condensed {
     // learner must be of type KNNClassifier since Condensed 
     // Nearest Neighbor is limited to classification problems
     private KNNClassifier learner;
-    // set that exists for validation purposes to test
-    // whether E-NN algorithm should be terminated
-    private Set validation_set;    
+ 
     
-    Condensed(int k, IDistMetric metric, Set validation_set){
+    Condensed(int k, IDistMetric metric){
         this.k = k;
         this.metric = metric;
         this.learner = new KNNClassifier();
         this.learner.setK(k);
         this.learner.setDistMetric(metric);
-        
-        this.validation_set = validation_set;
     }
     
     public Set reduce(Set original){
         
-        Set preCondense = original.clone();
-        Set postCondense = original.clone();
-        while(preCondense != postCondense){
-            for (Example ex : preCondense){
-                metric.dist();
+        Set reduced = new Set(original.getNumAttributes(), original.getNumClasses(), original.getClassNames());
+        Set oldSet = reduced.clone();
+        int maxIter = 1000;
+        int i = 0;
+        while (!reduced.getExamples().equals(oldSet.getExamples()) && i <= maxIter){
+            for(Example ex: reduced){
+                double min = Double.MAX_VALUE;
+                Example minEx = original.getExample(0);
+                for (Example ex2 : reduced){
+                    if (!ex.getAttributes().equals(ex2.getAttributes())){               //checking for identical example(self)
+                        if (metric.dist(ex, ex2) < min){                                //checking if distance to ex2 is smaller than minimum so far
+                            min = metric.dist(ex, ex2);
+                            minEx = ex2;
+                        }
+                    }
+                }
+                if (minEx.getClass() != ex.getClass()){
+                    reduced.addExample(minEx);
+                }
             }
+            i++;
         }
+        return reduced;
     }
     
 }

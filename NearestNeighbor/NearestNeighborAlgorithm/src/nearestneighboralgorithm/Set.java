@@ -146,6 +146,6 @@ public class Set implements Iterable<Example>, Cloneable {
     public String[] getClassNames(){ return this.class_names; }
     // outdated getter method to return examples
     // we now use iterator interface
-    // public ArrayList<Example> getExamples(){ return this.examples; }
+    public ArrayList<Example> getExamples(){ return this.examples; }
 
 }
