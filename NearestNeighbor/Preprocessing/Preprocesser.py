@@ -100,8 +100,9 @@ class data:
             fp.close
 
 #creating objects for each of the data files and outputting original and scrambled files
-files = [data(8, 0, False, True, 'abalone', ','), data(6, 0, False, True, 'car', ','),
-         data(0, 5, False, True, 'segmentation', ','), data(12, 1, False, False, 'forestfires', ','),
-         data(8, 0, False, False, 'machine', ','), data(11, 1, False, False, 'winequality-red', ';'),
-         data(11, 1, False, False, 'winequality-white', ';')]
+#files = [data(8, 0, False, True, 'abalone', ','), data(6, 0, False, True, 'car', ','),
+#         data(0, 5, False, True, 'segmentation', ','), data(12, 1, False, False, 'forestfires', ','),
+#         data(8, 0, False, False, 'machine', ','), data(11, 1, False, False, 'winequality-red', ';'),
+#         data(11, 1, False, False, 'winequality-white', ';')]
+data(0, 0, False, True, 'test', ',')
 
