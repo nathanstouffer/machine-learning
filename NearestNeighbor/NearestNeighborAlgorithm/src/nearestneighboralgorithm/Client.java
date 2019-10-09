@@ -20,12 +20,12 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        //testKNN();
+        testKNN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
         System.out.println("-----------------------------------------");
-        testENN();
+        //testENN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CONDENSED -----------");
@@ -41,13 +41,13 @@ public class Client {
     private static void testKNN() throws FileNotFoundException, UnsupportedEncodingException {
         // Open the output file
         PrintWriter writer = new PrintWriter("../knn_output.csv", "UTF-8");
-        writer.println("Dataset,Accuracy,MSE,MAE,ME");
+        writer.println("Dataset,Accuracy,MSE");
         
         // ---------------------------------------------------------------------
         // ------------------ TEST K-NN ----------------------------------------
         // ---------------------------------------------------------------------
         // List the files we want to test
-        String[] knn_datafiles = {"abalone.csv", "car.csv", "forestfires.csv", "machine.csv", "segmentation.csv", "winequality-red.csv", "winequality-white.csv"};
+        String[] knn_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
         
         // Iterate through each data file
         for(int f = 0; f < knn_datafiles.length; f++) {

@@ -57,10 +57,12 @@ public class EuclideanSquared implements IDistMetric {
             
             // square diff
             double sqrd_diff = Math.pow(diff, 2);
+            //System.out.println(sqrd_diff);
             // add dist to a running total
             sqrd_dist += sqrd_diff;
         }
         
+        //System.out.println("FINAL DIST: " + sqrd_dist);
         // return the squared Euclidean distance
         return sqrd_dist;
     }
