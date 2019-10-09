@@ -20,17 +20,17 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        testKNN();
+        //testKNN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
         System.out.println("-----------------------------------------");
-        testENN();
+        //testENN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CONDENSED -----------");
         System.out.println("-----------------------------------------");
-        //testKNNCondensed();
+        testKNNCondensed();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");
@@ -264,6 +264,7 @@ public class Client {
 
                 Set condensed_set = condensed_knn.reduce(training_set);
                 
+                System.out.println("Num points original: "+ training_set.getNumExamples());
                 System.out.println("NUM POINTS CONDENSED: " + condensed_set.getNumExamples());
                 num_points_sum += condensed_set.getNumExamples();
                 

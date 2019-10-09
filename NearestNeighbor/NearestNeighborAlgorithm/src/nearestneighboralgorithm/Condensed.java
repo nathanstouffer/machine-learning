@@ -6,6 +6,10 @@
 package nearestneighboralgorithm;
 
 import java.lang.Double;
+import java.util.Random;
+import java.util.Iterator;
+
+
 /**
  * Class to reduce the size of a set for use with a 
  * Nearest Neighbor algorithm.
@@ -23,6 +27,7 @@ public class Condensed {
     private int k;
     // metric that the reduciing algorithm will use
     private IDistMetric metric;
+    Random rd = new Random();
 
  
     /**
@@ -42,14 +47,17 @@ public class Condensed {
     public Set reduce(Set original){
         
         Set reduced = new Set(original.getNumAttributes(), original.getNumClasses(), original.getClassNames());
+        reduced.addExample(original.getExample(rd.nextInt(original.getNumExamples())));
         Set oldSet = original.clone();
+        Set copy = original.clone();
         int maxIter = 1000;
         int i = 0;
         while (!reduced.getExamples().equals(oldSet.getExamples()) && i <= maxIter){        //while the set changes from one iteration to the next
             oldSet = reduced.clone();
-            for(Example ex: original){
+            for (Iterator<Example> iterator = copy.iterator(); iterator.hasNext();) {
+                Example ex = iterator.next();
                 double min = Double.MAX_VALUE;                                          //saving minimums to find the closest example in the set, for each example
-                Example minEx = original.getExample(0);
+                Example minEx = copy.getExample(0);
                 for (Example ex2 : reduced){
                     if (!ex.getAttributes().equals(ex2.getAttributes())){               //checking for identical example(self)
                         if (metric.dist(ex, ex2) < min){                                //checking if distance to ex2 is smaller than minimum so far
@@ -58,8 +66,9 @@ public class Condensed {
                         }
                     }
                 }
-                if (minEx.getClass() != ex.getClass()){                     //adds the closest example to the reduced set if it has different class than 
-                    reduced.addExample(minEx);                              //example we are comparing to
+                if (minEx.getValue() != ex.getValue()){                     //adds the closest example to the reduced set if it has different class than 
+                    reduced.addExample(ex);                              //example we are comparing to
+                    iterator.remove();
                 }
             }
             i++;
