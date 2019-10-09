@@ -64,12 +64,15 @@ public class Edited implements IDataReducer {
         // declare the edited set
         Set edited;
         
+        this.learner.train(excessive);        
+        double orig_acc = computeAccuracy();
+        
         boolean edit = true;
         do {
             // train learner with excessive
             this.learner.train(excessive);
             // compute accuracy for excessive learner (uses validation_set)
-            double excessive_acc = computeAccuracy();
+            // double excessive_acc = computeAccuracy();
             
             // get misclassifed examples in the data set
             ArrayList<Example> misclassified = findMisclassified(excessive);
@@ -85,7 +88,7 @@ public class Edited implements IDataReducer {
             double edited_acc = computeAccuracy();
             
             // stop editing set when performance degrades
-            if (edited_acc < excessive_acc){
+            if (edited_acc < orig_acc) {//excessive_acc){
                 edit = false;
                 // we have edited too far, and must revert one iteration
                 edited = excessive;
@@ -123,9 +126,20 @@ public class Edited implements IDataReducer {
     private ArrayList<Example> findMisclassified(Set orig){
         ArrayList<Example> misclassified = new ArrayList<Example>();
         // using learner, classify all points in orig
-        for (Example ex: orig){
+        // for (Example ex: orig){
+        for (int i = 0; i < orig.getNumExamples(); i++){
+            // the ith example
+            Example ex = orig.getExample(i);
+            // real classification
             double real = ex.getValue();
+            
+            // this removes ex from the training set
+            orig.delExample(ex);
+            // find predicted classification
             double pred = learner.classify(ex);
+            
+            // add ex back into training set
+            orig.addExample(i, ex);
 
             // if incorrect classification, add ex to misclassified ArrayList
             if (pred != real){ misclassified.add(ex); }

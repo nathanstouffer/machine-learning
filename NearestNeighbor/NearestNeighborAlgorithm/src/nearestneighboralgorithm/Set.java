@@ -116,6 +116,13 @@ public class Set implements Iterable<Example>, Cloneable {
     public void addExample(Example ex){ this.examples.add(ex); }
     
     /**
+     * method to add an example at index
+     * @param index
+     * @param ex 
+     */
+    public void addExample(int index, Example ex){ this.examples.add(index, ex); }
+    
+    /**
      * overloaded method to delete the ith example in a set
      * @param index 
      */
