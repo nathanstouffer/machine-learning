@@ -102,7 +102,7 @@ public class CMeans implements IDataReducer{
                    closestCluster = cluster;
                }
            }
-           closestCluster.clusterAdd(ex);
+           closestCluster.AddExample(ex);
        }
    }
    
@@ -127,7 +127,7 @@ public class CMeans implements IDataReducer{
                newAttributes.set(i, average);
            }
            Example newCenter = new Example(newAttributes);              //puts the averages into an example to save as the new center
-           cluster.representativeChange(newCenter);
+           cluster.SetRepresentative(newCenter);
        }
     }
 }
