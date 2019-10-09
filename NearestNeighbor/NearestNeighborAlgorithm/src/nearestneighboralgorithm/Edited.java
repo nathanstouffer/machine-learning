@@ -6,6 +6,7 @@
 package nearestneighboralgorithm;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Class to reduce the size of a data set for the use of 
@@ -20,6 +21,8 @@ import java.util.ArrayList;
  */
 public class Edited implements IDataReducer {
     
+    // batch size for editing
+    private final int BATCH_SIZE = 100;
     // variable to determine how many neighbors the learning
     // algorithm will view
     private int k;
@@ -130,26 +133,51 @@ public class Edited implements IDataReducer {
     
     /**
      * method to find the misclassified examples using k-NN
-     * @param orig
+     * @param clone
      * @return 
      */
     private ArrayList<Example> findMisclassified(Set orig){
+        // clone clone
+        Set clone = orig.clone();
+        // ArrayList for misclassified data points
         ArrayList<Example> misclassified = new ArrayList<Example>();
-        // using learner, classify all points in orig
-        // for (Example ex: orig){
-        for (int i = 0; i < orig.getNumExamples(); i++){
+        // array for a batch that we will edit
+        // the size of batch is BATCH_SIZE
+        Example[] batch = new Example[this.BATCH_SIZE];
+        
+        // populate batch with random Examples from clone
+        Random rnd = new Random();
+        for (int i = 0; i < this.BATCH_SIZE; i++){
+            // get random value in to index clone
+            int rand_index = rnd.nextInt(orig.getNumExamples());
+            
+            // get the example at rand_value in clone
+            Example ex = orig.getExample(rand_index);
+            // remove this example from clone (so it cannot be selected again)
+            orig.delExample(ex);
+            
+            // insert ex into batch
+            batch[i] = ex;
+        }
+        
+        // reinsert values of batch into clone
+        for (int i = 0; i < batch.length; i++){ orig.addExample(batch[i]); }
+        
+        // using learner, classify all points in clone
+        // for (Example ex: clone){
+        for (int i = 0; i < clone.getNumExamples(); i++){
             // the ith example
-            Example ex = orig.getExample(i);
+            Example ex = clone.getExample(i);
             // actual classification
             double actual = ex.getValue();
             
             // this removes ex from the training set
-            orig.delExample(ex);
+            clone.delExample(ex);
             // find predicted classification
             double pred = learner.classify(ex);
             
             // add ex back into training set
-            orig.addExample(i, ex);
+            clone.addExample(i, ex);
 
             // if incorrect classification, add ex to misclassified ArrayList
             if (pred != actual){ misclassified.add(ex); }

@@ -25,31 +25,31 @@ import java.io.IOException;
  */
 public class DataReader {
     
+// variable to store number of subsets
+    private final int NUM_SUBSETS = 10;
     // variable to store file name
-    private final String file_name;
+    private final String FILE_NAME;    
     // array storing information on the data of the form
     // { num_attr, num_examples, num_classes }
     private final int[] data_summary = new int[4];
     // array storing class names. in our input files, 
     // classes are assigned to a number from 0 up to c, the number of
-    // classes. The string can be accessed using this array
+    // classes. The actual class string can be accessed using this array
     private String[] class_names;
-    // variable to store number of subsets
-    private int num_subset = 10;
     // array to store the subsets used in 10-fold cross validation
-    private Set[] subsets = new Set[num_subset];
+    private Set[] subsets = new Set[NUM_SUBSETS];
     // Set class to store the validation set
     private Set validation_set;
     // array of similarity matrices for computing categorical distances
-    private SimilarityMatrix[] sim_matr = null;
+    private SimilarityMatrix[] sim_matr;
 
     /**
-     * Constructor to take input from file file_name
+     * Constructor to take input from file FILE_NAME
      * @param file_name 
      */
     public DataReader(String file_name){
-        // populate global variable file_name
-        this.file_name = file_name;
+        // populate global variable FILE_NAME
+        this.FILE_NAME = file_name;
         
         // read and process file
         try{ readFile(); }
@@ -65,8 +65,8 @@ public class DataReader {
      */
     private void readFile() throws IOException {
         // construct file to be read
-        //File file = new File("../../../../Preprocessing/DataFiles/" + file_name);
-        File file = new File("../Preprocessing/ProcessedDataFiles/" + file_name);
+        //File file = new File("../../../../Preprocessing/DataFiles/" + FILE_NAME);
+        File file = new File("../Preprocessing/ProcessedDataFiles/" + FILE_NAME);
         
         // construct the buffered reader
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -103,7 +103,7 @@ public class DataReader {
         }
         
         // initialize each element in the subsets array
-        for (int i = 0; i < this.num_subset; i++){ this.subsets[i] = new Set(num_attr, num_classes, this.class_names); }
+        for (int i = 0; i < this.NUM_SUBSETS; i++){ this.subsets[i] = new Set(num_attr, num_classes, this.class_names); }
         
         // iterate through file line-by-line to populate examples array
         for (int i = 0; i < num_examples; i++){

@@ -2,8 +2,7 @@
 # Kevin Browder, Nathan Stouffer, Andy Kirby, Eric Kempf
 # Program for importing data from Machine Learning example data and exports
 # processed data as two csv file. One with original data with sets for 10 fold CV
-# and a header that algorithm code need to run Naive Bayes. A second file scrambles
-# 10% of the attributes
+# and a header that algorithm code need to run Nearest Neighbor.
 #############################################
 import csv
 import numpy as np
@@ -75,7 +74,7 @@ class data:
                 categorical.append("1")
         matrices = ''
         for i in range(len(categorical)):
-            # calculate matrices for distance metric for all catigorical variable
+            # calculate matrices for distance metric for all categorical variable
             if categorical[i] == '0':
                 matrices += str(i) + ',' + str(len(df[i].unique())) + ',' + str(len(df.Class.unique())) + '\n'
                 for a in df[i].unique():
