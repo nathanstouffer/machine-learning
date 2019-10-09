@@ -88,7 +88,6 @@ class data:
                 else:
                     df[i] = df[i].apply(lambda x: (x - df[i].min()) / (df[i].max() - df[i].min()))
         # generate first two rows of formatted output
-        print(df.head())
         if classification:
             header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
                 df['Class'].nunique()) + ',' + str(numcategoricalvar) + '\n' + matrices + ','.join(map(str, classes)) + ',' + '\n'
@@ -100,8 +99,7 @@ class data:
             fp.write((df.to_csv(index=False, header=False)))
             fp.close
 
-
-# creating objects for each of the data files and outputting original and scrambled files
+#creating objects for each of the data files and outputting original and scrambled files
 files = [data(8, 0, False, True, 'abalone', ','), data(6, 0, False, True, 'car', ','),
          data(0, 5, False, True, 'segmentation', ','), data(12, 1, False, False, 'forestfires', ','),
          data(8, 0, False, False, 'machine', ','), data(11, 1, False, False, 'winequality-red', ';'),
