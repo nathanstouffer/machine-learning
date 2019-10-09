@@ -12,12 +12,12 @@ import random
 
 
 # data class imports and preprocesses data
-# and exports to .csv for use by a Naive Bayes
+# and exports to .csv for use by a KNN algorthim
 class data:
     # class variables
 
-    # contructor that reads in datafile as dataframe and formats for importing into Java Nieve Bayes algorithm
-    # Prameters: int location of class column, bool if data contains missing data, bool if data is pre binned,
+    # constructor that reads in datafile as dataframe and formats for importing into Java Nearest Neighbor algorithm
+    # Parameters: int location of class column, bool if data contains missing data, bool if data is pre binned,
     # string filename
     def __init__(self, classloc, remove, missing, classification, filename, seperator):
         df = pd.DataFrame()
@@ -29,7 +29,7 @@ class data:
         a = 0
         i = 0
         df = pd.read_csv('..\\OrigDataFiles\\' + filename + '.data', skiprows=remove, sep=seperator, header=None)
-        # create list of iterating values from 0-9 distrubeted equally across rows
+        # create list of iterating values from 0-9 distributed equally across rows
         while i < len(df):
             sets.append(a)
             a += 1
@@ -43,7 +43,7 @@ class data:
         df = df[new_columns]
         # randomize all examples
         df = df.sample(frac=1).reset_index(drop=True)
-        # rename attributes 0-num of attribues after moving class column to front
+        # rename attributes 0-num of attributes after moving class column to front
         fixedcolumns = ['Class']
         for i in range(len(df.columns) - 1):
             fixedcolumns.append(i)
@@ -54,43 +54,47 @@ class data:
             classes = np.sort(classes)
             for i in range(len(classes)):
                 df['Class'] = df['Class'].replace(classes[i], i)
+        # bins regression values
         else:
             backupclass = df['Class']
-            df['Class'] = pd.cut(df[i], 10, labels=False)
+            df['Class'] = pd.cut(df['Class'], 10, labels=False)
         # assign sets to examples
         df.insert(1, 'Sets', sets)
-        # converts all columns that are strings to integers starting at 0 and indexing by 1
+        # converts all categorical variables to integers starting at 0 and indexing by 1
+        # also keeps track of which attributes are categorical and which are numerical
         categorical = []
-        catfeat = 0
+        numcategoricalvar = 0
         for i in range(len(df.columns) - 2):
             if df[i].dtype == object:
                 original = df[i].unique()
-                replacedict = dict(zip(original, range(len(original))))
-                df[i] = df[i].map(replacedict)
+                replace = dict(zip(original, range(len(original))))
+                df[i] = df[i].map(replace)
                 categorical.append("0")
-                catfeat += 1
+                numcategoricalvar += 1
             else:
                 categorical.append("1")
         matrices = ''
         for i in range(len(categorical)):
+            # calculate matrices for distance metric for all catigorical variable
             if categorical[i] == '0':
                 matrices += str(i) + ',' + str(len(df[i].unique())) + ',' + str(len(df.Class.unique())) + '\n'
                 for a in df[i].unique():
                     for b in np.sort(df.Class.unique()):
                         matrices += str(len(df[(df['Class'] == b) & (df[i] == a)]) / len(df[df['Class'] == b])) + ','
                     matrices += '\n'
+            # normalize all numerical variables
             else:
-                if(df[i].max() == df[i].min()):
+                if (df[i].max() == df[i].min()):
                     df[i].values[:] = 0
                 else:
-                    df[i] = df[i].apply(lambda x: (x - df[i].min())/(df[i].max() - df[i].min()))
+                    df[i] = df[i].apply(lambda x: (x - df[i].min()) / (df[i].max() - df[i].min()))
         # generate first two rows of formatted output
         if classification:
             header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
-                df['Class'].nunique()) + ',' + str(catfeat) + '\n'+ matrices + ','.join(map(str, classes)) + ',' + '\n'
+                df['Class'].nunique()) + ',' + str(numcategoricalvar) + '\n' + matrices + ','.join(map(str, classes)) + ',' + '\n'
         else:
             df['Class'] = backupclass
-            header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + '-1' + ',' + str(catfeat) + '\n'+ matrices
+            header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + '-1' + ',' + str(numcategoricalvar) + '\n' + matrices
         with open('ProcessedDataFiles\\' + name + '.csv', 'w') as fp:
             fp.write(header)
             fp.write((df.to_csv(index=False, header=False)))
