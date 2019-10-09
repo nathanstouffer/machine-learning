@@ -54,7 +54,7 @@ public class EuclideanSquared implements IDistMetric {
                 // compute the difference between corresponding values
                 diff = (double)(attr2.get(i) - attr1.get(i));
                 // regularize difference
-                diff = Math.pow(1 + Math.exp(-1 * diff), -1);
+                //diff = Math.pow(1 + Math.exp(-1 * diff), -1);
             }
             
             // square diff

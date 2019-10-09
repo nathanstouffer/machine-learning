@@ -7,7 +7,6 @@ package nearestneighboralgorithm;
 
 import java.util.ArrayList; 
 import java.util.Random;
-import java.lang.Double;
 /**
  * Class to reduce the size of a set for use with
  * a Nearest Neighbor algorithm.

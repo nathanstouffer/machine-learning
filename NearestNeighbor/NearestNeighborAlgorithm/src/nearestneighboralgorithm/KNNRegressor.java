@@ -115,7 +115,7 @@ public class KNNRegressor implements IKNearestNeighbor {
         double num = 0; // The number of nearest neigbors (may be less than k if
                         // there are less than k in the data set).
         for(int i = 0; i < k; i++) {
-            if(nn_distances[i] < Double.MIN_VALUE) { // Make sure it that there were an
+            if(nn_distances[i] < Double.MAX_VALUE) { // Make sure it that there were an
                                                      // appropriate # of nn
                 sum += nn_values[i];
                 num++;
@@ -123,6 +123,9 @@ public class KNNRegressor implements IKNearestNeighbor {
                 break;
             }
         }
+        
+        //System.out.println("Prediction: " + sum/num);
+        //System.out.println("Real value: " + example.getValue());
         return sum / num;
     }
     
