@@ -25,12 +25,12 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
         System.out.println("-----------------------------------------");
-        //testENN();
+        testENN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CONDENSED -----------");
         System.out.println("-----------------------------------------");
-        testKNNCondensed();
+        //testKNNCondensed();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");

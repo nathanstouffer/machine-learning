@@ -79,7 +79,7 @@ public class CMeans implements IDataReducer{
    public void initializeClusters(Set original){
        for (int i = 0; i < c; i++){
            Example center = original.getExample(rd.nextInt(original.getNumExamples()));
-           Cluster cluster = new Cluster(center, metric, original.getNumAttributes(), original.getNumClasses(), original.getClassNames());
+           Cluster cluster = new Cluster(center, original.getNumAttributes(), original.getNumClasses(), original.getClassNames());
            clusterList.add(cluster);
        }
    }
