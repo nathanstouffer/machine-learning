@@ -112,12 +112,12 @@ public class KNNClassifier implements IKNearestNeighbor {
                     nn_distances.remove(k);
                     
                     //Print out new distances
-                    Iterator<Double> iter1 = nn_classes.iterator();
-                    Iterator<Double> iter2 = nn_distances.iterator();
-                    while(iter1.hasNext()) {
-                        System.out.print("-CLASS: " + iter1.next() + " DIST: " + iter2.next() + "-");
-                    }
-                    System.out.println();
+//                    Iterator<Double> iter1 = nn_classes.iterator();
+//                    Iterator<Double> iter2 = nn_distances.iterator();
+//                    while(iter1.hasNext()) {
+//                        System.out.print("-CLASS: " + iter1.next() + " DIST: " + iter2.next() + "-");
+//                    }
+//                    System.out.println();
                     
                     break; // Exit for-loop
                 } //Otherwise, check next k-nn

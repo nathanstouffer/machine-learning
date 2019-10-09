@@ -23,7 +23,7 @@ public class ClassificationEvaluator implements IEvaluator {
         int index = 0;
         Iterator<Example> iterator = actual.iterator();
         while(iterator.hasNext()) {
-            if(iterator.next().getValue() == predicted[index]) {
+            if(Math.round(iterator.next().getValue()) == Math.round(predicted[index])) {
                 accuracy++;
             }
             index++;
