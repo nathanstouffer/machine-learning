@@ -20,7 +20,7 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        //testKNN();
+        testKNN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
@@ -162,11 +162,12 @@ public class Client {
             IKNearestNeighbor knn;
             knn = new KNNClassifier();
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
-            knn.setK((int)Math.sqrt(reader.getNumExamples()));
+           
             
             System.out.println("readervalidset" + reader.getValidationSet());
             //Edited edited_knn = new Edited((int)Math.sqrt(reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices()), reader.getValidationSet());      
             Edited edited_knn = new Edited(3, new EuclideanSquared(reader.getSimMatrices()), reader.getValidationSet());    
+            
             
             // Initialize the sums that will be used to compute our average loss metrics
             double accuracy_sum = 0;
@@ -179,6 +180,7 @@ public class Client {
                 Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
 
                 Set edited_set = edited_knn.reduce(training_set.clone());
+                knn.setK((int)Math.sqrt(edited_set.getNumExamples()));
                 
                 System.out.println("NUM POINTS EDITED: " + edited_set.getNumExamples());
                 num_points_sum += edited_set.getNumExamples();
@@ -209,12 +211,12 @@ public class Client {
             }
             // Output information about the loss metrics to the console----
             System.out.println("Average number of condensed points for" + edited_datafiles[f] + " was " 
-                    + new DecimalFormat("###.##").format(num_points_sum/10));
+                    + new DecimalFormat("###.##").format(num_points_sum/9));
             System.out.println("Average accuracy for " + edited_datafiles[f] + " was " 
-                    + new DecimalFormat("###.##").format(accuracy_sum/10*100)
+                    + new DecimalFormat("###.##").format(accuracy_sum/9*100)
                         + "%");
             System.out.println("Average MSE for " + edited_datafiles[f] + " was " 
-                    + new DecimalFormat("###.##").format(mse_sum/10));
+                    + new DecimalFormat("###.##").format(mse_sum/9));
             
             System.out.println("----------------------------------------------");
             
@@ -332,7 +334,7 @@ public class Client {
                 cmeans = new CMeans((int) 0.25 * reader.getNumExamples(), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                cmeans = new CMeans(5, new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                cmeans = new CMeans(10, new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }      
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
             knn.setK((int)Math.sqrt(reader.getNumExamples()));

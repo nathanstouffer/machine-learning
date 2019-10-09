@@ -99,6 +99,7 @@ public class Set implements Iterable<Example>, Cloneable {
      * @param orig
      * @return 
      */
+    @Override
     public Set clone(){
         // initialize new Set object
         Set clone = new Set(this.num_attributes, this.num_classes, this.class_names);

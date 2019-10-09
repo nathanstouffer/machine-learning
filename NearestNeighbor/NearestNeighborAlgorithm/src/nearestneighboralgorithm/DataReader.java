@@ -84,8 +84,6 @@ public class DataReader {
         
         // instantiate sim_matr to correct size
         this.sim_matr = new SimilarityMatrix[num_cat_attr];
-        // read in similarity matrices
-        br.readLine();                                              //DUMMY READ IO SKIP 2nD LINE IN FILE -__ANDY PUT HERE
         for (int i = 0; i < num_cat_attr; i++){
             try{ this.sim_matr[i] = readMatrix(br); }
             catch(IOException e){ System.err.println("Unexpected end of file"); }

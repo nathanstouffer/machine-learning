@@ -1,5 +1,6 @@
 package nearestneighboralgorithm;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -83,12 +84,12 @@ public class KNNRegressor implements IKNearestNeighbor {
     private double predict(Example example) {
         // Initialize two arrays to track the nearest neighbors. Only the value
         // and distance of the k-nn are necessary to hold on to.
-        double[] nn_values = new double[k];
-        double[] nn_distances = new double[k];
+        ArrayList<Double> nn_values = new ArrayList<>();
+        ArrayList<Double> nn_distances = new ArrayList<>();
         for(int i = 0; i < k; i++) { 
             //Initialize the values so they will be overwritten
-            nn_values[i] = 0;
-            nn_distances[i] = Double.MAX_VALUE;
+            nn_values.add(0.0);
+            nn_distances.add(Double.MAX_VALUE);
         }
         
         // Iterate through all neighbors, calculating their distance from the
@@ -100,10 +101,13 @@ public class KNNRegressor implements IKNearestNeighbor {
             double dist = dist_metric.dist(example, neighbor);
             // Check if the distance is smaller than any current k-nn
             for(int i = 0; i < k; i++) {
-                if(dist < nn_distances[i]) {
+                if(dist < nn_distances.get(i)) {
                     // If closer, then overwrite the k-nn
-                    nn_values[i] = neighbor.getValue();
-                    nn_distances[i] = dist;
+                    nn_values.add(i, neighbor.getValue());
+                    nn_distances.add(i, dist);
+                    // Delete last k-nn
+                    nn_values.remove(k);
+                    nn_distances.remove(k);
                     break; // Exit for-loop
                 } //Otherwise, check next k-nn
             }
@@ -115,9 +119,9 @@ public class KNNRegressor implements IKNearestNeighbor {
         double num = 0; // The number of nearest neigbors (may be less than k if
                         // there are less than k in the data set).
         for(int i = 0; i < k; i++) {
-            if(nn_distances[i] < Double.MAX_VALUE) { // Make sure it that there were an
+            if(nn_distances.get(i) < Double.MAX_VALUE) { // Make sure it that there were an
                                                      // appropriate # of nn
-                sum += nn_values[i];
+                sum += nn_values.get(i);
                 num++;
             } else { // Otherwise, compute the mean based on the nn that exist
                 break;
