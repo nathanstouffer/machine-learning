@@ -1,5 +1,6 @@
 package nearestneighboralgorithm;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -85,12 +86,12 @@ public class KNNClassifier implements IKNearestNeighbor {
     public double classify(Example example) {
         // Initialize two arrays to track the nearest neighbors. Only the class
         // and distance of the k-nn are necessary to hold on to.
-        double[] nn_classes = new double[k];
-        double[] nn_distances = new double[k];
+        ArrayList<Double> nn_classes = new ArrayList<>();
+        ArrayList<Double> nn_distances = new ArrayList<>();
         for(int i = 0; i < k; i++) { 
             //Initialize the values so they will be overwritten
-            nn_classes[i] = -1;
-            nn_distances[i] = Double.MAX_VALUE;
+            nn_classes.add(-1.0);
+            nn_distances.add(Double.MAX_VALUE);
         }
         
         // Iterate through all neighbors, calculating their distance from the
@@ -102,10 +103,13 @@ public class KNNClassifier implements IKNearestNeighbor {
             double dist = dist_metric.dist(example, neighbor);
             // Check if the distance is smaller than any current k-nn
             for(int i = 0; i < k; i++) {
-                if(dist < nn_distances[i]) {
+                if(dist < nn_distances.get(i)) {
                     // If closer, then overwrite the k-nn
-                    nn_classes[i] = neighbor.getValue();
-                    nn_distances[i] = dist;
+                    nn_classes.add(i, neighbor.getValue());
+                    nn_distances.add(i, dist);
+                    // Delete last k-nn
+                    nn_classes.remove(k);
+                    nn_distances.remove(k);
                     break; // Exit for-loop
                 } //Otherwise, check next k-nn
             }
@@ -117,8 +121,8 @@ public class KNNClassifier implements IKNearestNeighbor {
         int[] class_freq = new int[num_classes]; // Create a histogram with each class
         for(int i = 0; i < k; i++) { // Populate the histogram
             //System.out.println("NN class: " + nn_classes[i]);
-            if(nn_classes[i] != -1) { // Make sure there were an appropriate # of nn
-                class_freq[(int)nn_classes[i]]++;
+            if(nn_classes.get(i) != -1) { // Make sure there were an appropriate # of nn
+                class_freq[nn_classes.get(i).intValue()]++;
             }
         }
         int classification = 0;

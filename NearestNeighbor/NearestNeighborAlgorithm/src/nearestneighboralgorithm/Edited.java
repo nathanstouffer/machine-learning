@@ -64,11 +64,15 @@ public class Edited implements IDataReducer {
         // declare the edited set
         Set edited;
         
+        System.out.println("ORIG SIZE: " + excessive.getNumExamples());
+        
         this.learner.train(excessive);        
         double orig_acc = computeAccuracy();
         
         boolean edit = true;
+        int iterations = 0;
         do {
+            iterations++;
             // train learner with excessive
             this.learner.train(excessive);
             // compute accuracy for excessive learner (uses validation_set)
@@ -91,11 +95,17 @@ public class Edited implements IDataReducer {
             if (edited_acc < orig_acc) {//excessive_acc){
                 edit = false;
                 // we have edited too far, and must revert one iteration
+                System.out.println("EDITED SIZE: " + edited.getNumExamples());
+                System.out.println("EXCESS SIZE: " + excessive.getNumExamples());
                 edited = excessive;
+                System.out.println("EDITED2 SIZE: " + edited.getNumExamples());
+                System.out.println("EXCESS2 SIZE: " + excessive.getNumExamples());
             }
             // otherwise, run another iteration of the editing process
             else{ excessive = edited; }
         } while (edit);
+        
+        System.out.println("EDITED ITERATIONS: " + iterations);
         
         return edited;
     }
@@ -130,8 +140,8 @@ public class Edited implements IDataReducer {
         for (int i = 0; i < orig.getNumExamples(); i++){
             // the ith example
             Example ex = orig.getExample(i);
-            // real classification
-            double real = ex.getValue();
+            // actual classification
+            double actual = ex.getValue();
             
             // this removes ex from the training set
             orig.delExample(ex);
@@ -142,7 +152,7 @@ public class Edited implements IDataReducer {
             orig.addExample(i, ex);
 
             // if incorrect classification, add ex to misclassified ArrayList
-            if (pred != real){ misclassified.add(ex); }
+            if (pred != actual){ misclassified.add(ex); }
         }
         
         return misclassified;

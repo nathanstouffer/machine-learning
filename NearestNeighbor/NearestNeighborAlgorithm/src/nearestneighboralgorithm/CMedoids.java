@@ -36,7 +36,7 @@ public class CMedoids implements IDataReducer{
         //add c number of random medoids from set
         for(int i = 0; i < c; i++){
             int dist = new Random().nextInt(clone.getNumExamples());
-            medoids.add(new Cluster(clone.getExample(dist), clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames()));
+            //medoids.add(new Cluster(clone.getExample(dist), clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames()));
             clone.delExample(clone.getExample(dist));
         }
         boolean change = true;
