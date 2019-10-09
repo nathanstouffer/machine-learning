@@ -72,8 +72,6 @@ class data:
             else:
                 categorical.append("1")
         matrices = ''
-        print(np.sort(df.Class.unique()))
-        print(df.head())
         for i in range(len(categorical)):
             if categorical[i] == '0':
                 matrices += str(i) + ',' + str(len(df[i].unique())) + ',' + str(len(df.Class.unique())) + '\n'
@@ -86,8 +84,6 @@ class data:
                     df[i].values[:] = 0
                 else:
                     df[i] = df[i].apply(lambda x: (x - df[i].min())/(df[i].max() - df[i].min()))
-        print(df.head())
-        print("-------------------")
         # generate first two rows of formatted output
         if classification:
             header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
