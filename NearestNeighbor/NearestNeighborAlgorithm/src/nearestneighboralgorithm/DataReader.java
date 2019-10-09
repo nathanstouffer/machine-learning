@@ -114,6 +114,9 @@ public class DataReader {
             this.subsets[temp.getSubsetIndex()].addExample(temp);
         }
         
+        // set validation_set as subset[0]
+        this.validation_set = this.subsets[0];
+        
         // close buffered reader
         br.close();
     }

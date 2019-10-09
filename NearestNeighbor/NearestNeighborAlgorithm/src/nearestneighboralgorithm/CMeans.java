@@ -45,6 +45,8 @@ public class CMeans implements IDataReducer{
      */
     @Override
    public Set reduce(Set original){
+       oldcenters = new ArrayList<>();
+       clusterList = new ArrayList<>();
        int maxIter = 1000;
        int i = 0;
        initializeClusters(original);
@@ -112,6 +114,9 @@ public class CMeans implements IDataReducer{
        for (Cluster cluster : clusterList){
            Example center = cluster.getRepresentative();
            ArrayList<Double> newAttributes = new ArrayList<>(center.getAttributes().size());    //makes an ArrayList to calculate averages
+           for (int i = 0; i < center.getAttributes().size(); i++) { //Initialize Arraylist with 0s
+               newAttributes.add(0.0);
+           }
            for (int i = 0; i < center.getAttributes().size(); i++){
                for (Example ex : original){                                                     //gets the average of each attribute in the cluster
                    ArrayList<Double> exAttr = ex.getAttributes();
