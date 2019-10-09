@@ -88,6 +88,7 @@ class data:
                 else:
                     df[i] = df[i].apply(lambda x: (x - df[i].min()) / (df[i].max() - df[i].min()))
         # generate first two rows of formatted output
+        print(df.head())
         if classification:
             header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
                 df['Class'].nunique()) + ',' + str(numcategoricalvar) + '\n' + matrices + ','.join(map(str, classes)) + ',' + '\n'
