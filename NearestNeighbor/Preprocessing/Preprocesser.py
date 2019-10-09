@@ -83,12 +83,10 @@ class data:
         # generate first two rows of formatted output
         if classification:
             header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
-                df['Class'].nunique()) + ',' + str(catfeat) + '\n' + ',,' + ','.join(
-                categorical) + '\n' + matrices + ','.join(map(str, classes)) + ',' + '\n'
+                df['Class'].nunique()) + ',' + str(catfeat) + '\n'+ matrices + ','.join(map(str, classes)) + ',' + '\n'
         else:
             df['Class'] = backupclass
-            header = str(len(df.columns) - 1) + ',' + str(len(df)) + ',' + '-1' + ',' + '\n' + ',,' + ','.join(
-                categorical) + '\n' + matrices
+            header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + '-1' + ',' + str(catfeat) + '\n'+ matrices
         with open('ProcessedDataFiles\\' + name + '.csv', 'w') as fp:
             fp.write(header)
             fp.write((df.to_csv(index=False, header=False)))
