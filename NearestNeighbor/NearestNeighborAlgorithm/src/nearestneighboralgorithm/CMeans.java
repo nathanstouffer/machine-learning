@@ -7,9 +7,15 @@ package nearestneighboralgorithm;
 
 import java.util.ArrayList; 
 import java.util.Random;
-import java.lang.Double;
 /**
- *
+ * Class to reduce the size of a set for use with
+ * a Nearest Neighbor algorithm.
+ * 
+ * CMeans splits a given data set into a specified number of
+ * clusters. It then finds the centers, or average values of
+ * these clusters. Once centers have been found, all points are
+ * reclustered using the new centers. This process is repeated
+ * until centers no longer update.
  * @author erick
  */
 public class CMeans implements IDataReducer{
@@ -18,9 +24,7 @@ public class CMeans implements IDataReducer{
     ArrayList<Cluster> clusterList;
     ArrayList<Example> oldcenters;
     int c;
-
     private IDistMetric metric;
-    private KNNClassifier learner;
     
     /**
      * Constructor to initialize global variables
@@ -30,10 +34,8 @@ public class CMeans implements IDataReducer{
     CMeans(int k, IDistMetric metric){
         this.c = k;
         this.metric = metric;
-        this.learner = new KNNClassifier();
-        this.learner.setK(k);
-        this.learner.setDistMetric(metric);
         this.oldcenters = new ArrayList<>();
+        this.clusterList = new ArrayList<>();
     }
    
     /**

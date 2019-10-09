@@ -5,8 +5,6 @@
  */
 package nearestneighboralgorithm;
 
-import java.util.ArrayList;
-
 /**
  * Class to compute the distance between two categorical
  * attributes
@@ -16,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author natha
  */
-public class Categorical {
+public class ValueDifferenceMetric {
     
     /**
      * method that implements the Value Difference Metric to compute

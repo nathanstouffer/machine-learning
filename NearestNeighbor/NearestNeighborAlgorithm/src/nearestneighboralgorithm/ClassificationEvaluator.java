@@ -65,12 +65,12 @@ public class ClassificationEvaluator implements IEvaluator {
 
     @Override
     public double getMAE() {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
+        return -1; // Unimplemented
     }
 
     @Override
     public double getME() {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
+        return -1; // Unimplemented
     }
     
 }

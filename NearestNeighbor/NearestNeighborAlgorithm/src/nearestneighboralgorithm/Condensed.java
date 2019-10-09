@@ -7,7 +7,13 @@ package nearestneighboralgorithm;
 
 import java.lang.Double;
 /**
- *
+ * Class to reduce the size of a set for use with a 
+ * Nearest Neighbor algorithm.
+ * 
+ * The Condensed Nearest Neighbor algorithm looks at the given
+ * data set and condenses points of the same class that neighbor
+ * each other into a single point, decreasing total number of points
+ * in the set. This process is repeated until the set does not change.
  * @author erick
  */
 public class Condensed {
@@ -17,29 +23,32 @@ public class Condensed {
     private int k;
     // metric that the reduciing algorithm will use
     private IDistMetric metric;
-    // learner used for reducing purposes
-    // learner must be of type KNNClassifier since Condensed 
-    // Nearest Neighbor is limited to classification problems
-    private KNNClassifier learner;
+
  
-    
-    Condensed(int k, IDistMetric metric){
-        this.k = k;
+    /**
+     * Constructor to initialize a new instance of Condensed
+
+     * @param metric 
+     */
+    Condensed(IDistMetric metric){
         this.metric = metric;
-        this.learner = new KNNClassifier();
-        this.learner.setK(k);
-        this.learner.setDistMetric(metric);
     }
     
+    /**
+     * Method that takes in a set and returns the reduced version after running the condensing algorithm on it
+     * @param original
+     * @return 
+     */
     public Set reduce(Set original){
         
         Set reduced = new Set(original.getNumAttributes(), original.getNumClasses(), original.getClassNames());
-        Set oldSet = reduced.clone();
+        Set oldSet = original.clone();
         int maxIter = 1000;
         int i = 0;
-        while (!reduced.getExamples().equals(oldSet.getExamples()) && i <= maxIter){
-            for(Example ex: reduced){
-                double min = Double.MAX_VALUE;
+        while (!reduced.getExamples().equals(oldSet.getExamples()) && i <= maxIter){        //while the set changes from one iteration to the next
+            oldSet = reduced.clone();
+            for(Example ex: original){
+                double min = Double.MAX_VALUE;                                          //saving minimums to find the closest example in the set, for each example
                 Example minEx = original.getExample(0);
                 for (Example ex2 : reduced){
                     if (!ex.getAttributes().equals(ex2.getAttributes())){               //checking for identical example(self)
@@ -49,8 +58,8 @@ public class Condensed {
                         }
                     }
                 }
-                if (minEx.getClass() != ex.getClass()){
-                    reduced.addExample(minEx);
+                if (minEx.getClass() != ex.getClass()){                     //adds the closest example to the reduced set if it has different class than 
+                    reduced.addExample(minEx);                              //example we are comparing to
                 }
             }
             i++;
