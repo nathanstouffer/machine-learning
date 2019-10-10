@@ -63,18 +63,23 @@ where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th a
 The K-Nearest Neighbor decision rule is a lazy algorithm where the performance is a function of the number of training examples. Therefore, in terms of a learner's computational efficiency, the most favorable training set is the smallest set.
 This is subject to the constraint that the model's performance is not compromised.
 
-Thus, the optimal training set for a K-NN learner is the smallest set that is able to maximize correct identification of any query example.
-The purpose of the following four algorithms is to identify and remove unnecessary examples from the training set. Since K-NN is lazy by nature, this will improve the computation time of the learner.
+Thus, the optimal training set for a K-NN learner is the smallest set that is able to maximize the correct identification of any query example.
+The purpose of the following four algorithms is to reduce the size of the dataset without compromising the learner's performance. Since K-NN is lazy by nature, this will improve the computation time of the learner at query time.
 % should I talk about not decreasing performance? That is what we are testing right
 
 
 \subsubsection{Edited K-NN}
-The Edited K-Nearest Neighbor algorithm begins the discussion of algorithms that reduce the size of a training set. Edited K-NN begins with an initial set of training examples $D$ and classifies each example $e \in D$ using a K-NN algorithm. For each example $e$, K-NN returns the predicted class of $e$: $predclass(e)$. However, recall that $e$ is a training example, so the actual class of $e$, $class(e)$ is known. So, for each $e$ where $class(e) \neq predclass(e)$ (if $e$ was misclassified), the algorithm removes $e$ from $D$.
+The discussion of algorithms that reduce the size of a training set begins with Edited K-Nearest Neighbor. Edited K-NN begins by training a K-NN learner $L$ with each example in an initial dataset $D^0$. Note that since multiple steps in the following algorithm rely on knowing the classification of $e$, Edited K-NN can only be used on classification problems.
 
-This creates a new set $D^\prime$. 
+The learner $L$ then classifies each example $e^0 \in D^0$. That is, for each example $e^0$, the learner $L$ returns the predicted class of $e^0$: $predclass(e^0)$. However, recall that $e^0$ is a training example, so $class(e^0)$, the actual class of $e^0$, is known. So, for each $e^0$ where $class(e^0) \neq predclass(e^0)$ (if $e^0$ was misclassified), the algorithm removes $e^0$ from $D^0$.
 
-As a side note, since multiple steps of the algorithm relies on knowing the classification of $e$, Edited K-NN can only be used on classification problems.
+This creates a new set $D^1$. The learner $L$ is now trained with $D^1$ and the editing process repeats itself until performance decreases. In this case, the performance is measured as the accuracy of the learner on a validation set. The validation set is consistent in all editing iterations.
+
+Say performance decreases on the $i^{th}$ iteration. The final edited data set is $D^{i-1}$. A separate K-NN classifier is now trained using $D^{i-1}$ and is tested using a testing set.
+
+
 % TODO talk about the k used in edited k-nn
+% TODO talk about accuracy being our metric
 
 % explain edited (cite paper)
 % metric for decisions (accuracy)
@@ -86,24 +91,26 @@ As a side note, since multiple steps of the algorithm relies on knowing the clas
 
 \subsubsection{Condensed K-NN}
 
-Eric
+Condensed Nearest Neighbor begins with a null set Z and initializes a random starting point out of the data set. Z becomes the reduced data set once the algorithm has completed. The algorithm then iterates through all examples x in the original data set and finds the closest example x’ in Z for each of them. It then compares the classes of x and x’, adding x to the data set Z only if the two classes differ. This process is repeated until Z no longer changes, or the max number of iterations is reached. This process can be thought of as simply taking all of the same class examples nearest each other and condensing them into a single point. This way, we reduce the number of points required to represent a given class at a single point.
 
 \subsubsection{Kmeans K-NN}
 
-Eric test
+The K-Means (C-Means) algorithm is a data reducer that utilizes clustering to return a smaller data set. It does this by taking the average value of all the points in a cluster, and updating them until the averages remain the same from iteration to iteration. The algorithm is passed in a data set and a value for number of clusters K. It then initializes K clusters by randomly selecting points out of the data set. We chose to take the initial points from the data set in an effort to reduce the time it takes for the algorithm to zero in on the data. From there, the algorithm iterates through all of the examples in the original set and adds them to the nearest cluster. Once all points have been assigned, K-Means computes the new average point within each cluster and assigns that to the representative point. Once every cluster average has been recomputed, all points are reassigned to the new representative points. This process is repeated until the representative points no longer change, or a max number of iterations is reached.
 
 \subsubsection{PAM K-NN}
-The Partitioning Around Medoids (PAM) K-NN is a variant of K-Means K-NN but is more resistant to outliers because it uses an actual point in the dataset instead of making a new point using means. PAM begins by randomly selecting $C$ number of data points from the data set $D$ as the medoids $m$. In this case $C$ is determined by the number of points returned by Edited K-NN. The algorithm then clusters all of the remaining examples $x$ to the closest corresponding $m_i \in m$. Then the distortion is calculated with $$D = \sum_{j=1}^{k}\sum_{i \in cluster_j} (x_i - m_j)$$. We then iterate through each $m$ and swap it with every $x_j \in D$ $x_j \notin m$. After every swap the distortion $D$ is calculated again. This was optimized by calculating the distortion of each medoid separately and only recalculating the distortion for the medoid that was changed. If the new distortion is less than the original distortion the algorithm moves on and if the new distortion is greater than the original distortion than the medoid and example are swapped back. The clusters are then cleared and the algorithm then recalculates all of the clusters and distortion and repeats the swapping until no more swapping occurs or the algorithm iterates through 1000 times. 
+The Partitioning Around Medoids (PAM) K-NN is a variant of K-Means K-NN but is more resistant to outliers because it uses an actual point in the data set instead of making a new point using means. PAM begins by randomly selecting $C$ number of data points from the data set $D$ as the medoids $m$. In this case $C$ is determined by the number of points returned by Edited K-NN. The algorithm then clusters all of the remaining examples $x$ to the closest corresponding $m_i \in m$. Then the distortion is calculated with $$D = \sum_{j=1}^{k}\sum_{i \in cluster_j} (x_i - m_j)$$. We then iterate through each $m$ and swap it with every $x_j \in D$ $x_j \notin m$. After every swap the distortion $D$ is calculated again. This was optimized by calculating the distortion of each medoid separately and only recalculating the distortion for the medoid that was changed. If the new distortion is less than the original distortion the algorithm moves on and if the new distortion is greater than the original distortion than the medoid and example are swapped back. The clusters are then cleared and the algorithm then recalculates all of the clusters and distortion and repeats the swapping until no more swapping occurs or the algorithm iterates through 1000 times (\cite{Fox1990FindingGI}).
 
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
 
-All of the preprocessing is done in Python and outputted in .csv files for the main Java program to read in. First all the examples in the dataset are randomly scrambled and then assigned to sets for ten-fold cross validation. All categorical variables are converted to integers and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distanced between categorical variables. Class names are also converted to incrementing integers for easier reading by the Java program. All numerical variables are normalized between 0 and 1. The preprocessor generates a three lines of key information that the Java program needs to run and adds this data to the beginning of the .csv file. The similarity matrices are outputted next followed by the examples. Having Python do most of these calculations greatly simplified our Java program and made preprocessing much simpler. The data sets did not contain any missing variables so preprocessing did not need to handle that. 
+First all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. All categorical variables are converted to integers and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distanced between categorical variables. Class names are also converted to incrementing integers for easier reading by the Java program. All numerical variables are normalized between 0 and 1. The data sets did not contain any missing variables so preprocessing did not need to handle that. 
 
 \subsection{Tuning}
 
-A few of us
+The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set. 
+
+The second parameter to tune is $C$ which is the number of representative points that K-Means K-NN and K-Medoids K-NN have. Tuning begins with the number of points returned by Edited K-NN and tuned from there. 
 
 \section{Results}
 

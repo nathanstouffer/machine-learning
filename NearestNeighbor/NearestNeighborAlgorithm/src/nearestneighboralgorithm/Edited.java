@@ -95,14 +95,10 @@ public class Edited implements IDataReducer {
             double edited_acc = computeAccuracy();
             
             // stop editing set when performance degrades
-            if (edited_acc < orig_acc) {//excessive_acc){
+            if (iterations == 10){//edited_acc < orig_acc) {//excessive_acc){
                 edit = false;
                 // we have edited too far, and must revert one iteration
-                System.out.println("EDITED SIZE: " + edited.getNumExamples());
-                System.out.println("EXCESS SIZE: " + excessive.getNumExamples());
                 edited = excessive;
-                System.out.println("EDITED2 SIZE: " + edited.getNumExamples());
-                System.out.println("EXCESS2 SIZE: " + excessive.getNumExamples());
             }
             // otherwise, run another iteration of the editing process
             else{ excessive = edited; }
@@ -143,10 +139,10 @@ public class Edited implements IDataReducer {
         ArrayList<Example> misclassified = new ArrayList<Example>();
         // array for a batch that we will edit
         // the size of batch is BATCH_SIZE
-        Example[] batch = new Example[this.BATCH_SIZE];
+        // Example[] batch = new Example[this.BATCH_SIZE];
         
         // populate batch with random Examples from clone
-        Random rnd = new Random();
+        /*Random rnd = new Random();
         for (int i = 0; i < this.BATCH_SIZE; i++){
             // get random value in to index clone
             int rand_index = rnd.nextInt(orig.getNumExamples());
@@ -158,10 +154,10 @@ public class Edited implements IDataReducer {
             
             // insert ex into batch
             batch[i] = ex;
-        }
+        }*/
         
         // reinsert values of batch into clone
-        for (int i = 0; i < batch.length; i++){ orig.addExample(batch[i]); }
+        //for (int i = 0; i < batch.length; i++){ orig.addExample(batch[i]); }
         
         // using learner, classify all points in clone
         // for (Example ex: clone){
