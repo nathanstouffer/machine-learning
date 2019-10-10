@@ -1,0 +1,9 @@
+Dataset,Accuracy,MSE
+test.csv,100%,0,-1,-1
+abalone.csv,26.19%,231.09,-1,-1
+car.csv,92.65%,11.45,-1,-1
+segmentation.csv,81.9%,2.46,-1,-1
+forestfires.csv,-100%,4238.22,12.93,-12.67
+machine.csv,-100%,2.07,0.55,-0.51
+winequality-red.csv,-100%,20.74,4.26,-4.25
+winequality-white.csv,-100%,18.69,4.09,-4.09
