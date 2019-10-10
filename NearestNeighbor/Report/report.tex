@@ -30,11 +30,11 @@ In the realm of machine learning, knowing the form of some distribution of data 
 
 The data sets to be handled in this project do not follow a known distribution. Thus, constructing parametric learners for these sets is very hard. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form. 
 
-One popular and intuitive method of non-parametric learning is K-Nearest Neighbors (K-NN) learning algorithm. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited K-Nearest Neighbor, Condensed Nearest Neighbor, K-Means and K-Medoids data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
+One popular and intuitive method of non-parametric learning is K-Nearest Neighbors (K-NN) learning algorithm. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited Nearest Neighbor (E-NN), Condensed Nearest Neighbor (C-NN), K-Means (KMeans), and K-Medoids (PAM) data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
 
 \subsection*{Hypothesis}
 
-K-NN is expected to outperform the other nearest neighbor variants. K-NN utilizes the most data points from the data set, which is essential for minimizing the error rate (See 2.1, K-NN).
+K-NN is expected to outperform the other nearest neighbor variants. K-NN utilizes the most data points from the data set, which is essential for minimizing the error rate. Furthermore, KMeans and PAM are expected to perform better than E-NN and C-NN because they will have similar amounts of representative points, but KMeans and PAM fit the representative points to the known data.
 
 \section{Algorithms}
 
@@ -48,7 +48,7 @@ Thus, given $X$, a number of neighbors $k$, and a new example $x$, K-NN finds th
 
 Note that this does not heavily assume anything about the form of the actual distribution. K-NN is flexible enough to adapt to almost any functional form that the underlying distribution takes on. This is a huge advantage for data sets that are hard to visualize or have unknown traits. The downside to this characteristic is that, like many nonparametric models, K-NN requires much more data than a parametric model to train effectively. In other words, K-NN requires a great number of known examples because it must is essentially estimating the real distribution from the known examples. Without sufficient data, K-NN will perform poorly.
 
-In fact, the error of K-NN, $R_{knn}$ is bounded by:
+In fact, the error of K-NN, $R_{knn}$ as the number of points sampled approaches infinity is bounded by:
 $$R^* \leq R_{knn} \leq (1+\frac{1}{k})R^*$$ 
 where $R^*$ is the Bayes risk, the optimal risk given a known set of probability densities that represents the data (\cite{NNClassification}). Thus, as $k \rightarrow \infty$ and the number of data points $n \rightarrow \infty$, theoretically $R_{knn} \rightarrow R^*$. Of course, $\frac{k}{n} \rightarrow 0$ should be ensured so that $k$ is still only a small subset of the total data points $n$. In short, K-NN will work optimally as the number of points sampled approaches infinity. As more attributes or data complexity is added, K-NN will approach its optimal condition slower given increasing $n$.
 
