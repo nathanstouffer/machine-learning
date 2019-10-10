@@ -2,6 +2,7 @@
 
 \usepackage{jmlr2e}
 \usepackage{spverbatim}
+\usepackage{amsmath}
 
 \begin{document}
 
@@ -59,6 +60,16 @@ The nearest neighbor rule, and therefore K-NN, requires a distance metric to det
 $$D = \sqrt{\sum_{i=0}^{d}(a_1^i - a_2^i)^2}$$
 where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th attribute of $x_1$, and $a_2^i$ is the $i$-th attribute of $x_2$.
 
+A Euclidean distance metric assumes that all data in a dataset is continuous. However, in the world of data science and this project, some attributes contain categorical values. One method to compute this distance is the Value Difference Metric (VDM). Note that the VDM relies on classification to compute a distance, so continuous outputs must be discretized by some method.
+
+To compute a distance between two categorical values $x_1, x_2$ within one attribute $a$ using the VDM, find the following for each value:
+$$ v_n = \sum _{i = 1}^{k} | \dfrac{N_{1i}}{N_1} - \dfrac{N_{2i}}{N_2} | $$
+where $N_{1i}, N_{2i}$ are the number of examples in $a$ that are of the $i^{th}$ class and have values $x_1, x_2$ respectively, and $N_1, N_2$ are the number of examples in $a$ that are of the $i^{th}$ class.
+
+Then compute the difference
+$v_2 - v_1$.
+This difference is considered to be the distance $v$ between the two categorical values $x_1$ and $x_2$ \citep{vdm}.
+
 \subsection{Data Reducers}
 The K-Nearest Neighbor decision rule is a lazy algorithm where the performance is a function of the number of training examples. Therefore, in terms of a learner's computational efficiency, the most favorable training set is the smallest set.
 This is subject to the constraint that the model's performance is not compromised.
@@ -73,21 +84,16 @@ The discussion of algorithms that reduce the size of a training set begins with 
 
 The learner $L$ then classifies each example $e^0 \in D^0$. That is, for each example $e^0$, the learner $L$ returns the predicted class of $e^0$: $predclass(e^0)$. However, recall that $e^0$ is a training example, so $class(e^0)$, the actual class of $e^0$, is known. So, for each $e^0$ where $class(e^0) \neq predclass(e^0)$ (if $e^0$ was misclassified), the algorithm removes $e^0$ from $D^0$.
 
-This creates a new set $D^1$. The learner $L$ is now trained with $D^1$ and the editing process repeats itself until performance decreases. In this case, the performance is measured as the accuracy of the learner on a validation set. The validation set is consistent in all editing iterations.
+This creates a new set $D^1$. The learner $L$ is now trained with $D^1$ and the editing process repeats itself until performance decreases \citep{edited}. In this case, the performance is measured as the accuracy of the learner on a validation set. The validation set is consistent throughout all editing iterations.
 
-Say performance decreases on the $i^{th}$ iteration. The final edited data set is $D^{i-1}$. A separate K-NN classifier is now trained using $D^{i-1}$ and is tested using a testing set.
+Say performance decreases on the $i^{th}$ iteration. The final edited data set is $D^{i-1}$. A separate K-NN classifier is now trained using $D^{i-1}$ and subsequently tested.
 
 
 % TODO talk about the k used in edited k-nn
-% TODO talk about accuracy being our metric
-
-% explain edited (cite paper)
-% metric for decisions (accuracy)
 
 % notes: edited paper has a good line of reasoning for the hypothesis
 % nn-d2l has information for tuning
 % remember to discuss lack of knowledge about overfitting in convergence based algorithms
-% TODO get rid of K-NN in reducing algorithm titles
 
 \subsubsection{Condensed K-NN}
 
