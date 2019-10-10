@@ -44,10 +44,10 @@ public class Example {
         for (int i = 0; i < num_attr; i++){ this.attr.add(Double.parseDouble(data[i+2])); }
     }
     
-    Example(ArrayList<Double> attributes){
+    Example(double value, ArrayList<Double> attributes){
         this.attr = attributes;
-        this.value = 0.0;
-        this.subset_index = 0;
+        this.value = value;
+        this.subset_index = -1;
     }
     
     // getter methods
@@ -55,6 +55,6 @@ public class Example {
     public int getSubsetIndex(){ return this.subset_index; }
     // method to return a clone of the attributes
     // a client of an Example object should only be able to view the information, not edit
-    public ArrayList<Double> getAttributes(){ return (ArrayList<Double>)this.attr.clone(); }
+    public ArrayList<Double> getAttributes(){ return this.attr; }
     
 }

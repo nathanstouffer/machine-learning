@@ -17,12 +17,13 @@ public class CMedoids implements IDataReducer {
 
     //number of clusters to create, gets from ENN
     private int c;
-    //initilize distortion variable
-    private double distortion = 0;
+    //initilize computeDistortion variable
+    private double distortion;
     // metric that the reduciing algorithm should use
     private IDistMetric metric;
     //Euclidean squared object to get distances between points
-    private ArrayList<Cluster> clusters = new ArrayList<Cluster>();
+    private Cluster[] clusters;
+    
     /**
      * constructor takes number of medoids c and distance metric to use
      * @param c
@@ -31,6 +32,8 @@ public class CMedoids implements IDataReducer {
     CMedoids(int c, IDistMetric met) {
         this.c = c;
         this.metric = met;
+        this.distortion = 0.0;
+        this.clusters = new Cluster[c];
     }
     /**
      * Implements reduce method from IDataReducer and outputs a reduced data set
@@ -41,75 +44,166 @@ public class CMedoids implements IDataReducer {
     public Set reduce(Set orig) {
         //clones original data set in order to delete from set
         Set clone = orig.clone();
-
-        //add c number of random examples as medoids to clusters array
-        for (int i = 0; i < c; i++) {
-            int dist = new Random().nextInt(clone.getNumExamples());
-            clusters.add(new Cluster(clone.getExample(dist), clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames(), metric));
-            clone.delExample(clone.getExample(dist));
-        }
-        //boolean to determine if a swap occured
+        
+        // initialize the medoids at random values
+        this.initializeMedoids(clone);
+                
+        // boolean to determine if a swap occured
         boolean change = true;
-        //loop to run until no change happens or 1000 loops
-        for (int g = 0; g < 1000 && change; g++) {
-            change = false;
-            //adding each point to the cluster of its nearest medoid
-            for (int i = 0; i < clone.getNumExamples(); i++) {
-                //setting min value
-                double min = Double.MAX_VALUE;
-                //index of closest medoid
-                int minmedoidindex = 0;
-                Example example = clone.getExample(i);
-                //getting distance between each example and each medoid
-                for (int a = 0; a < clusters.size(); a++) {
-                    Example medoid = clusters.get(a).getRepresentative();
-                    double dist = metric.dist(example, medoid);
-                    //if distance is less change min distance and closest medoid index
-                    if (dist < min) {
-                        min = dist;
-                        minmedoidindex = a;
-                    }
-                }
-                clusters.get(minmedoidindex).AddExample(example);
-            }
-            //calculate total distortion
-            for (Cluster c : clusters) {
-                distortion += c.distortion();
-            }
-            //swapping each medoid with all points in cluster
-            for (int a = 0; a < clusters.size(); a++) {
-                //iterating through all example by cluster
-                for (Cluster c : clusters) {
-                    for (int e = 0; e < c.getCluster().getNumExamples(); e++) { //Example e : c.getCluster()) {
-                        //swap example with medoid
-                        Example ex = c.getCluster().getExample(e);
-                        c.DeleteExample(ex);
-                        Example medoid = clusters.get(a).getRepresentative();
-                        clusters.get(a).AddExample(medoid);
-                        clusters.get(a).SetRepresentative(ex);
-                        //calculate new distortion
-                        double newdistortion = 0;
-                        for (Cluster x : clusters) {
-                            newdistortion += x.distortion();
-                        }
-                        //swap back if new distortion is larger than old distortion
-                        if (distortion < newdistortion) {
-                            clusters.get(a).DeleteExample(medoid);
-                            c.AddExample(e, ex);
-                            clusters.get(a).SetRepresentative(medoid);
-                        //change is true, keep iterating
-                        } else {
-                            change = true;
-                        }
-                    }
-                }
-            }
+        // loop to run until no change happens or 1000 loops
+        for (int g = 0; g < 1000 && change; g++) {            
+            // clear the current clusters
+            for (int i = 0; i < this.c; i++){ this.clusters[i].clearCluster(); }
+
+            // cluster the data using the current medoids
+            this.cluster(clone, this.getMedoids());
+            
+            // find the best fitting medoid in each cluster
+            change = this.swapMedoids();            
         }
-        //getting each representative medoid from all the clusters and add to output set
-        Set medoids = new Set(clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames());
-        for (Cluster c : clusters) {
-            medoids.addExample(c.getRepresentative());
+        
+        // declare a new set for the reduced data
+        // this set will be populated with the medoids
+        Set reduced = new Set(clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames());
+        // final medoids
+        Example[] medoids = this.getMedoids();
+        // iterate through medoids
+        for (int i = 0; i < this.c; i++){
+            // compute the assigned value of the medoid
+            double medoid_val = this.clusters[i].computeRepValue();
+            // get the attributes of the medoid
+            ArrayList<Double> attr = medoids[i].getAttributes();
+            // instantiate new value
+            Example val = new Example(medoid_val, attr);
+            // add val to reduced set
+            reduced.addExample(val);
         }
+        return reduced;
+    }
+    
+    /**
+     * method to swap the each medoid with each example in its cluster
+     * returns false if medoids do not change
+     * @return 
+     */
+    public boolean swapMedoids(){
+        // assume that the current medoids are on the final iteration
+        boolean change = false;
+        // declare distortion array
+        double[] distortions = new double[this.c];
+        // populate distortions array with distortions
+        for (int i = 0; i < this.c; i++){ distortions[i] = this.clusters[i].computeDistortion(); }
+        
+        // test if any medoid should be swapped
+        for (int i = 0; i < this.c; i++){
+            // current cluster and medoid
+            Cluster cluster = this.clusters[i];
+            // iterate through each point in the current cluster
+            for (int j = 0; j < cluster.getClusterSize(); j++){
+                // current medoid
+                Example medoid = cluster.getRep();
+                // jth example in cluster
+                Example ex = cluster.getExample(j);
+
+                // swap ex with the current medoid
+                cluster.replaceExample(j, medoid);
+                cluster.setRep(ex);
+
+                // compute new computeDistortion for this cluster
+                double new_distortion = cluster.computeDistortion();
+
+                // compare to original computeDistortion
+                if (distortions[i] <= new_distortion){
+                    // swap back to original medoid
+                    cluster.replaceExample(j, ex);
+                    cluster.setRep(medoid);
+                }
+                else {
+                    // a medoid was correctly swapped, so change must be true
+                    change = true;
+                    // update the distortions array
+                    distortions[i] = new_distortion;
+                }
+            }
+            //System.out.println("NUM EXAMPLES IN CLUSTER: " + Integer.toString(cluster.getClusterSize()));
+        }
+        
+        return change;
+    }
+    
+    /**
+     * method to cluster the data around the medoids
+     * @param data
+     * @param medoids 
+     */
+    private void cluster(Set data, Example[] medoids){
+        // iterate through each example in the data
+        for (int i = 0; i < data.getNumExamples(); i++) {
+            // example we must assign to a medoid
+            Example ex = data.getExample(i);
+            // index of closest medoid
+            int min_index = 0;
+
+            // assume current distance from ex to closest medoid is Double.MAX_VALUE
+            double min_dist = Double.MAX_VALUE;
+            // iterate through medoids
+            for (int a = 0; a < this.c; a++) {
+                // get current medoid
+                Example curr_medoid = medoids[a];
+                // compute distance between ex and medoid
+                double dist = metric.dist(ex, curr_medoid);
+                // compare dist to min_dist
+                if (dist < min_dist) {
+                    // if dist is less than min_dist, make dist the new min_dist
+                    min_dist = dist;
+                    min_index = a;
+                }
+            }
+            // assign ex to a medoid
+            this.clusters[min_index].addExample(ex);
+        }
+    }
+    
+    /**
+     * method to return an Example array with all the medoids
+     * @return 
+     */
+    private Example[] getMedoids(){
+        // declare correctly sized array
+        Example[] medoids = new Example[this.c];
+        
+        // iterate through each cluster
+        for (int i = 0; i < c; i++){ 
+            // add cluster representative to medoids
+            medoids[i] = this.clusters[i].getRep();
+        }
+        
         return medoids;
+    }
+    
+    /**
+     * method to randomly declare the medoids
+     * @param data 
+     */
+    private void initializeMedoids(Set data){
+        // variable for the number of classes in clone
+        int num_classes = data.getNumClasses();
+        
+        // add c number of random examples as medoids to clusters array
+        Random rand = new Random();
+        for (int i = 0; i < this.c; i++) {
+            // compute random index
+            int rand_index = rand.nextInt(data.getNumExamples());
+            // create medoid from value at rand_index in data
+            Example medoid = data.getExample(rand_index);
+            
+            // create new cluster with medoid
+            Cluster temp = new Cluster(medoid, num_classes, this.metric);
+            // add the new cluster to clusters
+            this.clusters[i] = temp;
+            
+            // delete medoid from data so it will not be chosen again
+            data.delExample(medoid);
+        }
     }
 }

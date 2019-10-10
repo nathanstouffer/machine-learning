@@ -45,6 +45,8 @@ public class ValueDifferenceMetric {
                 // add to running total
                 dist += diff;
             }
+            // regularize the distance by dividing by the number of classes
+            dist /= mtr.getNumBins();   // THIS MAY NOT BE A GOOD IDEA
             // return the distance
             return dist;
         }

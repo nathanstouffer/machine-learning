@@ -35,12 +35,12 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");
         System.out.println("-----------------------------------------");
-        //testCMeans();
+        testCMeans();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEDOIDS --------------");
         System.out.println("-----------------------------------------");
-        testMedoids();
+        //testMedoids();
     }
     
     private static void testKNN() throws FileNotFoundException, UnsupportedEncodingException {
@@ -340,7 +340,7 @@ public class Client {
                 cmeans = new CMeans((int) 0.25 * reader.getNumExamples(), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                cmeans = new CMeans(10, new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                cmeans = new CMeans((int) (0.25 * (double)reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }      
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
             knn.setK((int)Math.sqrt(reader.getNumExamples()));
@@ -450,7 +450,7 @@ public class Client {
                 medoids = new CMedoids((int) 0.25 * reader.getNumExamples(), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                medoids = new CMedoids(5, new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                medoids = new CMedoids(100, new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }      
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
             knn.setK((int)Math.sqrt(reader.getNumExamples()));
