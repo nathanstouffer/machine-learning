@@ -45,7 +45,7 @@ public class CMedoids implements IDataReducer {
         //add c number of random examples as medoids to clusters array
         for (int i = 0; i < c; i++) {
             int dist = new Random().nextInt(clone.getNumExamples());
-            clusters.add(new Cluster(clone.getExample(dist), clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames()));
+            clusters.add(new Cluster(clone.getExample(dist), clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames(), metric));
             clone.delExample(clone.getExample(dist));
         }
         //boolean to determine if a swap occured
@@ -76,16 +76,17 @@ public class CMedoids implements IDataReducer {
             for (Cluster c : clusters) {
                 distortion += c.distortion();
             }
-            //swapping each medoid will all points
+            //swapping each medoid with all points in cluster
             for (int a = 0; a < clusters.size(); a++) {
                 //iterating through all example by cluster
                 for (Cluster c : clusters) {
-                    for (Example e : c.getCluster()) {
+                    for (int e = 0; e < c.getCluster().getNumExamples(); e++) { //Example e : c.getCluster()) {
                         //swap example with medoid
-                        c.DeleteExample(e);
+                        Example ex = c.getCluster().getExample(e);
+                        c.DeleteExample(ex);
                         Example medoid = clusters.get(a).getRepresentative();
                         clusters.get(a).AddExample(medoid);
-                        clusters.get(a).SetRepresentative(e);
+                        clusters.get(a).SetRepresentative(ex);
                         //calculate new distortion
                         double newdistortion = 0;
                         for (Cluster x : clusters) {
@@ -94,7 +95,7 @@ public class CMedoids implements IDataReducer {
                         //swap back if new distortion is larger than old distortion
                         if (distortion < newdistortion) {
                             clusters.get(a).DeleteExample(medoid);
-                            c.AddExample(e);
+                            c.AddExample(e, ex);
                             clusters.get(a).SetRepresentative(medoid);
                         //change is true, keep iterating
                         } else {

@@ -20,7 +20,7 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        testKNN();
+        //testKNN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
@@ -36,6 +36,11 @@ public class Client {
         System.out.println("------------------- CMEANS --------------");
         System.out.println("-----------------------------------------");
         //testCMeans();
+        
+        System.out.println("-----------------------------------------");
+        System.out.println("------------------- CMEDOIDS --------------");
+        System.out.println("-----------------------------------------");
+        testMedoids();
     }
     
     private static void testKNN() throws FileNotFoundException, UnsupportedEncodingException {
@@ -47,7 +52,7 @@ public class Client {
         // ------------------ TEST K-NN ----------------------------------------
         // ---------------------------------------------------------------------
         // List the files we want to test
-        String[] knn_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
+        String[] knn_datafiles = {"test.csv", "abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
         
         // Iterate through each data file
         for(int f = 0; f < knn_datafiles.length; f++) {
@@ -416,6 +421,116 @@ public class Client {
             */
             
             writer.print(cmeans_datafiles[f] + "," + new DecimalFormat("###.##").format(accuracy_sum/10*100)+ "%,");
+            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + "\n");
+            
+        }          
+        
+        writer.close(); //Close output file
+    }
+    
+     private static void testMedoids() throws FileNotFoundException, UnsupportedEncodingException {
+        // Open the output file
+        PrintWriter writer = new PrintWriter("../medoids_output.csv", "UTF-8");
+        writer.println("Dataset,Accuracy,MSE,Datapoints");
+        
+        // List the files we want to test
+        String[] medoids_datafiles = {"car.csv"};//{"abalone.csv", "car.csv", "segmentation.csv", };
+        
+        // Iterate through each data file
+        for(int f = 0; f < medoids_datafiles.length; f++) {
+            System.out.println("--- Handling " + medoids_datafiles[f] + " data set ---");
+            // Create the data reader to read in our preprocessed files
+            DataReader reader = new DataReader(medoids_datafiles[f]); 
+            
+            // Initialize the object that will be runnning our algorithm on the data
+            IKNearestNeighbor knn;
+            CMedoids medoids;
+            if(reader.getClassNames() == null) { // Check if the file contained a regression set
+                knn = new KNNRegressor();
+                medoids = new CMedoids((int) 0.25 * reader.getNumExamples(), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
+            } else { // Otherwise, the file contained a classification set
+                knn = new KNNClassifier();
+                medoids = new CMedoids(5, new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+            }      
+            knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
+            knn.setK((int)Math.sqrt(reader.getNumExamples()));
+            
+            // Initialize the sums that will be used to compute our average loss metrics
+            double accuracy_sum = 0;
+            double mse_sum = 0;
+            double mae_sum = 0;
+            double me_sum = 0;
+            
+            // PERFORM 10 FOLD CROSS VALIDATION
+            for(int i = 0; i < 10; i++) {
+                System.out.println("Test " + (i+1));
+                Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
+
+                Set medoids_set = medoids.reduce(training_set.clone());
+                
+                System.out.println("MEDOIDS REDUCED TO " + medoids_set.getNumExamples() + " POINTS");
+                System.out.println(medoids_set.getExamples().toString());
+                
+                knn.train(medoids_set); // Train
+                Set testing_set = reader.getSubsets()[i]; // Test with the remaining subset
+
+                double[] predictions = knn.test(testing_set); // Test
+                
+                IEvaluator eval;
+                if(reader.getClassNames() == null) { // Check if the file contained a regression set
+                    eval = new RegressionEvaluator(predictions, testing_set);
+                } else { // Otherwise, the file contained a classification set
+                    eval = new ClassificationEvaluator(predictions, testing_set);
+                }
+                
+                // Output information about the metrics
+                System.out.println("The accuracy was: " + 
+                        new DecimalFormat("###.##").format(eval.getAccuracy()*100)
+                        + "%");
+                System.out.println("The MSE was: " + 
+                        new DecimalFormat("###.##").format(eval.getMSE()));
+                System.out.println("The MAE was: " + 
+                        new DecimalFormat("###.##").format(eval.getMAE()));
+                System.out.println("The ME was: " + 
+                        new DecimalFormat("###.##").format(eval.getMAE()));
+                // Track sums for averages
+                accuracy_sum += eval.getAccuracy();
+                mse_sum += eval.getMSE();
+                mae_sum += eval.getMAE();
+                me_sum += eval.getME();
+
+                System.out.println();
+            }
+            // Output information about the loss metrics to the console----
+            if(reader.getClassNames() == null) { // Check if the file contained a regression set
+                System.out.println("Average MSE for " + medoids_datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(mse_sum/10));
+                System.out.println("Average MAE for " + medoids_datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(mae_sum/10));
+                System.out.println("Average ME for " + medoids_datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(me_sum/10));
+                System.out.println("----------------------------------------------");
+            } else { // Otherwise, the file contained a classification set
+                System.out.println("Average accuracy for " + medoids_datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(accuracy_sum/10*100)
+                        + "%");
+                System.out.println("Average MSE for " + medoids_datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(mse_sum/10));
+                System.out.println("----------------------------------------------");
+            }
+            
+            
+            
+            // Output information about the loss metrics to a file
+            /*writer.println("Average accuracy for " + datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(accuracy_sum/10*100)
+                        + "%");
+            writer.println("Average MSE for " + datafiles[f] + " was " 
+                    + new DecimalFormat("###.##").format(mse_sum/10));
+            writer.println("----------------------------------------------");
+            */
+            
+            writer.print(medoids_datafiles[f] + "," + new DecimalFormat("###.##").format(accuracy_sum/10*100)+ "%,");
             writer.print(new DecimalFormat("###.##").format(mse_sum/10) + "\n");
             
         }          

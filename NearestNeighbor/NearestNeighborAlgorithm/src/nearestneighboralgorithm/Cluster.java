@@ -25,7 +25,8 @@ public class Cluster {
      * @param num_classes
      * @param class_names 
      */
-    Cluster(Example rep, int num_attributes, int num_classes, String[] class_names) {
+    Cluster(Example rep, int num_attributes, int num_classes, String[] class_names, IDistMetric distance_metric) {
+        this.euclidean = (EuclideanSquared)distance_metric;
         this.representative = rep;
         this.cluster = new Set(num_attributes, num_classes, class_names);
     }
@@ -42,6 +43,7 @@ public class Cluster {
     }
     //getters and setters for cluster and representative
     public void AddExample(Example example){ cluster.addExample(example); }
+    public void AddExample(int index, Example example){ cluster.addExample(index, example); }
     public void DeleteExample(Example example){ cluster.delExample(example); };
     public void SetRepresentative(Example example){ representative = example; }
     public Example getRepresentative(){ return this.representative; }
