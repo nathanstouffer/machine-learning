@@ -20,17 +20,17 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        testKNN();
+        //testKNN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
         System.out.println("-----------------------------------------");
-        testENN();
+        //testENN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CONDENSED -----------");
         System.out.println("-----------------------------------------");
-        testKNNCondensed();
+        //testKNNCondensed();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");
@@ -326,7 +326,8 @@ public class Client {
         
         // List the files we want to test
         String[] cmeans_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
-        int[] c_values = {1000, 75, 25, 0, 0, 0, 0};
+        int[] c_values = {1400, 1500, 170, 0, 0, 0, 0};
+        //int[] c_values = {(int) (1400*1.1), 1525, (int)(170*1.1), 0, 0, 0, 0};
         
         // Iterate through each data file
         for(int f = 0; f < cmeans_datafiles.length; f++) {
@@ -342,7 +343,7 @@ public class Client {
                 cmeans = new CMeans((int) (0.25 * reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                cmeans = new CMeans(c_values[f], new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                cmeans = new CMeans((int) (c_values[f]), new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }      
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
             
@@ -424,7 +425,9 @@ public class Client {
             */
             
             writer.print(cmeans_datafiles[f] + "," + new DecimalFormat("###.##").format(accuracy_sum/10*100)+ "%,");
-            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + "\n");
+            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(mae_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(me_sum/10) + "\n");
             
         }          
         
@@ -438,7 +441,8 @@ public class Client {
         
         // List the files we want to test
         String[] medoids_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
-        int[] c_values = {1000, 75, 25, 0, 0, 0, 0};
+        int[] c_values = {1400, 1500, 170, 0, 0, 0, 0};
+        //int[] c_values = {(int) (1400*1.1), 1525, (int)(170*1.1), 0, 0, 0, 0};
         
         // Iterate through each data file
         for(int f = 0; f < medoids_datafiles.length; f++) {
@@ -454,7 +458,7 @@ public class Client {
                 medoids = new CMedoids((int) (0.25 * reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                medoids = new CMedoids(c_values[f], new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                medoids = new CMedoids((int) (c_values[f]), new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }      
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
             
@@ -536,7 +540,9 @@ public class Client {
             */
             
             writer.print(medoids_datafiles[f] + "," + new DecimalFormat("###.##").format(accuracy_sum/10*100)+ "%,");
-            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + "\n");
+            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(mae_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(me_sum/10) + "\n");
             
         }          
         
