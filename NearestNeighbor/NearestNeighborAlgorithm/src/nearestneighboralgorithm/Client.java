@@ -20,7 +20,7 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        //testKNN();
+        testKNN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
@@ -69,7 +69,7 @@ public class Client {
             }
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
             knn.setK((int)Math.sqrt(reader.getNumExamples()));
-            
+            //knn.setK(1);
             
             // Initialize the sums that will be used to compute our average loss metrics
             double accuracy_sum = 0;
