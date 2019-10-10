@@ -25,12 +25,12 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
         System.out.println("-----------------------------------------");
-        //testENN();
+        testENN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CONDENSED -----------");
         System.out.println("-----------------------------------------");
-        //testKNNCondensed();
+        testKNNCondensed();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");
@@ -40,7 +40,7 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEDOIDS --------------");
         System.out.println("-----------------------------------------");
-        //testMedoids();
+        testMedoids();
     }
     
     private static void testKNN() throws FileNotFoundException, UnsupportedEncodingException {
@@ -253,7 +253,6 @@ public class Client {
             IKNearestNeighbor knn;
             knn = new KNNClassifier();
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
-            knn.setK((int)Math.sqrt(reader.getNumExamples()));
             
             Condensed condensed_knn = new Condensed(new EuclideanSquared(reader.getSimMatrices()));            
             
@@ -268,6 +267,8 @@ public class Client {
                 Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
 
                 Set condensed_set = condensed_knn.reduce(training_set);
+                
+                knn.setK((int)Math.sqrt(condensed_set.getNumExamples()));
                 
                 System.out.println("Num points original: "+ training_set.getNumExamples());
                 System.out.println("NUM POINTS CONDENSED: " + condensed_set.getNumExamples());
@@ -324,7 +325,8 @@ public class Client {
         writer.println("Dataset,Accuracy,MSE,Datapoints");
         
         // List the files we want to test
-        String[] cmeans_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", };
+        String[] cmeans_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
+        int[] c_values = {1000, 75, 25, 0, 0, 0, 0};
         
         // Iterate through each data file
         for(int f = 0; f < cmeans_datafiles.length; f++) {
@@ -337,13 +339,13 @@ public class Client {
             CMeans cmeans;
             if(reader.getClassNames() == null) { // Check if the file contained a regression set
                 knn = new KNNRegressor();
-                cmeans = new CMeans((int) 0.25 * reader.getNumExamples(), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
+                cmeans = new CMeans((int) (0.25 * reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                cmeans = new CMeans((int) (0.25 * (double)reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                cmeans = new CMeans(c_values[f], new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }      
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
-            knn.setK((int)Math.sqrt(reader.getNumExamples()));
+            
             
             // Initialize the sums that will be used to compute our average loss metrics
             double accuracy_sum = 0;
@@ -357,6 +359,7 @@ public class Client {
                 Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
 
                 Set means_set = cmeans.reduce(training_set.clone());
+                knn.setK((int)Math.sqrt(means_set.getNumExamples()));
                 
                 System.out.println("CMEANS REDUCED TO " + means_set.getNumExamples() + " POINTS");
                 System.out.println(means_set.getExamples().toString());
@@ -434,7 +437,8 @@ public class Client {
         writer.println("Dataset,Accuracy,MSE,Datapoints");
         
         // List the files we want to test
-        String[] medoids_datafiles = {"car.csv"};//{"abalone.csv", "car.csv", "segmentation.csv", };
+        String[] medoids_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
+        int[] c_values = {1000, 75, 25, 0, 0, 0, 0};
         
         // Iterate through each data file
         for(int f = 0; f < medoids_datafiles.length; f++) {
@@ -447,13 +451,12 @@ public class Client {
             CMedoids medoids;
             if(reader.getClassNames() == null) { // Check if the file contained a regression set
                 knn = new KNNRegressor();
-                medoids = new CMedoids((int) 0.25 * reader.getNumExamples(), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
+                medoids = new CMedoids((int) (0.25 * reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                medoids = new CMedoids(100, new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                medoids = new CMedoids(c_values[f], new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }      
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
-            knn.setK((int)Math.sqrt(reader.getNumExamples()));
             
             // Initialize the sums that will be used to compute our average loss metrics
             double accuracy_sum = 0;
@@ -467,6 +470,8 @@ public class Client {
                 Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
 
                 Set medoids_set = medoids.reduce(training_set.clone());
+                
+                knn.setK((int)Math.sqrt(medoids_set.getNumExamples()));
                 
                 System.out.println("MEDOIDS REDUCED TO " + medoids_set.getNumExamples() + " POINTS");
                 System.out.println(medoids_set.getExamples().toString());
