@@ -17,6 +17,9 @@
 \begin{abstract}
 	blah Abstract deez nuutz
 	
+	we learned the relative performances of these algs
+	knn generally better, tradeoff performance for less data storage with other algs
+	
 	Andy 
 	
 \end{abstract}
@@ -25,22 +28,48 @@
 
 Given an input file that contains examples, the task main is to implement the K Nearest Neighbors learning algorithm for both classification and regression problems. Given that same input file a secondary task is to reduce the size of the data set by implementing the Edited K-Nearest Neighbor, Condensed Nearest Neighbor, K-Means and K-Medoids data reducing algorithms. Of particular are interst are how the data reducers contribute to the preformance of the K-Nearest Neighbor classifier and regressor.
 
+
+Andy's word dump to go somewhere in intro (will make prettier) 
+
+parametric learning is nice because it has a fixed set of parameters/fixed form (ex: Naive Bayes) that can be learned quickly and understood simply. They dont require as much data to train and are fast.
+
+The limitation of these forms of learning is that its functional form constrains the performance.
+
+The data sets to be handled do not follow an unknown distribution/model. Thus, constructing parametric learners for these sets is very hard.
+
+This is where nonparametric comes along. Nonparametric does not construct a model with a fixed form. It makes no strong assumptions about the form of the data.
+
+One popular form of nonparametric learning is K-NN, which will be used to predict classes and values 
+
 \section{Algorithms}
 
 \subsection{K-NN}
 
-ANDY
+K Nearest Neighbor (K-NN) is a modification of the nearest neighbor rule, a nonparametric procedure for classification or regression that utilizes a set of known points.
+
+At its core, the nearest neighbor rule utilizes the intuitive assumption that a set of known examples, $X$, follows the distribution of all possible examples that it was taken from. As such, examples which are ``close" to each other likely belong to the same class or have a similar real value (\cite{NNClassification}). Metrics for determining this distance are discussed in section 2.2.
+
+Thus, given $X$, a number of neighbors $k$, and a new example $x$, K-NN finds the $k$ nearest neighbors of $x$ by iterating through the examples in $X$, calculating the distance from $x$ for each example. Then K-NN classifies $x$ given a majority vote among the returned class values from its $k$ nearest neighbors. K-NN handles regression by computing the mean value among its $k$ nearest neighbors.
+
+Note that this does not heavily assume anything about the form of the actual distribution. K-NN is flexible enough to adapt to almost any functional form that the underlying distribution takes on. This is a huge advantage for data sets that are hard to visualize or have unknown traits. The downside to this characteristic is that, like many nonparametric models, K-NN requires much more data than a parametric model to train effectively. In other words, K-NN requires a great number of known examples because it must is essentially estimating the real distribution from the known examples. Without sufficient data, K-NN will perform poorly.
+
+In fact, the error of K-NN, $R_{knn}$ is bounded by:
+$$R^* \leq R_{knn} \leq (1+\frac{1}{k})R^*$$ 
+where $R^*$ is the Bayes risk, the optimal risk given a known set of probability densities that represents the data (\cite{NNClassification}). Thus, as $k \rightarrow \infty$ and the number of data points $n \rightarrow \infty$, theoretically $R_{knn} \rightarrow R^*$. Of course, $\frac{k}{n} \rightarrow 0$ should be ensured so that $k$ is still only a small subset of the total data points $n$. In short, K-NN will work optimally as the number of points sampled approaches infinity. As more attributes or data complexity is added, K-NN will approach its optimal condition slower given increasing $n$.
+
 
 \subsection{Distance Metrics}
 
-nn assumes there is a distance metric
+The nearest neighbor rule, and therefore K-NN, requires a distance metric to determine the theoretical ``distance" between two examples. A common distance metric---and the one used in this paper---is Euclidean distance. The Euclidean distance $D$ between two examples $x_1$ and $x_2$ is computed as:
+$$D = \sqrt{\sum_{i=0}^{d}(a_1^i - a_2^i)^2}$$
+where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th attribute of $x_1$, and $a_2^i$ is the $i$-th attribute of $x_2$.
 
 \subsection{Data Reducers}
 The K-Nearest Neighbor decision rule is a lazy algorithm where the performance is a function of the number of training examples. Therefore, in terms of a learner's computational efficiency, the most favorable training set is the smallest set.
 This is subject to the constraint that the model's performance is not compromised.
 
-Thus, the optimal training set for a K-NN learner is the smallest set that is able to correctly identify any query example.
-The purpose of the following four algorithms is to identify and remove unnecessary examples from the training set. Since K-NN is lazy by nature, this will improve the computation time of a learner.
+Thus, the optimal training set for a K-NN learner is the smallest set that is able to maximize correct identification of any query example.
+The purpose of the following four algorithms is to identify and remove unnecessary examples from the training set. Since K-NN is lazy by nature, this will improve the computation time of the learner.
 % should I talk about not decreasing performance? That is what we are testing right
 
 
@@ -84,6 +113,10 @@ A few of us
 \section{Results}
 
 a few of us
+
+A FULL PAGE (OR MORE) WITH GRAPHS OF EVAL METRICS for each data set. CORRESPONDING GRAPHS SIDE BY SIDE WITH K varied. SIDE BY SIDE WITH C varied.
+
+if kevin didnt mention normalization in preprocessing, we can talk about it here?
 
 \section{Summary}
 
