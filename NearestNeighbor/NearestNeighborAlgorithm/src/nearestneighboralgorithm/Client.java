@@ -20,22 +20,22 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        testKNN();
+        //testKNN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
         System.out.println("-----------------------------------------");
-        testENN();
+        //testENN();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CONDENSED -----------");
         System.out.println("-----------------------------------------");
-        testKNNCondensed();
+        //testKNNCondensed();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");
         System.out.println("-----------------------------------------");
-        testCMeans();
+        //testCMeans();
         
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEDOIDS --------------");
@@ -68,7 +68,7 @@ public class Client {
                 knn = new KNNClassifier();
             }
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
-            knn.setK((int)Math.sqrt(reader.getNumExamples()));
+            knn.setK((int)(Math.sqrt(reader.getNumExamples())));
             //knn.setK(1);
             
             // Initialize the sums that will be used to compute our average loss metrics
@@ -169,7 +169,7 @@ public class Client {
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
            
             
-            System.out.println("readervalidset" + reader.getValidationSet());
+            //System.out.println("readervalidset" + reader.getValidationSet());
             //Edited edited_knn = new Edited((int)Math.sqrt(reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices()), reader.getValidationSet());      
             Edited edited_knn = new Edited(3, new EuclideanSquared(reader.getSimMatrices()), reader.getValidationSet());    
             
@@ -215,7 +215,7 @@ public class Client {
                 System.out.println();
             }
             // Output information about the loss metrics to the console----
-            System.out.println("Average number of condensed points for" + edited_datafiles[f] + " was " 
+            System.out.println("Average number of edited points for " + edited_datafiles[f] + " was " 
                     + new DecimalFormat("###.##").format(num_points_sum/9));
             System.out.println("Average accuracy for " + edited_datafiles[f] + " was " 
                     + new DecimalFormat("###.##").format(accuracy_sum/9*100)
@@ -326,7 +326,7 @@ public class Client {
         
         // List the files we want to test
         String[] cmeans_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
-        int[] c_values = {1000, 75, 25, 0, 0, 0, 0};
+        int[] c_values = {1400, 1500, 170, 0, 0, 0, 0};
         
         // Iterate through each data file
         for(int f = 0; f < cmeans_datafiles.length; f++) {
@@ -362,7 +362,7 @@ public class Client {
                 knn.setK((int)Math.sqrt(means_set.getNumExamples()));
                 
                 System.out.println("CMEANS REDUCED TO " + means_set.getNumExamples() + " POINTS");
-                System.out.println(means_set.getExamples().toString());
+                //System.out.println(means_set.getExamples().toString());
                 
                 knn.train(means_set); // Train
                 Set testing_set = reader.getSubsets()[i]; // Test with the remaining subset
@@ -424,7 +424,9 @@ public class Client {
             */
             
             writer.print(cmeans_datafiles[f] + "," + new DecimalFormat("###.##").format(accuracy_sum/10*100)+ "%,");
-            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + "\n");
+            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(mae_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(me_sum/10) + "\n");
             
         }          
         
@@ -438,7 +440,7 @@ public class Client {
         
         // List the files we want to test
         String[] medoids_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
-        int[] c_values = {1000, 75, 25, 0, 0, 0, 0};
+        int[] c_values = {1400, 1500, 170, 0, 0, 0, 0};
         
         // Iterate through each data file
         for(int f = 0; f < medoids_datafiles.length; f++) {
@@ -468,13 +470,13 @@ public class Client {
             for(int i = 0; i < 10; i++) {
                 System.out.println("Test " + (i+1));
                 Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
-
+                
                 Set medoids_set = medoids.reduce(training_set.clone());
                 
                 knn.setK((int)Math.sqrt(medoids_set.getNumExamples()));
                 
                 System.out.println("MEDOIDS REDUCED TO " + medoids_set.getNumExamples() + " POINTS");
-                System.out.println(medoids_set.getExamples().toString());
+                //System.out.println(medoids_set.getExamples().toString());
                 
                 knn.train(medoids_set); // Train
                 Set testing_set = reader.getSubsets()[i]; // Test with the remaining subset
@@ -536,7 +538,9 @@ public class Client {
             */
             
             writer.print(medoids_datafiles[f] + "," + new DecimalFormat("###.##").format(accuracy_sum/10*100)+ "%,");
-            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + "\n");
+            writer.print(new DecimalFormat("###.##").format(mse_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(mae_sum/10) + ",");
+            writer.print(new DecimalFormat("###.##").format(me_sum/10) + "\n");
             
         }          
         

@@ -1,0 +1,4 @@
+Dataset,Accuracy,MSE,Datapoints
+abalone.csv,26.07%,177.06,3333.3
+car.csv,66.72%,883.45,155.1
+segmentation.csv,54.76%,6.09,55.4

@@ -95,7 +95,7 @@ public class Edited implements IDataReducer {
             double edited_acc = computeAccuracy();
             
             // stop editing set when performance degrades
-            if (iterations == 10){//edited_acc < orig_acc) {//excessive_acc){
+            if (iterations == 10 || (double) edited.getNumExamples() <= orig.getNumExamples() * 0.25){//edited_acc < orig_acc) {//excessive_acc){
                 edit = false;
                 // we have edited too far, and must revert one iteration
                 edited = excessive;
