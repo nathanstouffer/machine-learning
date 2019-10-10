@@ -113,7 +113,9 @@ First all the examples in the data set are randomly scrambled and then assigned 
 
 \subsection{Tuning}
 
-The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. We are starting with $K = sqrt(N)$ where $N$ is the number of examples in the data set. 
+The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set. 
+
+The second parameter to tune is $C$ which is the number of representative points that K-Means K-NN and K-Medoids K-NN have. Tuning begins with the number of points returned by Edited K-NN and tuned from there. 
 
 \section{Results}
 
