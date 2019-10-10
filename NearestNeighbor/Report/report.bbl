@@ -1,0 +1,21 @@
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Cover} and {Hart}(1967)]{NNClassification}
+T.~{Cover} and P.~{Hart}.
+\newblock Nearest neighbor pattern classification.
+\newblock \emph{IEEE Transactions on Information Theory}, 13\penalty0
+  (1):\penalty0 21--27, January 1967.
+\newblock \doi{10.1109/TIT.1967.1053964}.
+
+\bibitem[Dudani(1976)]{dudani1976distance}
+Sahibsingh~A Dudani.
+\newblock The distance-weighted k-nearest-neighbor rule.
+\newblock \emph{IEEE Transactions on Systems, Man, and Cybernetics}, \penalty0
+  (4):\penalty0 325--327, 1976.
+
+\end{thebibliography}
