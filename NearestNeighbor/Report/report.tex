@@ -26,20 +26,15 @@
 
 \section{Problem Statement w/ Hypothesis}
 
-Given an input file that contains examples, the task main is to implement the K Nearest Neighbors learning algorithm for both classification and regression problems. Given that same input file a secondary task is to reduce the size of the data set by implementing the Edited K-Nearest Neighbor, Condensed Nearest Neighbor, K-Means and K-Medoids data reducing algorithms. Of particular are interst are how the data reducers contribute to the preformance of the K-Nearest Neighbor classifier and regressor.
+In the realm of machine learning, knowing the form of some distribution of data is very valuable. In these cases, parametric learning my be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance.
 
+The data sets to be handled in this project do not follow a known distribution. Thus, constructing parametric learners for these sets is very hard. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form. 
 
-Andy's word dump to go somewhere in intro (will make prettier) 
+One popular and intuitive method of non-parametric learning is K-Nearest Neighbors (K-NN) learning algorithm. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited K-Nearest Neighbor, Condensed Nearest Neighbor, K-Means and K-Medoids data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
 
-parametric learning is nice because it has a fixed set of parameters/fixed form (ex: Naive Bayes) that can be learned quickly and understood simply. They dont require as much data to train and are fast.
+\subsection*{Hypothesis}
 
-The limitation of these forms of learning is that its functional form constrains the performance.
-
-The data sets to be handled do not follow an unknown distribution/model. Thus, constructing parametric learners for these sets is very hard.
-
-This is where nonparametric comes along. Nonparametric does not construct a model with a fixed form. It makes no strong assumptions about the form of the data.
-
-One popular form of nonparametric learning is K-NN, which will be used to predict classes and values 
+K-NN is expected to outperform the other nearest neighbor variants. K-NN utilizes the most data points from the data set, which is essential for minimizing the error rate (See 2.1, K-NN).
 
 \section{Algorithms}
 
