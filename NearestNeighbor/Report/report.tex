@@ -26,20 +26,15 @@
 
 \section{Problem Statement w/ Hypothesis}
 
-Given an input file that contains examples, the task main is to implement the K Nearest Neighbors learning algorithm for both classification and regression problems. Given that same input file a secondary task is to reduce the size of the data set by implementing the Edited K-Nearest Neighbor, Condensed Nearest Neighbor, K-Means and K-Medoids data reducing algorithms. Of particular are interst are how the data reducers contribute to the preformance of the K-Nearest Neighbor classifier and regressor.
+In the realm of machine learning, knowing the form of some distribution of data is very valuable. In these cases, parametric learning my be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance.
 
+The data sets to be handled in this project do not follow a known distribution. Thus, constructing parametric learners for these sets is very hard. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form. 
 
-Andy's word dump to go somewhere in intro (will make prettier) 
+One popular and intuitive method of non-parametric learning is K-Nearest Neighbors (K-NN) learning algorithm. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited K-Nearest Neighbor, Condensed Nearest Neighbor, K-Means and K-Medoids data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
 
-parametric learning is nice because it has a fixed set of parameters/fixed form (ex: Naive Bayes) that can be learned quickly and understood simply. They dont require as much data to train and are fast.
+\subsection*{Hypothesis}
 
-The limitation of these forms of learning is that its functional form constrains the performance.
-
-The data sets to be handled do not follow an unknown distribution/model. Thus, constructing parametric learners for these sets is very hard.
-
-This is where nonparametric comes along. Nonparametric does not construct a model with a fixed form. It makes no strong assumptions about the form of the data.
-
-One popular form of nonparametric learning is K-NN, which will be used to predict classes and values 
+K-NN is expected to outperform the other nearest neighbor variants. K-NN utilizes the most data points from the data set, which is essential for minimizing the error rate (See 2.1, K-NN).
 
 \section{Algorithms}
 
@@ -96,24 +91,26 @@ Say performance decreases on the $i^{th}$ iteration. The final edited data set i
 
 \subsubsection{Condensed K-NN}
 
-Eric
+Condensed Nearest Neighbor begins with a null set Z and initializes a random starting point out of the data set. Z becomes the reduced data set once the algorithm has completed. The algorithm then iterates through all examples x in the original data set and finds the closest example x’ in Z for each of them. It then compares the classes of x and x’, adding x to the data set Z only if the two classes differ. This process is repeated until Z no longer changes, or the max number of iterations is reached. This process can be thought of as simply taking all of the same class examples nearest each other and condensing them into a single point. This way, we reduce the number of points required to represent a given class at a single point.
 
 \subsubsection{Kmeans K-NN}
 
-Eric test
+The K-Means (C-Means) algorithm is a data reducer that utilizes clustering to return a smaller data set. It does this by taking the average value of all the points in a cluster, and updating them until the averages remain the same from iteration to iteration. The algorithm is passed in a data set and a value for number of clusters K. It then initializes K clusters by randomly selecting points out of the data set. We chose to take the initial points from the data set in an effort to reduce the time it takes for the algorithm to zero in on the data. From there, the algorithm iterates through all of the examples in the original set and adds them to the nearest cluster. Once all points have been assigned, K-Means computes the new average point within each cluster and assigns that to the representative point. Once every cluster average has been recomputed, all points are reassigned to the new representative points. This process is repeated until the representative points no longer change, or a max number of iterations is reached.
 
 \subsubsection{PAM K-NN}
-The Partitioning Around Medoids (PAM) K-NN is a variant of K-Means K-NN but is more resistant to outliers because it uses an actual point in the dataset instead of making a new point using means. PAM begins by randomly selecting $C$ number of data points from the data set $D$ as the medoids $m$. In this case $C$ is determined by the number of points returned by Edited K-NN. The algorithm then clusters all of the remaining examples $x$ to the closest corresponding $m_i \in m$. Then the distortion is calculated with $$D = \sum_{j=1}^{k}\sum_{i \in cluster_j} (x_i - m_j)$$. We then iterate through each $m$ and swap it with every $x_j \in D$ $x_j \notin m$. After every swap the distortion $D$ is calculated again. This was optimized by calculating the distortion of each medoid separately and only recalculating the distortion for the medoid that was changed. If the new distortion is less than the original distortion the algorithm moves on and if the new distortion is greater than the original distortion than the medoid and example are swapped back. The clusters are then cleared and the algorithm then recalculates all of the clusters and distortion and repeats the swapping until no more swapping occurs or the algorithm iterates through 1000 times. 
+The Partitioning Around Medoids (PAM) K-NN is a variant of K-Means K-NN but is more resistant to outliers because it uses an actual point in the data set instead of making a new point using means. PAM begins by randomly selecting $C$ number of data points from the data set $D$ as the medoids $m$. In this case $C$ is determined by the number of points returned by Edited K-NN. The algorithm then clusters all of the remaining examples $x$ to the closest corresponding $m_i \in m$. Then the distortion is calculated with $$D = \sum_{j=1}^{k}\sum_{i \in cluster_j} (x_i - m_j)$$. We then iterate through each $m$ and swap it with every $x_j \in D$ $x_j \notin m$. After every swap the distortion $D$ is calculated again. This was optimized by calculating the distortion of each medoid separately and only recalculating the distortion for the medoid that was changed. If the new distortion is less than the original distortion the algorithm moves on and if the new distortion is greater than the original distortion than the medoid and example are swapped back. The clusters are then cleared and the algorithm then recalculates all of the clusters and distortion and repeats the swapping until no more swapping occurs or the algorithm iterates through 1000 times (\cite{Fox1990FindingGI}).
 
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
 
-All of the preprocessing is done in Python and outputted in .csv files for the main Java program to read in. First all the examples in the dataset are randomly scrambled and then assigned to sets for ten-fold cross validation. All categorical variables are converted to integers and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distanced between categorical variables. Class names are also converted to incrementing integers for easier reading by the Java program. All numerical variables are normalized between 0 and 1. The preprocessor generates a three lines of key information that the Java program needs to run and adds this data to the beginning of the .csv file. The similarity matrices are outputted next followed by the examples. Having Python do most of these calculations greatly simplified our Java program and made preprocessing much simpler. The data sets did not contain any missing variables so preprocessing did not need to handle that. 
+First all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. All categorical variables are converted to integers and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distanced between categorical variables. Class names are also converted to incrementing integers for easier reading by the Java program. All numerical variables are normalized between 0 and 1. The data sets did not contain any missing variables so preprocessing did not need to handle that. 
 
 \subsection{Tuning}
 
-A few of us
+The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set. 
+
+The second parameter to tune is $C$ which is the number of representative points that K-Means K-NN and K-Medoids K-NN have. Tuning begins with the number of points returned by Edited K-NN and tuned from there. 
 
 \section{Results}
 
