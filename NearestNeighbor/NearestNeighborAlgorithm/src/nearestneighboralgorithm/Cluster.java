@@ -64,8 +64,8 @@ public class Cluster {
         // test if set is null
         // end computation if true
         if (this.examples.size() == 0){
-            System.err.println("No examples in cluster.\nRep value: "
-                    + Double.toString(this.rep.getValue()));
+            //System.err.println("No examples in cluster.\nRep value: "
+                    //+ Double.toString(this.rep.getValue()));
             return this.rep.getValue();
         }
         
