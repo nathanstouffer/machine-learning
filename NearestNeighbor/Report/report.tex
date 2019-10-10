@@ -68,18 +68,23 @@ where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th a
 The K-Nearest Neighbor decision rule is a lazy algorithm where the performance is a function of the number of training examples. Therefore, in terms of a learner's computational efficiency, the most favorable training set is the smallest set.
 This is subject to the constraint that the model's performance is not compromised.
 
-Thus, the optimal training set for a K-NN learner is the smallest set that is able to maximize correct identification of any query example.
-The purpose of the following four algorithms is to identify and remove unnecessary examples from the training set. Since K-NN is lazy by nature, this will improve the computation time of the learner.
+Thus, the optimal training set for a K-NN learner is the smallest set that is able to maximize the correct identification of any query example.
+The purpose of the following four algorithms is to reduce the size of the dataset without compromising the learner's performance. Since K-NN is lazy by nature, this will improve the computation time of the learner at query time.
 % should I talk about not decreasing performance? That is what we are testing right
 
 
 \subsubsection{Edited K-NN}
-The Edited K-Nearest Neighbor algorithm begins the discussion of algorithms that reduce the size of a training set. Edited K-NN begins with an initial set of training examples $D$ and classifies each example $e \in D$ using a K-NN algorithm. For each example $e$, K-NN returns the predicted class of $e$: $predclass(e)$. However, recall that $e$ is a training example, so the actual class of $e$, $class(e)$ is known. So, for each $e$ where $class(e) \neq predclass(e)$ (if $e$ was misclassified), the algorithm removes $e$ from $D$.
+The discussion of algorithms that reduce the size of a training set begins with Edited K-Nearest Neighbor. Edited K-NN begins by training a K-NN learner $L$ with each example in an initial dataset $D^0$. Note that since multiple steps in the following algorithm rely on knowing the classification of $e$, Edited K-NN can only be used on classification problems.
 
-This creates a new set $D^\prime$. 
+The learner $L$ then classifies each example $e^0 \in D^0$. That is, for each example $e^0$, the learner $L$ returns the predicted class of $e^0$: $predclass(e^0)$. However, recall that $e^0$ is a training example, so $class(e^0)$, the actual class of $e^0$, is known. So, for each $e^0$ where $class(e^0) \neq predclass(e^0)$ (if $e^0$ was misclassified), the algorithm removes $e^0$ from $D^0$.
 
-As a side note, since multiple steps of the algorithm relies on knowing the classification of $e$, Edited K-NN can only be used on classification problems.
+This creates a new set $D^1$. The learner $L$ is now trained with $D^1$ and the editing process repeats itself until performance decreases. In this case, the performance is measured as the accuracy of the learner on a validation set. The validation set is consistent in all editing iterations.
+
+Say performance decreases on the $i^{th}$ iteration. The final edited data set is $D^{i-1}$. A separate K-NN classifier is now trained using $D^{i-1}$ and is tested using a testing set.
+
+
 % TODO talk about the k used in edited k-nn
+% TODO talk about accuracy being our metric
 
 % explain edited (cite paper)
 % metric for decisions (accuracy)
