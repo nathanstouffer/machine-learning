@@ -167,10 +167,11 @@ public class CMeans implements IDataReducer{
                 newAttributes.add(0.0);
             }
             for (int i = 0; i < center.getAttributes().size(); i++){
+                double currentsum;
                 for (int j = 0; j < cluster.getClusterSize(); j++){
                 //for (Example ex : original){                                                     //gets the average of each attribute in the cluster    // SEE LINE ABOVE FOR EDIT
                     ArrayList<Double> exAttr = cluster.getExample(j).getAttributes();
-                    double currentsum = newAttributes.get(i) + exAttr.get(i);
+                    currentsum = newAttributes.get(i) + exAttr.get(i);
                     newAttributes.set(i, currentsum);
                 }
                 double average = newAttributes.get(i)/cluster.getClusterSize();
