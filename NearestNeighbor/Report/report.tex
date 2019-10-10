@@ -23,7 +23,7 @@
 
 \section{Problem Statement w/ Hypothesis}
 
-Kevin
+Given an input file that contains examples, the task main is to implement the K Nearest Neighbors learning algorithm for both classification and regression problems. Given that same input file a secondary task is to reduce the size of the data set by implementing the Edited K-Nearest Neighbor, Condensed Nearest Neighbor, K-Means and K-Medoids data reducing algorithms. Of particular are interst are how the data reducers contribute to the preformance of the K-Nearest Neighbor classifier and regressor.
 
 \section{Algorithms}
 
@@ -69,14 +69,13 @@ Eric
 Eric test
 
 \subsubsection{PAM K-NN}
-
-KEVVVVVIIIIINNNN
+The Partitioning Around Medoids (PAM) K-NN is a variant of K-Means K-NN but is more resistant to outliers because it uses an actual point in the dataset instead of making a new point using means. PAM begins by randomly selecting $C$ number of data points from the data set $D$ as the medoids $m$. In this case $C$ is determined by the number of points returned by Edited K-NN. The algorithm then clusters all of the remaining examples $x$ to the closest corresponding $m$. Then the distortion is calculated with $D = \sum_{j=1}^{k}\sum_{i\epsilon cluster_j} (x_i - m_j)$. We then iterate through each $m$ and swap it with every $x \epsilon D x \notin m$. After every swap the distortion is calculated again. This was optimized by calculating the distortion of each medoid separately and only recalculating the distortion for the medoid that was changed. If the new distortion is less than the original distortion the algorithm moves on and if the new distortion is greater than the original distortion than the medoid and example are swapped back. The clusters are then cleared and the algorithm then recalculates all of the clusters and distortion and repeats the swapping until no more swapping occurs or the algorithm iterates through 1000 times. 
 
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
 
-Kevin
+All of the preprocessing is done in Python and outputted in .csv files for the main Java program to read in. First all the examples in the dataset are randomly scrambled and then assigned to sets for ten-fold cross validation. All categorical variables are converted to integers and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distanced between categorical variables. Class names are also converted to incrementing integers for easier reading by the Java program. All numerical variables are normalized between 0 and 1. The preprocessor generates a three lines of key information that the Java program needs to run and adds this data to the beginning of the .csv file. The similarity matrices are outputted next followed by the examples. Having Python do most of these calculations greatly simplified our Java program and made preprocessing much simpler. The data sets did not contain any missing variables so preprocessing did not need to handle that. 
 
 \subsection{Tuning}
 
