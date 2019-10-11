@@ -21,8 +21,6 @@ import java.util.Random;
  */
 public class Edited implements IDataReducer {
     
-    // batch size for editing
-    private final int BATCH_SIZE = 100;
     // variable to determine how many neighbors the learning
     // algorithm will view
     private int k;
@@ -137,27 +135,6 @@ public class Edited implements IDataReducer {
         Set clone = orig.clone();
         // ArrayList for misclassified data points
         ArrayList<Example> misclassified = new ArrayList<Example>();
-        // array for a batch that we will edit
-        // the size of batch is BATCH_SIZE
-        // Example[] batch = new Example[this.BATCH_SIZE];
-        
-        // populate batch with random Examples from clone
-        /*Random rnd = new Random();
-        for (int i = 0; i < this.BATCH_SIZE; i++){
-            // get random value in to index clone
-            int rand_index = rnd.nextInt(orig.getNumExamples());
-            
-            // get the example at rand_value in clone
-            Example ex = orig.getExample(rand_index);
-            // remove this example from clone (so it cannot be selected again)
-            orig.delExample(ex);
-            
-            // insert ex into batch
-            batch[i] = ex;
-        }*/
-        
-        // reinsert values of batch into clone
-        //for (int i = 0; i < batch.length; i++){ orig.addExample(batch[i]); }
         
         // using learner, classify all points in clone
         // for (Example ex: clone){
