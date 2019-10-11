@@ -270,10 +270,10 @@ The second parameter to tune is $C$ which is the number of representative points
 			PAM    & -4.09 & -4.09   & -4.09
 		\end{tabular}
 	\end{minipage}
-	\caption{Results of varying $k$ for K-NN and variants. The middle $k$ value is the square root of $N$, the number of points in the data set. Selected are $+/- 10\%$ of this number.}
+	\caption{Results of varying $k$ for K-NN and variants. The middle $k$ value is the square root of $N$, the number of points in the set. Selected are $+/- 10\%$ of this number $N$.}
 \end{table}
 
-Tests were run to evaluate performances of each algorithm based on varying $k$ as well as Kmeans and PAM given varying numbers of clusters. The results for the varying $k$ tests are shown in table 1. The algorithms were evaluated using accuracy, mean square error (MSE), and mean error (ME).
+Tests were run to evaluate performances of each algorithm based on varying $k$ as well as KMeans and PAM given varying numbers of clusters. The results for the varying $k$ tests are shown in table 1. The algorithms were evaluated using accuracy, mean square error (MSE), and mean error (ME).
 
 A standout may be the abysmal performance of K-NN and variants on the abalone data set. The K-NN learner's average accuracy is around 26\%. In the abalone dataset, the goal is to classify the age of an abalone mollusks. However, there are 29 ages and consecutive ages would be closely related to each other. Adjacent ages likely have attributes which blend together, making the problem particularly difficult for a nearest neighbor classifier whose weakness is this phenomena. 
 Additionally, 17 classes in the dataset have less than 100 examples associated with them \citep{datasets}, which is a small training set for a K-NN learner.
@@ -283,9 +283,10 @@ One method to improve the accuracy of classification would be to bin the ages in
 
 \begin{figure}[ht]
 	\includegraphics[width=\linewidth]{comparisongraphs.pdf}
-	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed as zero-one loss, MSE is the mean squared error, and ME is the mean error.}
+	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed with zero-one loss, MSE is the mean squared error, and ME is the mean error.}
 	\label{fig:comparealgs}
 \end{figure}
+
 
 
 %\begin{figure}[ht]
