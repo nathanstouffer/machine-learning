@@ -95,7 +95,7 @@ The condensing algorithm is used to reduce total number of points in a data set.
 
 Condensing begins with a null set $Z$ and initializes a random starting point out of the data set. $Z$ becomes the reduced data set once the algorithm has completed. The algorithm then iterates through all examples $x$ in the original data set and finds the closest example $x’$ in $Z$ for each of them. It then compares the classes of $x$ and $x’$, adding $x$ to the data set $Z$ only if the two classes differ. This process is repeated until $Z$ no longer changes, or the max number of iterations is reached. 
 
-This process can be thought of as simply taking all of the same class examples nearest each other and condensing them into a single point. This way, we reduce the number of points required to represent a given class at any given point.
+This process can be thought of as simply taking all of the same class examples nearest each other and condensing them into a single point. This way, we reduce the number of points required to represent a given class at any given point. (\cite{Condensed})
 
 \subsubsection{Kmeans K-NN}
 
