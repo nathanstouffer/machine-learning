@@ -141,8 +141,8 @@ One parameter to tune is $C$, the number of representative points that K-Means K
 		\begin{tabular}{llll}
 			\hline
 			\#Clusters & 0.15N & 0.25N & 0.35N \\ \hline
-			CMEANS     & 2.08  & 2.05  & 2.05  \\
-			CMEDOIDS   & 2.06  & 2.05  & 2.07
+			KMEANS     & 2.08  & 2.05  & 2.05  \\
+			KMEDOIDS   & 2.06  & 2.05  & 2.07
 		\end{tabular}
 	\end{minipage}
 	\hspace{0.5cm}
@@ -152,8 +152,8 @@ One parameter to tune is $C$, the number of representative points that K-Means K
 		\begin{tabular}{llll}
 			\cline{1-4}
 			\#Clusters & 0.15N & 0.25N & 0.35N \\  \cline{1-4}
-			CMEANS     & -0.5  & -0.51 & -0.51 \\
-			CMEDOIDS   & -0.51 & -0.51 & -0.51
+			KMEANS     & -0.5  & -0.51 & -0.51 \\
+			KMEDOIDS   & -0.51 & -0.51 & -0.51
 		\end{tabular}
 	\end{minipage}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -162,8 +162,8 @@ One parameter to tune is $C$, the number of representative points that K-Means K
 		\begin{tabular}{llll}
 			\hline
 			\#Clusters & -10\% & \#ENN   & +10\% \\ \hline
-			CMEANS     & 22.22\%      & 22.22\% & 22.22\%      \\
-			CMEDOIDS   & 90.68\%      & 92.82\% & 92.94\%
+			KMEANS     & 22.22\%      & 22.22\% & 22.22\%      \\
+			KMEDOIDS   & 90.68\%      & 92.82\% & 92.94\%
 		\end{tabular}
 	\end{minipage}
 	\hspace{0.5cm}
@@ -173,23 +173,25 @@ One parameter to tune is $C$, the number of representative points that K-Means K
 		\begin{tabular}{llll}
 			\hline
 			\#Clusters & -10\% & \#ENN  & +10\% \\ \hline
-			CMEANS     & 8217.6       & 8217.6 & 8217.6       \\
-			CMEDOIDS   & 37.75        & 11.55  & 10.55
+			KMEANS     & 8217.6       & 8217.6 & 8217.6       \\
+			KMEDOIDS   & 37.75        & 11.55  & 10.55
 		\end{tabular}
 	\end{minipage}
 	\caption{Selected results of varying the number of clusters}
 \end{table}
 
-Beginning with the regression data sets, the initial number of clusters was set to $ 0.25 * N$ where $N$ is the number of points in the initial data set. Two other values were tested: $ 0.15 * N$ and $ 0.35 * N$.
+Beginning with the regression data sets (Forest Fires and Machine), the initial number of clusters was set to $ 0.25 * N$ where $N$ is the number of points in the initial data set. Two other values were tested: $ 0.15 * N$ and $ 0.35 * N$.
 For all data sets depicted above, the difference between each respective metric value when varying the cluster size was negligible.
 Specifically, the largest difference in the MSE of Forest Fires is less than 15 while the initial value MSE was 4236.03, there is essentially no change.
 Furthermore, the largest difference in ME for Forest Fires was 0.16 while the initial ME was -12.7, also virtually no change in the metric.
 
-Thus varying the number of clusters appears to have no affect on the performance of the learner on the regression data sets.
+Thus varying the number of clusters within $10\%$ of $0.25 * N$ appears to have no affect on the performance of the learner on the regression data sets.
 
-Now analyze 
+Now view the classification data set Car. The base value for the number of clusters in a classification set is the value returned by E-NN on that same data set. Call this value $E$. Two other tested values for the number of clusters are: $ 0.9 * E$ and $ 1.1 * E$.
+For the car data set, the performance metrics for KMeans did not vary when changing the number of clusters. This is most likely because of outliers in the data set, since the performance metrics for KMedoids does change with the number of clusters and KMedoids is more resistant to outliers than KMeans.
+Looking at the performance metrics for KMedoids, the best performing number of clusters was $1.1 * E$.
 
-The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set \citep{learning-k}.
+Another input must also be tuned: $K$, the number of nearest neighbors to compare with the query point. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set \citep{learning-k}.
 
 \section{Results}
 
