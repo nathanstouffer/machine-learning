@@ -16,7 +16,7 @@
 \maketitle
 
 \begin{abstract}
-	K-Nearest Neighbors is a non-parametric learning method that may be used for classification or regression. This learning model is very versatile and may be used on a variety of known or unknown distributions. Through tuning and experimentation, the K-Nearest Neighbors algorithm and several variants that help reduce the amount of data needed by the learner are explored, revealing their strengths and pitfalls. 
+	K-Nearest Neighbors is a non-parametric learning method that may be used for classification or regression. This learning model is very versatile and may be used on a variety of known or unknown distributions. Through tuning and experimentation, the K-Nearest Neighbors algorithm and several variants that help reduce the amount of data needed by the learner are explored, revealing their strengths and pitfalls.
 
 \end{abstract}
 
@@ -24,7 +24,7 @@
 
 In the realm of machine learning, knowing the form of some distribution of data is very valuable. In these cases, parametric learning my be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance \citep{distance-k-nn}.
 
-The data sets to be handled in this project do not follow a known distribution \citep{datasets}d. Thus, constructing parametric learners for these sets is difficult. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form.
+The data sets to be handled in this project do not follow a known distribution \citep{datasets}. Thus, constructing parametric learners for these sets is difficult. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form.
 
 One popular and intuitive method of non-parametric learning is the K-Nearest Neighbors (K-NN) learning algorithm \citep{NNClassificationOrigPaper}. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited Nearest Neighbor (E-NN), Condensed Nearest Neighbor (C-NN), K-Means (KMeans), and K-Medoids (PAM) data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
 
@@ -348,12 +348,12 @@ Another input must also be tuned: $K$, the number of nearest neighbors to compar
 			PAM    & -4.09 & -4.09   & -4.09
 		\end{tabular}
 	\end{minipage}
-	\caption{Results of varying $k$ for K-NN and variants. The middle $k$ value is the square root of $N$, the number of points in the data set. Selected are $+/- 10\%$ of this number.}
+	\caption{Results of varying $k$ for K-NN and variants. The middle $k$ value is the square root of $N$, the number of points in the set. Selected are $+/- 10\%$ of this number $N$.}
 \end{table}
 
-Tests were run to evaluate performances of each algorithm based on varying $k$ as well as Kmeans and PAM given varying numbers of clusters. The results for the varying $k$ tests are shown in table 1. The algorithms were evaluated using accuracy, mean square error (MSE), and mean error (ME).
+Tests were run to evaluate performances of each algorithm based on varying $k$ as well as KMeans and PAM given varying numbers of clusters. The results for the varying $k$ tests are shown in table 1. The algorithms were evaluated using accuracy, mean square error (MSE), and mean error (ME).
 
-A standout may be the abysmal performance of K-NN and variants on the abalone data set. The K-NN learner's average accuracy is around 26\%. In the abalone dataset, the goal is to classify the age of an abalone mollusks. However, there are 29 ages and consecutive ages would be closely related to each other. Adjacent ages likely have attributes which blend together, making the problem particularly difficult for a nearest neighbor classifier whose weakness is this phenomena. 
+A standout may be the abysmal performance of K-NN and variants on the abalone data set. The K-NN learner's average accuracy is around 26\%. In the abalone dataset, the goal is to classify the age of an abalone mollusks. However, there are 29 ages and consecutive ages would be closely related to each other. Adjacent ages likely have attributes which blend together, making the problem particularly difficult for a nearest neighbor classifier whose weakness is this phenomena.
 Additionally, 17 classes in the dataset have less than 100 examples associated with them \citep{datasets}, which is a small training set for a K-NN learner.
 This makes creating a good model for the abalone dataset a difficult task.
 
@@ -361,9 +361,11 @@ One method to improve the accuracy of classification would be to bin the ages in
 
 \begin{figure}[h]
 	\includegraphics[width=\linewidth]{comparisongraphs.pdf}
-	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed as zero-one loss, MSE is the mean squared error, and ME is the mean error.}
+	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed with zero-one loss, MSE is the mean squared error, and ME is the mean error.}
 	\label{fig:comparealgs}
 \end{figure}
+
+Selected comparisons of the tested algorithms are displayed in figure 1. Of the K-NN variants used to reduce the number of data points needed, E-NN and C-NN generally trailed slightly behind K-NN, admittedly because they did not remove a large proportion of points from the original data set. PAM performed well in most data sets except for abalone, which most likely was not conducive to clustering. KMeans performed the worst out of the algorithms, likely due to its sensitivity to outliers. It was observed during implementation that the means would be pulled far from their clusters by outliers, leaving empty clusters when the clusters were repopulated. This highlights the advantages that PAM provides against KMeans.
 
 
 \section{Summary}
