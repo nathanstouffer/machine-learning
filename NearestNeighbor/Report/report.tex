@@ -141,6 +141,17 @@ A FULL PAGE (OR MORE) WITH GRAPHS OF EVAL METRICS for each data set. CORRESPONDI
 
 if kevin didnt mention normalization in preprocessing, we can talk about it here?
 
+Consider the abalone dataset.
+% TODO insert figure reference here
+In viewing figure blank, the K-NN learner's average accuracy is 
+% TODO insert accuracy
+which is abysmal.
+In the abalone dataset, the goal is to classify the age of an abalone muscle. However, there are 29 ages and consecutive ages would be closely related to each other.
+Additionally, 17 classes in the dataset have less than 100 examples associated with them \citep{datasets}, which is a small training set for a K-NN learner.
+This makes creating a good model for the abalone dataset a difficult task.
+
+One method to improve the accuracy of classification would be to bin the ages into three age categories and then use a K-NN learner to classify the examples in abalone. In one study, this resulted in accuracies as high as $56.67\%$ with a K-NN learner where $K = 1$ \citep{abalone-bad}.
+
 \section{Summary}
 
 
