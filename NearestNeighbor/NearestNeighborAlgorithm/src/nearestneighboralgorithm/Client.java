@@ -35,7 +35,7 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");
         System.out.println("-----------------------------------------");
-        //testCMeans();
+        testCMeans();
 
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEDOIDS --------------");
@@ -326,8 +326,8 @@ public class Client {
 
         // List the files we want to test
         String[] cmeans_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
-        int[] c_values = {1400, 1500, 170, 0, 0, 0, 0};
-        //int[] c_values = {(int) (1400*1.1), 1525, (int)(170*1.1), 0, 0, 0, 0};
+        //int[] c_values = {1400, 1500, 170, 0, 0, 0, 0};
+        int[] c_values = {(int) (1400*0.9), (int)(1500*0.9), (int)(170*0.9), 0, 0, 0, 0};
 
         // Iterate through each data file
         for(int f = 0; f < cmeans_datafiles.length; f++) {
