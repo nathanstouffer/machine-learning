@@ -141,6 +141,234 @@ A FULL PAGE (OR MORE) WITH GRAPHS OF EVAL METRICS for each data set. CORRESPONDI
 
 if kevin didnt mention normalization in preprocessing, we can talk about it here?
 
+\begin{table}[ht]
+	\begin{minipage}[b]{0.45\linewidth}\centering
+			Forest Fires MSE
+			\begin{tabular}{lllll}
+				\cline{1-4}
+				\#Clusters & 0.15N   & 0.25N   & 0.35N   &  \\ \cline{1-4}
+				KMEANS     & 4235.6  & 4238.05 & 4236.91 &  \\
+				KMEDOIDS   & 4235.95 & 4236.03 & 4247.17 &  \\
+			\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Forest Fires ME
+		\centering
+		\begin{tabular}{llll}
+			\cline{1-4}
+			\#Clusters & 0.15N  & 0.25N  & 0.35N  \\ \cline{1-4}
+			KMEANS     & -12.71 & -12.63 & -12.66 \\
+			KMEDOIDS   & -12.68 & -12.7  & -12.54
+		\end{tabular}
+	\end{minipage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Machine MSE
+		\begin{tabular}{llll}
+			\hline
+			\#Clusters & 0.15N & 0.25N & 0.35N \\ \hline
+			CMEANS     & 2.08  & 2.05  & 2.05  \\
+			CMEDOIDS   & 2.06  & 2.05  & 2.07 
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Machine ME
+		\centering
+		\begin{tabular}{llll}
+			 \cline{1-4}
+			\#Clusters & 0.15N & 0.25N & 0.35N \\  \cline{1-4}
+			CMEANS     & -0.5  & -0.51 & -0.51 \\
+			CMEDOIDS   & -0.51 & -0.51 & -0.51
+		\end{tabular}
+	\end{minipage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Car Accuracy
+		\begin{tabular}{llll}
+			\hline
+			\#Clusters & -10\% & \#ENN   & +10\% \\ \hline
+			CMEANS     & 22.22\%      & 22.22\% & 22.22\%      \\
+			CMEDOIDS   & 90.68\%      & 92.82\% & 92.94\%     
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Car MSE
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			\#Clusters & -10\% & \#ENN  & +10\% \\ \hline
+			CMEANS     & 8217.6       & 8217.6 & 8217.6       \\
+			CMEDOIDS   & 37.75        & 11.55  & 10.55       
+		\end{tabular}
+	\end{minipage}
+\end{table}
+
+
+
+
+thisdnfjksndf
+s
+ss
+
+
+s
+
+
+\begin{table}[ht]
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Abalone Accuracy
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\%   & sqrt(N) & 10\%    \\ \hline
+			K-NN   & 26.17\% & 26.10\% & 26.19\% \\
+			E-NN   & 25.19\% & 25.38\% & 25.25\% \\
+			C-NN   & 26.07\% & 25.95\% & 26\%    \\
+			Kmeans & 0.02\%  & 0.02\%  & 0.02\%  \\
+			PAM    & 0.02\%  & 0.02\%  & 0.02\% 
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Abalone MSE
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\%   & sqrt(N) & 10\%    \\ \hline
+			K-NN   & 202.39  & 218.05  & 231.09  \\
+			E-NN   & 317.47  & 323     & 346     \\
+			C-NN   & 177.06  & 195.23  & 202.61  \\
+			Kmeans & 6893.59 & 6893.59 & 6893.59 \\
+			PAM    & 6893.59 & 6893.59 & 6893.59
+		\end{tabular}
+	\end{minipage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Cars Accuracy
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\%   & sqrt(N) & 10\%    \\ \hline
+			K-NN   & 93.06\% & 93.29\% & 92.65\% \\
+			E-NN   & 91.96\% & 92.09\% & 92.28\% \\
+			C-NN   & 66.72\% & 62.15\% & 65.79\% \\
+			Kmeans & 22.22\% & 22.22\% & 22.22\% \\
+			PAM    & 92.48\% & 92.88\% & 92.13\%
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Cars MSE
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\%  & sqrt(N) & 10\%   \\ \hline
+			K-NN   & 10.95  & 9.6     & 11.45  \\
+			E-NN   & 13.67  & 12.83   & 13.83  \\
+			C-NN   & 883.45 & 1324.4  & 998.25 \\
+			Kmeans & 8217.6 & 8217.6  & 8217.6 \\
+			PAM    & 13.75  & 11.3    & 16.85 
+		\end{tabular}
+	\end{minipage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Segmentation Accuracy
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\%   & sqrt(N) & 10\%    \\ \hline
+			K-NN   & 83.33\% & 83.33\% & 81.90\% \\
+			E-NN   & 84.13\% & 83.07\% & 81.48\% \\
+			C-NN   & 54.76\% & 50\%    & 45.24\% \\
+			Kmeans & 14.29\% & 14.29\% & 14.29\% \\
+			PAM    & 80.48\% & 82.38\% & 79.52\%
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Segmentation MSE
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\% & sqrt(N) & 10\%  \\ \hline
+			K-NN   & 2.11  & 2.11    & 2.46  \\
+			E-NN   & 2.19  & 2.67    & 2.92  \\
+			C-NN   & 6.09  & 7.77    & 9.49  \\
+			Kmeans & 56.37 & 56.37   & 56.37 \\
+			PAM    & 2.57  & 2.14    & 2.86 
+		\end{tabular}
+	\end{minipage}
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Forest Fires MSE
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\%   & sqrt(N) & 10\%    \\ \hline
+			K-NN   & 4239.7  & 4238.9  & 4238.22 \\
+			Kmeans & 4235.71 & 4236.26 & 4238.24 \\
+			PAM    & 4238.7  & 4248.17 & 4238.87
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Forest Fires ME
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\%  & sqrt(N) & 10\%   \\ \hline
+			K-NN   & -12.64 & -12.65  & -12.67 \\
+			Kmeans & -12.72 & -12.67  & -12.65 \\
+			PAM    & -12.66 & -12.57  & -12.63
+		\end{tabular}
+	\end{minipage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Machine MSE
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\% & sqrt(N) & 10\% \\ \hline
+			K-NN   & 2.08  & 2.07    & 2.07 \\
+			Kmeans & 2.07  & 2.06    & 2.06 \\
+			PAM    & 2.07  & 2.07    & 2.06
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Machine ME
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\% & sqrt(N) & 10\%  \\ \hline
+			K-NN   & -0.5  & -0.5    & -0.51 \\
+			Kmeans & -0.51 & -0.51   & -0.51 \\
+			PAM    & -0.51 & -0.51   & -0.51
+		\end{tabular}
+	\end{minipage}
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Wine Quality MSE
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\% & sqrt(N) & 10\%  \\ \hline
+			K-NN   & 18.69 & 18.69   & 18.69 \\
+			Kmeans & 18.69 & 18.69   & 18.69 \\
+			PAM    & 18.69 & 18.69   & 18.69
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Wine Quality ME
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			K      & -10\% & sqrt(N) & 10\%  \\ \hline
+			K-NN   & -4.09 & -4.09   & -4.09 \\
+			Kmeans & -4.09 & -4.09   & -4.09 \\
+			PAM    & -4.09 & -4.09   & -4.09
+		\end{tabular}
+	\end{minipage}
+\end{table}
+
 \section{Summary}
 
 
