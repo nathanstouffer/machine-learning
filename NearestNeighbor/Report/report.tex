@@ -25,13 +25,13 @@
 	
 \end{abstract}
 
-\section{Problem Statement w/ Hypothesis}
+\section{Problem Statement}
 
-In the realm of machine learning, knowing the form of some distribution of data is very valuable. In these cases, parametric learning my be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance.
+In the realm of machine learning, knowing the form of some distribution of data is very valuable. In these cases, parametric learning my be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance \citep{distance-k-nn}.
 
-The data sets to be handled in this project do not follow a known distribution. Thus, constructing parametric learners for these sets is very hard. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form. 
+The data sets to be handled in this project do not follow a known distribution \citep{datasets}d. Thus, constructing parametric learners for these sets is difficult. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form. 
 
-One popular and intuitive method of non-parametric learning is K-Nearest Neighbors (K-NN) learning algorithm. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited Nearest Neighbor (E-NN), Condensed Nearest Neighbor (C-NN), K-Means (KMeans), and K-Medoids (PAM) data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
+One popular and intuitive method of non-parametric learning is K-Nearest Neighbors (K-NN) learning algorithm \citep{NNClassificationOrigPaper}. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited Nearest Neighbor (E-NN), Condensed Nearest Neighbor (C-NN), K-Means (KMeans), and K-Medoids (PAM) data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
 
 \subsection*{Hypothesis}
 
@@ -51,7 +51,7 @@ Note that this does not heavily assume anything about the form of the actual dis
 
 In fact, the error of K-NN, $R_{knn}$ as the number of points sampled approaches infinity is bounded by:
 $$R^* \leq R_{knn} \leq (1+\frac{1}{k})R^*$$ 
-where $R^*$ is the Bayes risk, the optimal risk given a known set of probability densities that represents the data (\cite{NNClassification}). Thus, as $k \rightarrow \infty$ and the number of data points $n \rightarrow \infty$, theoretically $R_{knn} \rightarrow R^*$. Of course, $\frac{k}{n} \rightarrow 0$ should be ensured so that $k$ is still only a small subset of the total data points $n$. In short, K-NN will work optimally as the number of points sampled approaches infinity. As more attributes or data complexity is added, K-NN will approach its optimal condition slower given increasing $n$.
+where $R^*$ is the Bayes risk, the optimal risk given a known set of probability densities that represents the data (\cite{NNClassificationOrigPaper}). Thus, as $k \rightarrow \infty$ and the number of data points $n \rightarrow \infty$, theoretically $R_{knn} \rightarrow R^*$. Of course, $\frac{k}{n} \rightarrow 0$ should be ensured so that $k$ is still only a small subset of the total data points $n$. In short, K-NN will work optimally as the number of points sampled approaches infinity. As more attributes or data complexity is added, K-NN will approach its optimal condition slower given increasing $n$.
 
 
 \subsection{Distance Metrics}
@@ -87,12 +87,6 @@ The learner $L$ then classifies each example $e^0 \in D^0$. That is, for each ex
 This creates a new set $D^1$. The learner $L$ is now trained with $D^1$ and the editing process repeats itself until performance decreases \citep{edited}. In this case, the performance is measured as the accuracy of the learner on a validation set. The validation set is consistent throughout all editing iterations.
 
 Say performance decreases on the $i^{th}$ iteration. The final edited data set is $D^{i-1}$. A separate K-NN classifier is now trained using $D^{i-1}$ and subsequently tested.
-
-
-% TODO talk about the k used in edited k-nn
-
-% notes: edited paper has a good line of reasoning for the hypothesis
-% nn-d2l has information for tuning
 % remember to discuss lack of knowledge about overfitting in convergence based algorithms
 
 \subsubsection{Condensed K-NN}
@@ -107,7 +101,7 @@ This process can be thought of as simply taking all of the same class examples n
 
 The K-Means (C-Means) algorithm is a data reducer that utilizes clustering to return a smaller data set. It does this by taking the average value of all the points in a cluster, and updating them until the averages remain the same from iteration to iteration.
 
- The algorithm is passed in a data set and a value for number of clusters $K$. It then initializes $K$ clusters by randomly selecting points out of the data set. We chose to take the initial points from the data set in an effort to reduce the time it takes for the algorithm to zero in on the data. From there, the algorithm iterates through all of the examples in the original set and adds them to the nearest cluster. Once all points have been assigned, K-Means computes the new average point within each cluster and assigns that to the representative point. Once every cluster average has been recomputed, all points are reassigned to the new representative points. This process is repeated until the representative points no longer change, or a max number of iterations is reached.
+The algorithm is passed in a data set and a value for number of clusters $K$. It then initializes $K$ clusters by randomly selecting points out of the data set. We chose to take the initial points from the data set in an effort to reduce the time it takes for the algorithm to zero in on the data. From there, the algorithm iterates through all of the examples in the original set and adds them to the nearest cluster. Once all points have been assigned, K-Means computes the new average point within each cluster and assigns that to the representative point. Once every cluster average has been recomputed, all points are reassigned to the new representative points. This process is repeated until the representative points no longer change, or a max number of iterations is reached.
 
 By recalculating the means of each cluster multiple times, the algorithm is very predictable and the centroids will normally find there way to the same points, regardless of which points were first initialized. (\cite{CMeans})
 
@@ -122,7 +116,7 @@ First all the examples in the data set are randomly scrambled and then assigned 
 
 \subsection{Tuning}
 
-The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set. 
+The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set \citep{learning-k}. 
 
 The second parameter to tune is $C$ which is the number of representative points that K-Means K-NN and K-Medoids K-NN have. Tuning begins with the number of points returned by Edited K-NN and tuned from there. 
 
