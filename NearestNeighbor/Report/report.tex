@@ -24,7 +24,7 @@
 
 In the realm of machine learning, knowing the form of some distribution of data is very valuable. In these cases, parametric learning my be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance \citep{distance-k-nn}.
 
-The data sets to be handled in this project do not follow a known distribution \citep{datasets}d. Thus, constructing parametric learners for these sets is difficult. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form.
+The data sets to be handled in this project do not follow a known distribution \citep{datasets}. Thus, constructing parametric learners for these sets is difficult. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form.
 
 One popular and intuitive method of non-parametric learning is the K-Nearest Neighbors (K-NN) learning algorithm \citep{NNClassificationOrigPaper}. Given data sets containing examples, the task is to implement K-NN learning algorithm for both classification and regression problems. Given the same input file, a secondary task is to reduce the size of the data set by implementing the Edited Nearest Neighbor (E-NN), Condensed Nearest Neighbor (C-NN), K-Means (KMeans), and K-Medoids (PAM) data reducing algorithms. Of particular are interest is how the data reducers contribute to the performance of K-Nearest Neighbor.
 
@@ -362,6 +362,8 @@ One method to improve the accuracy of classification would be to bin the ages in
 	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed with zero-one loss, MSE is the mean squared error, and ME is the mean error.}
 	\label{fig:comparealgs}
 \end{figure}
+
+Selected comparisons of the tested algorithms are displayed in figure 1. Of the K-NN variants used to reduce the number of data points needed, E-NN and C-NN generally trailed slightly behind K-NN, admittedly because they did not remove a large proportion of points from the original data set. PAM performed well in most data sets except for abalone, which most likely was not conducive to clustering. KMeans performed the worst out of the algorithms, likely due to its sensitivity to outliers. It was observed during implementation that the means would be pulled far from their clusters by outliers, leaving empty clusters when the clusters were repopulated. This highlights the advantages that PAM provides against KMeans.
 
 
 \section{Summary}
