@@ -116,9 +116,85 @@ First all the examples in the data set are randomly scrambled and then assigned 
 
 \subsection{Tuning}
 
-The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set \citep{learning-k}.
+One parameter to tune is $C$, the number of representative points that K-Means K-NN and K-Medoids K-NN have. The following tables show the Mean Standard Error for both clustering algorithms on a sample of the data sets tested with different numbers of clusters. There are two sections, one for regression data sets and the other for classification data sets.
 
-The second parameter to tune is $C$ which is the number of representative points that K-Means K-NN and K-Medoids K-NN have. Tuning begins with the number of points returned by Edited K-NN and tuned from there.
+\begin{table}[h]
+	%\title{Selected results of varying the number of clusters}
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Forest Fires MSE
+		\begin{tabular}{lllll}
+			\cline{1-4}
+			\#Clusters & 0.15N   & 0.25N   & 0.35N   &  \\ \cline{1-4}
+			KMEANS     & 4235.6  & 4238.05 & 4236.91 &  \\
+			KMEDOIDS   & 4235.95 & 4236.03 & 4247.17 &  \\
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Forest Fires ME
+		\centering
+		\begin{tabular}{llll}
+			\cline{1-4}
+			\#Clusters & 0.15N  & 0.25N  & 0.35N  \\ \cline{1-4}
+			KMEANS     & -12.71 & -12.63 & -12.66 \\
+			KMEDOIDS   & -12.68 & -12.7  & -12.54
+		\end{tabular}
+	\end{minipage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Machine MSE
+		\begin{tabular}{llll}
+			\hline
+			\#Clusters & 0.15N & 0.25N & 0.35N \\ \hline
+			CMEANS     & 2.08  & 2.05  & 2.05  \\
+			CMEDOIDS   & 2.06  & 2.05  & 2.07
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Machine ME
+		\centering
+		\begin{tabular}{llll}
+			\cline{1-4}
+			\#Clusters & 0.15N & 0.25N & 0.35N \\  \cline{1-4}
+			CMEANS     & -0.5  & -0.51 & -0.51 \\
+			CMEDOIDS   & -0.51 & -0.51 & -0.51
+		\end{tabular}
+	\end{minipage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{minipage}[b]{0.45\linewidth}\centering
+		Car Accuracy
+		\begin{tabular}{llll}
+			\hline
+			\#Clusters & -10\% & \#ENN   & +10\% \\ \hline
+			CMEANS     & 22.22\%      & 22.22\% & 22.22\%      \\
+			CMEDOIDS   & 90.68\%      & 92.82\% & 92.94\%
+		\end{tabular}
+	\end{minipage}
+	\hspace{0.5cm}
+	\begin{minipage}[b]{0.45\linewidth}
+		Car MSE
+		\centering
+		\begin{tabular}{llll}
+			\hline
+			\#Clusters & -10\% & \#ENN  & +10\% \\ \hline
+			CMEANS     & 8217.6       & 8217.6 & 8217.6       \\
+			CMEDOIDS   & 37.75        & 11.55  & 10.55
+		\end{tabular}
+	\end{minipage}
+	\caption{Selected results of varying the number of clusters}
+\end{table}
+
+Beginning with the regression data sets, the initial number of clusters was set to $ 0.25 * N$ where $N$ is the number of points in the initial data set. Two other values were tested: $ 0.15 * N$ and $ 0.35 * N$.
+For all data sets depicted above, the difference between each respective metric value when varying the cluster size was negligible.
+Specifically, the largest difference in the MSE of Forest Fires is less than 15 while the initial value MSE was 4236.03, there is essentially no change.
+Furthermore, the largest difference in ME for Forest Fires was 0.16 while the initial ME was -12.7, also virtually no change in the metric.
+
+Thus varying the number of clusters appears to have no affect on the performance of the learner on the regression data sets.
+
+Now analyze 
+
+The most pertinent parameter to tune is $K$ which is the number of nearest neighbors to compare to. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set \citep{learning-k}.
 
 \section{Results}
 
@@ -291,80 +367,6 @@ One method to improve the accuracy of classification would be to bin the ages in
 	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed as zero-one loss, MSE is the mean squared error, and ME is the mean error.}
 	\label{fig:comparealgs}
 \end{figure}
-
-
-%\begin{figure}[ht]
-%	\includegraphics[width=\linewidth]{ctuning.pdf}
-%	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed as zero-one loss, MSE is the mean squared error, and ME is the mean error.}
-%	\label{fig:comparealgs}
-%\end{figure}
-
-\begin{table}[h]
-	%\title{Selected results of varying the number of clusters}
-	\begin{minipage}[b]{0.45\linewidth}\centering
-			Forest Fires MSE
-			\begin{tabular}{lllll}
-				\cline{1-4}
-				\#Clusters & 0.15N   & 0.25N   & 0.35N   &  \\ \cline{1-4}
-				KMEANS     & 4235.6  & 4238.05 & 4236.91 &  \\
-				KMEDOIDS   & 4235.95 & 4236.03 & 4247.17 &  \\
-			\end{tabular}
-	\end{minipage}
-	\hspace{0.5cm}
-	\begin{minipage}[b]{0.45\linewidth}
-		Forest Fires ME
-		\centering
-		\begin{tabular}{llll}
-			\cline{1-4}
-			\#Clusters & 0.15N  & 0.25N  & 0.35N  \\ \cline{1-4}
-			KMEANS     & -12.71 & -12.63 & -12.66 \\
-			KMEDOIDS   & -12.68 & -12.7  & -12.54
-		\end{tabular}
-	\end{minipage}
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\begin{minipage}[b]{0.45\linewidth}\centering
-		Machine MSE
-		\begin{tabular}{llll}
-			\hline
-			\#Clusters & 0.15N & 0.25N & 0.35N \\ \hline
-			CMEANS     & 2.08  & 2.05  & 2.05  \\
-			CMEDOIDS   & 2.06  & 2.05  & 2.07
-		\end{tabular}
-	\end{minipage}
-	\hspace{0.5cm}
-	\begin{minipage}[b]{0.45\linewidth}
-		Machine ME
-		\centering
-		\begin{tabular}{llll}
-			 \cline{1-4}
-			\#Clusters & 0.15N & 0.25N & 0.35N \\  \cline{1-4}
-			CMEANS     & -0.5  & -0.51 & -0.51 \\
-			CMEDOIDS   & -0.51 & -0.51 & -0.51
-		\end{tabular}
-	\end{minipage}
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\begin{minipage}[b]{0.45\linewidth}\centering
-		Car Accuracy
-		\begin{tabular}{llll}
-			\hline
-			\#Clusters & -10\% & \#ENN   & +10\% \\ \hline
-			CMEANS     & 22.22\%      & 22.22\% & 22.22\%      \\
-			CMEDOIDS   & 90.68\%      & 92.82\% & 92.94\%
-		\end{tabular}
-	\end{minipage}
-	\hspace{0.5cm}
-	\begin{minipage}[b]{0.45\linewidth}
-		Car MSE
-		\centering
-		\begin{tabular}{llll}
-			\hline
-			\#Clusters & -10\% & \#ENN  & +10\% \\ \hline
-			CMEANS     & 8217.6       & 8217.6 & 8217.6       \\
-			CMEDOIDS   & 37.75        & 11.55  & 10.55
-		\end{tabular}
-	\end{minipage}
-	\caption{Selected results of varying the number of clusters}
-\end{table}
 
 
 \section{Summary}
