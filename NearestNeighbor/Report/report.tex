@@ -16,13 +16,13 @@
 \maketitle
 
 \begin{abstract}
-	K-Nearest Neighbors is a non-parametric learning method that may be used for classification or regression. This learning model is very versatile and may be used on a variety of known or unknown distributions. Through tuning and experimentation, the K-Nearest Neighbors algorithm and several variants that help reduce the amount of data needed by the learner are explored, revealing their strengths and pitfalls.
+	K-Nearest Neighbors is a non-parametric learning method that may be used for classification or regression. This learning model is versatile and may be used in situations where the distribution is known or unknown. Through tuning and experimentation, the K-Nearest Neighbors algorithm and several variants that help reduce the amount of data needed by the learner are explored, revealing their strengths and pitfalls.
 
 \end{abstract}
 
 \section{Problem Statement}
 
-In the realm of machine learning, knowing the form of some distribution of data is very valuable. In these cases, parametric learning my be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance \citep{distance-k-nn}.
+In the realm of machine learning, knowing the form of some distribution of data is valuable information. In these cases, parametric learning may be used, mimicking the distribution with a fixed set of parameters and forms. An example of this is Naive Bayes, which can be learned quickly and represented simply. These learning algorithms train fast and require relatively less data. The limitation of parametric learning is that the functional form of the algorithm constrains the performance \citep{distance-k-nn}.
 
 The data sets to be handled in this project do not follow a known distribution \citep{datasets}. Thus, constructing parametric learners for these sets is difficult. Non-parametric learning offers a solution to this problem, making no strong assumptions about the form of the data---and therefore not constructing a model with a fixed form.
 
@@ -38,15 +38,15 @@ K-NN is expected to outperform the other nearest neighbor variants. K-NN utilize
 
 K Nearest Neighbor (K-NN) is a modification of the nearest neighbor rule, a nonparametric procedure for classification or regression that utilizes a set of known points.
 
-At its core, the nearest neighbor rule utilizes the intuitive assumption that a set of known examples, $X$, follows the distribution of all possible examples that it was taken from. As such, examples which are ``close" to each other likely belong to the same class or have a similar real value (\cite{NNClassification}). Metrics for determining this distance are discussed in section 2.2.
+At its core, the nearest neighbor rule utilizes the intuitive assumption that a set of known examples, $X$, follows the distribution of all possible examples that it was taken from. As such, examples which are ``close" to each other likely belong to the same class or have a similar real value (\cite{NNClassificationOrigPaper}). Metrics for determining this distance are discussed in section 2.2.
 
-Thus, given $X$, a number of neighbors $k$, and a new example $x$, K-NN finds the $k$ nearest neighbors of $x$ by iterating through the examples in $X$, calculating the distance from $x$ for each example. Then K-NN classifies $x$ given a majority vote among the returned class values from its $k$ nearest neighbors. K-NN handles regression by computing the mean value among its $k$ nearest neighbors.
+Thus, given $X$, a number of neighbors $k$, and a query example $x$, K-NN finds the $k$ nearest neighbors of $x$ by iterating through the examples in $X$, calculating the distance from $x$ for each example. Then K-NN classifies $x$ given a majority vote among the returned class values from its $k$ nearest neighbors. K-NN handles regression by computing the mean value among its $k$ nearest neighbors.
 
-Note that this does not heavily assume anything about the form of the actual distribution. K-NN is flexible enough to adapt to almost any functional form that the underlying distribution takes on. This is a huge advantage for data sets that are hard to visualize or have unknown traits. The downside to this characteristic is that, like many nonparametric models, K-NN requires much more data than a parametric model to train effectively. In other words, K-NN requires a great number of known examples because it must is essentially estimating the real distribution from the known examples. Without sufficient data, K-NN will perform poorly.
+Note that this does not heavily assume anything about the form of the actual distribution. K-NN is flexible enough to adapt to almost any functional form that the underlying distribution takes on. This is an advantage for data sets that are hard to visualize or have unknown traits. The downside to this characteristic is that, like many nonparametric models, K-NN requires much more data than a parametric model to effectively train. In other words, K-NN requires a great number of known examples because it is essentially estimating the real distribution from the known examples. Without sufficient data, K-NN will perform poorly.
 
 In fact, the error of K-NN, $R_{knn}$ as the number of points sampled approaches infinity is bounded by:
 $$R^* \leq R_{knn} \leq (1+\frac{1}{k})R^*$$
-where $R^*$ is the Bayes risk, the optimal risk given a known set of probability densities that represents the data (\cite{NNClassificationOrigPaper}). Thus, as $k \rightarrow \infty$ and the number of data points $n \rightarrow \infty$, theoretically $R_{knn} \rightarrow R^*$. Of course, $\frac{k}{n} \rightarrow 0$ should be ensured so that $k$ is still only a small subset of the total data points $n$. In short, K-NN will work optimally as the number of points sampled approaches infinity. As more attributes or data complexity is added, K-NN will approach its optimal condition slower given increasing $n$.
+where $R^*$ is the Bayes risk, the optimal risk given a known set of probability densities that represents the data. Thus, as $k \rightarrow \infty$ and the number of data points $n \rightarrow \infty$, theoretically $R_{knn} \rightarrow R^*$. Of course, $\frac{k}{n} \rightarrow 0$ should be ensured so that $k$ is still only a small subset of the total data points $n$  (\cite{NNClassificationOrigPaper}). In short, K-NN will work optimally as the number of points sampled approaches infinity. As more attributes or data complexity is added, K-NN will approach its optimal condition slower given increasing $n$.
 
 
 \subsection{Distance Metrics}
@@ -55,7 +55,7 @@ The nearest neighbor rule, and therefore K-NN, requires a distance metric to det
 $$D = \sqrt{\sum_{i=0}^{d}(a_1^i - a_2^i)^2}$$
 where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th attribute of $x_1$, and $a_2^i$ is the $i$-th attribute of $x_2$.
 
-A Euclidean distance metric assumes that all data in a dataset is continuous. However, in the world of data science and this project, some attributes contain categorical values. One method to compute this distance is the Value Difference Metric (VDM). Note that the VDM relies on classification to compute a distance, so continuous outputs must be discretized by some method.
+A Euclidean distance metric assumes that all data in a dataset is continuous. However, in the world of data science and this project, some attributes contain categorical values. One method to compute this distance is the Value Difference Metric (VDM). Note that the VDM relies on classification to compute a distance, so continuous regression values must be discretized by some method.
 
 To compute a distance between two categorical values $x_1, x_2$ within one attribute $a$ using the VDM, find the following for each value:
 $$ v_n = \sum _{i = 1}^{k} | \dfrac{N_{1i}}{N_1} - \dfrac{N_{2i}}{N_2} | $$
@@ -63,13 +63,13 @@ where $N_{1i}, N_{2i}$ are the number of examples in $a$ that are of the $i^{th}
 
 Then compute the difference
 $v_2 - v_1$.
-This difference is considered to be the distance $v$ between the two categorical values $x_1$ and $x_2$ \citep{vdm}.
+This difference is considered to be the distance $v$ between the two categorical values $x_1$ and $x_2$ \citep{vdm}. The squared difference can now be included in the summation when computing Euclidean distance.
 
 \subsection{Data Reducers}
 The K-Nearest Neighbor decision rule is a lazy algorithm where the performance is a function of the number of training examples. Therefore, in terms of a learner's computational efficiency, the most favorable training set is the smallest set.
 This is subject to the constraint that the model's performance is not compromised.
 
-Thus, the optimal training set for a K-NN learner is the smallest set that is able to maximize the correct identification of any query example.
+Thus, the optimal training set for a K-NN learner is the smallest set that is able to correctly identify the value of any query example.
 The purpose of the following four algorithms is to reduce the size of the dataset without compromising the learner's performance. Since K-NN is lazy by nature, this will improve the computation time of the learner at query time.
 % should I talk about not decreasing performance? That is what we are testing right
 
@@ -86,33 +86,36 @@ Say performance decreases on the $i^{th}$ iteration. The final edited data set i
 
 \subsubsection{Condensed K-NN}
 
-The condensing algorithm is used to reduce total number of points in a data set. It does this by condensing smiliarly classed points that neighbor each other into a single point.
+The condensing reduces neighboring, similarly classed points into a single point.
 
-Condensing begins with a null set $Z$ and initializes a random starting point out of the data set. $Z$ becomes the reduced data set once the algorithm has completed. The algorithm then iterates through all examples $x$ in the original data set and finds the closest example $x’$ in $Z$ for each of them. It then compares the classes of $x$ and $x’$, adding $x$ to the data set $Z$ only if the two classes differ. This process is repeated until $Z$ no longer changes, or the max number of iterations is reached.
+Condensing begins with a null set $Z$ and initializes a random starting point in the data set. When the algorithm terminates, $Z$ will be the reduced data set. The algorithm iterates through all examples $x$ in the original data set and finds the closest example $x’$ in $Z$ for each of them. It then compares the classes of $x$ and $x’$, adding $x$ to the data set $Z$ only if the two classes differ. This process is repeated until $Z$ no longer changes, or the max number of iterations is reached.
 
-This process can be thought of as simply taking all of the same class examples nearest each other and condensing them into a single point. This way, we reduce the number of points required to represent a given class at any given point. (\cite{Condensed})
+This process can be thought of as simply taking all of the same class examples nearest each other and condensing them into a single point. This way, the number of points required to represent a class at any given point is reduced (\cite{Condensed}).
 
 \subsubsection{Kmeans K-NN}
 
-The K-Means (C-Means) algorithm is a data reducer that utilizes clustering to return a smaller data set. It does this by taking the average value of all the points in a cluster, and updating them until the averages remain the same from iteration to iteration.
+The K-Means algorithm utilizes clustering to return a smaller data set. This is performed by taking the average value of all the points in a cluster, and then re clustering and repeating until the averages converge.
 
-The algorithm is passed in a data set and a value for number of clusters $K$. It then initializes $K$ clusters by randomly selecting points out of the data set. We chose to take the initial points from the data set in an effort to reduce the time it takes for the algorithm to zero in on the data. From there, the algorithm iterates through all of the examples in the original set and adds them to the nearest cluster. Once all points have been assigned, K-Means computes the new average point within each cluster and assigns that to the representative point. Once every cluster average has been recomputed, all points are reassigned to the new representative points. This process is repeated until the representative points no longer change, or a max number of iterations is reached.
+The algorithm is passed in a data set and a value for number of clusters $K$. It then initializes $K$ clusters by randomly selecting points out of the data set. We chose to take the initial points from the data set in an effort to reduce the time it takes for the algorithm to zero in on the data. From there, the algorithm iterates through all of the examples in the original set and adds them to the nearest cluster. Once all points have been assigned, K-Means computes the new average point within each cluster and assigns that to the representative point. Once every cluster average has been recomputed, all points are reclustered based on the new representative points. This process is repeated until the representative points no longer change, or a max number of iterations is reached.
 
-By recalculating the means of each cluster multiple times, the algorithm is very predictable and the centroids will normally find there way to the same points, regardless of which points were first initialized. (\cite{CMeans})
+By recalculating the means of each cluster multiple times, the algorithm is predictable and the centroids will find their way to the same points, regardless of which points were first initialized (\cite{CMeans}).
 
 \subsubsection{PAM K-NN}
-The Partitioning Around Medoids (PAM) K-NN is a variant of K-Means K-NN but is more resistant to outliers because it uses an actual point in the data set instead of making a new point using means. PAM begins by randomly selecting $C$ number of data points from the data set $D$ as the medoids $m$. In this case $C$ is determined by the number of points returned by Edited K-NN. The algorithm then clusters all of the remaining examples $x$ to the closest corresponding $m_i \in m$. Then the distortion is calculated with $$D = \sum_{j=1}^{k}\sum_{i \in cluster_j} (x_i - m_j)$$. We then iterate through each $m$ and swap it with every $x_j \in D$ $x_j \notin m$. After every swap the distortion $D$ is calculated again. This was optimized by calculating the distortion of each medoid separately and only recalculating the distortion for the medoid that was changed. If the new distortion is less than the original distortion the algorithm moves on and if the new distortion is greater than the original distortion than the medoid and example are swapped back. The clusters are then cleared and the algorithm then recalculates all of the clusters and distortion and repeats the swapping until no more swapping occurs or the algorithm iterates through 1000 times (\cite{Fox1990FindingGI}).
+The Partitioning Around Medoids (PAM) K-NN is a variant of K-Means K-NN but is more resistant to outliers because it uses an actual point in the data set instead of average the examples in a cluster. PAM begins by randomly selecting $C$ number of data points from the data set $D$ as the medoids $m$. In this case $C$ is determined by the number of points returned by Edited K-NN. The algorithm then clusters all of the remaining examples $x$ to the closest corresponding $m_i \in m$. Then the distortion is calculated with 
+$$D = \sum_{j=1}^{k}\sum_{i \in cluster_j} (x_i - m_j)$$
+where $x_i$ is the $i^{th}$ example in the $j^{th}$ cluster. Now iterate through each $m$ and swap it with every $x_j \in D$ such that $x_j \notin m$. After every swap the distortion $D$ is calculated again. This was optimized by calculating the distortion of each medoid separately and only recalculating the distortion for the medoid that was changed. If the new distortion is less than the original distortion the algorithm moves on and if the new distortion is greater than the original distortion than the medoid and example are swapped back. The clusters are then cleared and the algorithm then recalculates all of the clusters and distortion and repeats the swapping until no more swapping occurs or the algorithm iterates through 1000 times (\cite{Fox1990FindingGI}).
 
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
 
-First all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. All categorical variables are converted to integers and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distanced between categorical variables. Class names are also converted to incrementing integers for easier reading by the Java program. All numerical variables are normalized between 0 and 1. The data sets did not contain any missing variables so preprocessing did not need to handle that.
+First, all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. All categorical variables are converted to integers and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distances between categorical variables. All numerical variables are normalized between 0 and 1. The data sets did not contain any missing variables so preprocessing did not to handle that.
 
 \subsection{Tuning}
 
 One parameter to tune is $C$, the number of representative points that K-Means K-NN and K-Medoids K-NN have. The following tables show the Mean Standard Error for both clustering algorithms on a sample of the data sets tested with different numbers of clusters. There are two sections, one for regression data sets and the other for classification data sets.
 
+% the table should go in this exact spot
 \begin{table}[h]
 	%\title{Selected results of varying the number of clusters}
 	\begin{minipage}[b]{0.45\linewidth}\centering
@@ -191,10 +194,21 @@ Now view the classification data set Car. The base value for the number of clust
 For the car data set, the performance metrics for KMeans did not vary when changing the number of clusters. This is most likely because of outliers in the data set, since the performance metrics for KMedoids does change with the number of clusters and KMedoids is more resistant to outliers than KMeans.
 Looking at the performance metrics for KMedoids, the best performing number of clusters was $1.1 * E$.
 
-Another input must also be tuned: $K$, the number of nearest neighbors to compare with the query point. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set \citep{learning-k}.
+Another input must also be tuned: $K$, the number of nearest neighbors to compare with a query point. The value starts with $K = sqrt(N)$ where $N$ is the number of examples in the data set \citep{learning-k}. The two other values of $K$ tested were $0.9 * K$ and $1.1 * K$.
+In viewing Table 2 (which can be found in the Results section), it can be seen that, for classification data sets, the learner, on average, performs better when considering the $0.9 * K$ than the other possible values for $K$.
+For regression data sets, there is no significant change.
 
 \section{Results}
 
+Tests were run to evaluate performances of each algorithm based on varying $k$ as well as KMeans and PAM given varying numbers of clusters. The results for the varying $k$ tests are shown in table 1. The algorithms were evaluated using accuracy, mean square error (MSE), and mean error (ME).
+
+For classification, MSE is a good indicator of how far off the predicted distribution is from the actual distribution. Accuracy indicates how well the algorithm is classifying examples on an individual basis.
+
+Mean Error (ME) and MSE will be used to evaluate the regression problems. MSE takes the distance between real and predicted values and squares it. ME is computed similarly, but will not square the difference. MSE shows the existence of outliers because the value will increase a square. ME shows whether the learner is over or under estimating the values in the test set.
+
+\newpage
+
+% the table should go in this exact spot
 \begin{table}[h]
 	\title{Results of $k$ tests}
 	\begin{minipage}[b]{0.45\linewidth}\centering
@@ -351,21 +365,20 @@ Another input must also be tuned: $K$, the number of nearest neighbors to compar
 	\caption{Results of varying $k$ for K-NN and variants. The middle $k$ value is the square root of $N$, the number of points in the set. Selected are $+/- 10\%$ of this number $N$.}
 \end{table}
 
-Tests were run to evaluate performances of each algorithm based on varying $k$ as well as KMeans and PAM given varying numbers of clusters. The results for the varying $k$ tests are shown in table 1. The algorithms were evaluated using accuracy, mean square error (MSE), and mean error (ME).
-
 A standout may be the abysmal performance of K-NN and variants on the abalone data set. The K-NN learner's average accuracy is around 26\%. In the abalone dataset, the goal is to classify the age of an abalone mollusks. However, there are 29 ages and consecutive ages would be closely related to each other. Adjacent ages likely have attributes which blend together, making the problem particularly difficult for a nearest neighbor classifier whose weakness is this phenomena.
 Additionally, 17 classes in the dataset have less than 100 examples associated with them \citep{datasets}, which is a small training set for a K-NN learner.
 This makes creating a good model for the abalone dataset a difficult task.
 
 One method to improve the accuracy of classification would be to bin the ages into three age categories and then use a K-NN learner to classify the examples in abalone. In one study, this resulted in accuracies as high as $56.67\%$ with a K-NN learner where $K = 1$ \citep{abalone-bad}.
 
+% the graph should go in this exact spot
 \begin{figure}[h]
 	\includegraphics[width=\linewidth]{comparisongraphs.pdf}
 	\caption{Graphical summary of each algorithm's performance on two classification sets and a regression set. Accuracy is computed with zero-one loss, MSE is the mean squared error, and ME is the mean error.}
 	\label{fig:comparealgs}
 \end{figure}
 
-Selected comparisons of the tested algorithms are displayed in figure 1. Of the K-NN variants used to reduce the number of data points needed, E-NN and C-NN generally trailed slightly behind K-NN, admittedly because they did not remove a large proportion of points from the original data set. PAM performed well in most data sets except for abalone, which most likely was not conducive to clustering. KMeans performed the worst out of the algorithms, likely due to its sensitivity to outliers. It was observed during implementation that the means would be pulled far from their clusters by outliers, leaving empty clusters when the clusters were repopulated. This highlights the advantages that PAM provides against KMeans.
+Selected comparisons of the tested algorithms are displayed in Figure 1. Of the K-NN variants used to reduce the number of data points needed, E-NN and C-NN generally trailed slightly behind K-NN, admittedly because they did not remove a large proportion of points from the original data set. PAM performed well in most data sets except for abalone, which most likely was not conducive to clustering. KMeans performed the worst out of the algorithms, likely due to its sensitivity to outliers. It was observed during implementation that the means would be pulled far from their clusters by outliers, leaving empty clusters when the clusters were repopulated. This highlights the advantages that PAM provides against KMeans.
 
 
 \section{Summary}
