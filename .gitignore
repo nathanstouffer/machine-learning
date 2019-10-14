@@ -1,11 +1,10 @@
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.bbl
+*.blg
 /NaiveBayes/NaiveBayesAlgorithm/nbproject/private/
 /NaiveBayes/NaiveBayesAlgorithm/build/
-/NearestNeighbor/Report/report.aux
-/NearestNeighbor/Report/report.log
-/NearestNeighbor/Report/report.out
-/NearestNeighbor/Report/report.pdf
-/NearestNeighbor/Report/report.synctex.gz
 /NearestNeighbor/NearestNeighborAlgorithm/nbproject/private/
 /NearestNeighbor/NearestNeighborAlgorithm/build/
-/NearestNeighbor/Report/report.bbl
-/NearestNeighbor/Report/report.blg

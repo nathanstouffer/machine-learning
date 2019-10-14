@@ -32,7 +32,7 @@ class data:
         #iterators for assigning sets
         a = 0
         i = 0
-        df = pd.read_csv('..\\OrigDataFiles\\' + filename + '.data', header = None)
+        df = pd.read_csv('OrigDataFiles\\' + filename + '.data', header = None)
         #create list of iterating values from 0-9 distrubeted equally across rows
         while(i < len(df)):
             sets.append(a)

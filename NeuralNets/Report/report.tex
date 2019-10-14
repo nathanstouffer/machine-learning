@@ -1,0 +1,57 @@
+\documentclass[twoside,11pt]{article}
+
+\usepackage{jmlr2e}
+\usepackage{spverbatim}
+\usepackage{amsmath}
+
+\begin{document}
+
+\title{Learning with Nearest Neighbor}
+
+\author{\name Andrew Kirby \email andy-kirby@live.com \AND
+		\name Kevin Browder \email browderkevin54@gmail.com \AND
+		\name Nathan Stouffer \email nathanstouffer1999@gmail.com \AND
+		\name Eric Kempf \email erickempf123@gmail.com }
+
+\maketitle
+
+\begin{abstract}
+yeet
+\end{abstract}
+
+\section{Problem Statement}
+
+\subsection*{Hypothesis}
+
+\section{Algorithms}
+
+\subsection{Distance Metrics}
+
+The nearest neighbor rule, and therefore K-NN, requires a distance metric to determine the theoretical ``distance" between two examples. A common distance metric---and the one used in this paper---is Euclidean distance. The Euclidean distance $D$ between two examples $x_1$ and $x_2$ is computed as:
+$$D = \sqrt{\sum_{i=0}^{d}(a_1^i - a_2^i)^2}$$
+where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th attribute of $x_1$, and $a_2^i$ is the $i$-th attribute of $x_2$.
+
+A Euclidean distance metric assumes that all data in a dataset is continuous. However, in the world of data science and this project, some attributes contain categorical values. One method to compute this distance is the Value Difference Metric (VDM). Note that the VDM relies on classification to compute a distance, so continuous regression values must be discretized by some method.
+
+To compute a distance between two categorical values $x_1, x_2$ within one attribute $a$ using the VDM, find the following for each value:
+$$ v_n = \sum _{i = 1}^{k} | \dfrac{N_{1i}}{N_1} - \dfrac{N_{2i}}{N_2} | $$
+where $N_{1i}, N_{2i}$ are the number of examples in $a$ that are of the $i^{th}$ class and have values $x_1, x_2$ respectively, and $N_1, N_2$ are the number of examples in $a$ that are of the $i^{th}$ class.
+
+Then compute the difference
+$v_2 - v_1$.
+This difference is considered to be the distance $v$ between the two categorical values $x_1$ and $x_2$ \citep{vdm}. The squared difference can now be included in the summation when computing Euclidean distance.
+
+\section{Experiment}
+
+\subsection{Preprocessing Choices}
+
+\subsection{Tuning}
+
+\section{Results}
+
+\section{Summary}
+
+
+\bibliography{report}
+
+\end{document}
