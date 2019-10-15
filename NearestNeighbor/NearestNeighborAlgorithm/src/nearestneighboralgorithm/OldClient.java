@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
  *
  * @author andy-
  */
-public class Client {
+public class OldClient {
 
     /**
      * @param args the command line arguments
@@ -40,7 +40,7 @@ public class Client {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEDOIDS --------------");
         System.out.println("-----------------------------------------");
-        testMedoids();
+        //testMedoids();
     }
 
     private static void testKNN() throws FileNotFoundException, UnsupportedEncodingException {
@@ -327,7 +327,7 @@ public class Client {
         // List the files we want to test
         String[] cmeans_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
         //int[] c_values = {1400, 1500, 170, 0, 0, 0, 0};
-        int[] c_values = {(int) (1400*0.9), (int)(1500*0.9), (int)(170*0.9), 0, 0, 0, 0};
+        int[] c_values = {(int) (1400*0.9), (int)(400), (int)(170*0.9), 0, 0, 0, 0};
 
         // Iterate through each data file
         for(int f = 0; f < cmeans_datafiles.length; f++) {
@@ -337,13 +337,13 @@ public class Client {
 
             // Initialize the object that will be runnning our algorithm on the data
             IKNearestNeighbor knn;
-            CMeans cmeans;
+            OldCMeans cmeans;
             if(reader.getClassNames() == null) { // Check if the file contained a regression set
                 knn = new KNNRegressor();
-                cmeans = new CMeans((int) (0.25 * reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
+                cmeans = new OldCMeans((int) (0.25 * reader.getNumExamples()), new EuclideanSquared(reader.getSimMatrices())); // Set clusters by 0.25 n
             } else { // Otherwise, the file contained a classification set
                 knn = new KNNClassifier();
-                cmeans = new CMeans((int) (c_values[f]), new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
+                cmeans = new OldCMeans((int) (c_values[f]), new EuclideanSquared(reader.getSimMatrices())); // Set clusters manually to result of E-NN
             }
             knn.setDistMetric(new EuclideanSquared(reader.getSimMatrices()));
 
@@ -359,9 +359,10 @@ public class Client {
                 System.out.println("Test " + (i+1));
                 Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
 
-                Set means_set = cmeans.reduce(training_set.clone());
+                Set means_set = cmeans.reduce(training_set);
                 knn.setK((int)Math.sqrt(means_set.getNumExamples()));
 
+                System.out.println("ORIGINAL NUMBER OF DATA POINTS: " + training_set.getNumExamples());
                 System.out.println("CMEANS REDUCED TO " + means_set.getNumExamples() + " POINTS");
                 //System.out.println(means_set.getExamples().toString());
 
