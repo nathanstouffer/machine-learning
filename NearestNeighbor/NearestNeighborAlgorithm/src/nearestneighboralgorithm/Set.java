@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Set can be constructed with no values or from existing sets
  * @author natha
  */
-public class Set implements Iterable<Example>, Cloneable {
+public class Set implements Cloneable {
     
     // global variables to store set variables
     private final int num_attributes;
@@ -77,7 +77,7 @@ public class Set implements Iterable<Example>, Cloneable {
                     Set curr = subsets[i];
                     
                     // iterate through examples in a subset and add examples to the set
-                    for (Example ex: curr){ this.addExample(ex); }
+                    for (int j = 0; j < curr.getNumExamples(); j++){ this.addExample(curr.getExample(j)); }
                     
                     // outdated code before iterable interface
                     /*int curr_num_examples = curr.getNumExamples();
@@ -138,13 +138,6 @@ public class Set implements Iterable<Example>, Cloneable {
     public void replaceExample(int index, Example ex){ this.examples.set(index, ex); }
     
     public void clearSet(){ this.examples.clear(); }
-    
-    /**
-     * method to return an iterator over the examples in the Set
-     * @return 
-     */
-    @Override
-    public Iterator<Example> iterator() { return examples.iterator(); }
     
     // getter methods
     public Example getExample(int index){ return this.examples.get(index); }

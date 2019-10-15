@@ -64,20 +64,7 @@ public class CMedoids implements IDataReducer {
         
         // declare a new set for the reduced data
         // this set will be populated with the medoids
-        Set reduced = new Set(clone.getNumAttributes(), clone.getNumClasses(), clone.getClassNames());
-        // final medoids
-        Example[] medoids = this.getMedoids();
-        // iterate through medoids
-        for (int i = 0; i < this.c; i++){
-            // compute the assigned value of the medoid
-            double medoid_val = this.clusters[i].computeRepValue();
-            // get the attributes of the medoid
-            ArrayList<Double> attr = medoids[i].getAttributes();
-            // instantiate new value
-            Example val = new Example(medoid_val, attr);
-            // add val to reduced set
-            reduced.addExample(val);
-        }
+        Set reduced = this.computeReducedSet(clone);
         return reduced;
     }
     
@@ -86,7 +73,7 @@ public class CMedoids implements IDataReducer {
      * returns false if medoids do not change
      * @return 
      */
-    public boolean swapMedoids(){
+    private boolean swapMedoids(){
         // assume that the current medoids are on the final iteration
         boolean change = false;
         // declare distortion array
@@ -129,6 +116,30 @@ public class CMedoids implements IDataReducer {
         }
         
         return change;
+    }
+    
+    /**
+     * method to create a set from medoid of each cluster
+     * @param dataset
+     * @return 
+     */
+    private Set computeReducedSet(Set dataset){
+        Set reduced = new Set(dataset.getNumAttributes(), dataset.getNumClasses(), dataset.getClassNames());
+        // final medoids
+        Example[] medoids = this.getMedoids();
+        // iterate through medoids
+        for (int i = 0; i < this.c; i++){
+            // compute the assigned value of the medoid
+            double medoid_val = this.clusters[i].computeRepValue();
+            // get the attributes of the medoid
+            ArrayList<Double> attr = medoids[i].getAttributes();
+            // instantiate new value
+            Example val = new Example(medoid_val, attr);
+            // add val to reduced set
+            reduced.addExample(val);
+        }
+        // return dataset consisting of only medoids
+        return reduced;
     }
     
     /**
