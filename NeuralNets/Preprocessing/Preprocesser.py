@@ -16,93 +16,108 @@ class data:
     # class variables
 
     # constructor that reads in datafile as dataframe and formats for importing into Java Nearest Neighbor algorithm
-    # Parameters: int location of class column, bool if data contains missing data, bool if data is pre binned,
-    # string filename
-    def __init__(self, classloc, remove, missing, classification, filename, seperator):
-        df = pd.DataFrame()
-        name = filename
-        # lists to assign sets and record bin #
-        sets = []
-        bins = []
+    def __init__(self, classloc, remove, classification, filename, separator):
+        self.classloc = classloc
+        self.remove = remove
+        self.classification = classification
+        self.filename = filename
+        self.separator = separator
+        self.numcategoricalvar = 0
+        self.header = ''
+        self.sets = []
+        self.matrices = ''
+        self.df = pd.DataFrame()
+        self.csvin()
+        self.calccategorical()
+        self.output()
+
+    def csvin(self):
         # iterators for assigning sets
         a = 0
         i = 0
-        df = pd.read_csv('OrigDataFiles\\' + filename + '.data', skiprows=remove, sep=seperator, header=None)
+        self.df = pd.read_csv('OrigDataFiles\\' + self.filename + '.data', skiprows=self.remove, sep=self.separator,
+                              header=None)
         # create list of iterating values from 0-9 distributed equally across rows
-        while i < len(df):
-            sets.append(a)
+        while i < len(self.df):
+            self.sets.append(a)
             a += 1
             if a >= 10:
                 a = 0
             i += 1
         # placing class column at 0 loc
-        df.rename(columns={classloc: 'Class'}, inplace=True)
+        self.df.rename(columns={self.classloc: 'Class'}, inplace=True)
         cols_to_order = ['Class']
-        new_columns = cols_to_order + (df.columns.drop(cols_to_order).tolist())
-        df = df[new_columns]
+        new_columns = cols_to_order + (self.df.columns.drop(cols_to_order).tolist())
+        self.df = self.df[new_columns]
         # randomize all examples
-        df = df.sample(frac=1).reset_index(drop=True)
+        self.df = self.df.sample(frac=1).reset_index(drop=True)
         # rename attributes 0-num of attributes after moving class column to front
+
+    def calccategorical(self):
         fixedcolumns = ['Class']
-        for i in range(len(df.columns) - 1):
+        for i in range(len(self.df.columns) - 1):
             fixedcolumns.append(i)
-        df.columns = fixedcolumns
+        self.df.columns = fixedcolumns
         # converted class names to ints for reading by algorithm
-        if classification:
-            classes = (df.Class.unique())
+        if self.classification:
+            classes = (self.df.Class.unique())
             classes = np.sort(classes)
             for i in range(len(classes)):
-                df['Class'] = df['Class'].replace(classes[i], i)
+                self.df['Class'] = self.df['Class'].replace(classes[i], i)
         # bins regression values
         else:
-            backupclass = df['Class']
-            df['Class'] = pd.cut(df['Class'], 10, labels=False)
+            backupclass = self.df['Class']
+            self.df['Class'] = pd.cut(self.df['Class'], 10, labels=False)
         # assign sets to examples
-        df.insert(1, 'Sets', sets)
+        self.df.insert(1, 'Sets', self.sets)
         # converts all categorical variables to integers starting at 0 and indexing by 1
         # also keeps track of which attributes are categorical and which are numerical
         categorical = []
-        numcategoricalvar = 0
-        for i in range(len(df.columns) - 2):
-            if df[i].dtype == object:
-                original = df[i].unique()
+        for i in range(len(self.df.columns) - 2):
+            if self.df[i].dtype == object:
+                original = self.df[i].unique()
                 replace = dict(zip(original, range(len(original))))
-                df[i] = df[i].map(replace)
+                self.df[i] = self.df[i].map(replace)
                 categorical.append("0")
-                numcategoricalvar += 1
+                self.numcategoricalvar += 1
             else:
                 categorical.append("1")
-        matrices = ''
+
         for i in range(len(categorical)):
             # calculate matrices for distance metric for all categorical variable
             if categorical[i] == '0':
-                matrices += str(i) + ',' + str(len(df[i].unique())) + ',' + str(len(df.Class.unique())) + '\n'
-                for a in df[i].unique():
-                    for b in np.sort(df.Class.unique()):
-                        matrices += str(len(df[(df['Class'] == b) & (df[i] == a)]) / len(df[df['Class'] == b])) + ','
-                    matrices += '\n'
+                self.matrices += str(i) + ',' + str(len(self.df[i].unique())) + ',' + str(
+                    len(self.df.Class.unique())) + '\n'
+                for a in self.df[i].unique():
+                    for b in np.sort(self.df.Class.unique()):
+                        self.matrices += str(len(self.df[(self.df['Class'] == b) & (self.df[i] == a)]) / len(
+                            self.df[self.df['Class'] == b])) + ','
+                    self.matrices += '\n'
             # normalize all numerical variables
             else:
-                if (df[i].max() == df[i].min()):
-                    df[i].values[:] = 0
+                if self.df[i].max() == self.df[i].min():
+                    self.df[i].values[:] = 0
                 else:
-                    df[i] = df[i].apply(lambda x: (x - df[i].min()) / (df[i].max() - df[i].min()))
+                    self.df[i] = self.df[i].apply(
+                        lambda x: (x - self.df[i].min()) / (self.df[i].max() - self.df[i].min()))
         # generate first two rows of formatted output
-        if classification:
-            header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + str(
-                df['Class'].nunique()) + ',' + str(numcategoricalvar) + '\n' + matrices + ','.join(map(str, classes)) + ',' + '\n'
+        if self.classification:
+            self.header = str(len(self.df.columns) - 2) + ',' + str(len(self.df)) + ',' + str(
+                self.df['Class'].nunique()) + ',' + str(self.numcategoricalvar) + '\n' + self.matrices + ','.join(
+                map(str, classes)) + ',' + '\n'
         else:
-            df['Class'] = backupclass
-            header = str(len(df.columns) - 2) + ',' + str(len(df)) + ',' + '-1' + ',' + str(numcategoricalvar) + '\n' + matrices
-        with open('ProcessedDataFiles\\' + name + '.csv', 'w') as fp:
-            fp.write(header)
-            fp.write((df.to_csv(index=False, header=False)))
+            self.df['Class'] = backupclass
+            self.header = str(len(self.df.columns) - 2) + ',' + str(len(self.df)) + ',' + '-1' + ',' + str(
+                self.numcategoricalvar) + '\n' + self.matrices
+
+    def output(self):
+        with open('ProcessedDataFiles\\' + self.filename + '.csv', 'w') as fp:
+            fp.write(self.header)
+            fp.write((self.df.to_csv(index=False, header=False)))
             fp.close
 
-#creating objects for each of the data files and outputting original and scrambled files
-#files = [data(8, 0, False, True, 'abalone', ','), data(6, 0, False, True, 'car', ','),
-#         data(0, 5, False, True, 'segmentation', ','), data(12, 1, False, False, 'forestfires', ','),
-#         data(8, 0, False, False, 'machine', ','), data(11, 1, False, False, 'winequality-red', ';'),
-#         data(11, 1, False, False, 'winequality-white', ';')]
-data(0, 0, False, True, 'test', ',')
-
+# creating objects for each of the data files and outputting original and scrambled files
+files = [data(8, 0, True, 'abalone', ','), data(6, 0, True, 'car', ','),
+         data(0, 5, True, 'segmentation', ','), data(12, 1, False, 'forestfires', ','),
+         data(8, 0, False, 'machine', ','), data(11, 1, False, 'winequality-red', ';'),
+         data(11, 1, False, 'winequality-white', ';')]
