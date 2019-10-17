@@ -20,7 +20,7 @@ public class OldClient {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- KNN -----------------");
         System.out.println("-----------------------------------------");
-        //testKNN();
+        testKNN();
 
         System.out.println("-----------------------------------------");
         System.out.println("------------------- EDITED --------------");
@@ -30,12 +30,12 @@ public class OldClient {
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CONDENSED -----------");
         System.out.println("-----------------------------------------");
-        //testKNNCondensed();
+        testKNNCondensed();
 
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEANS --------------");
         System.out.println("-----------------------------------------");
-        testCMeans();
+        //testCMeans();
 
         System.out.println("-----------------------------------------");
         System.out.println("------------------- CMEDOIDS --------------");

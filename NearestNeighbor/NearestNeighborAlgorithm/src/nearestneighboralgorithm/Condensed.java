@@ -54,11 +54,12 @@ public class Condensed {
         int i = 0;
         while (!reduced.getExamples().equals(oldSet.getExamples()) && i <= maxIter){        //while the set changes from one iteration to the next
             oldSet = reduced.clone();
-            for (Iterator<Example> iterator = copy.iterator(); iterator.hasNext();) {
-                Example ex = iterator.next();
+            for (int j = 0; j < copy.getNumExamples(); j++) {
+                Example ex = copy.getExample(j);
                 double min = Double.MAX_VALUE;                                          //saving minimums to find the closest example in the set, for each example
                 Example minEx = copy.getExample(0);
-                for (Example ex2 : reduced){
+                for (int k = 0; k < reduced.getNumExamples(); k++) {
+                    Example ex2 = reduced.getExample(k);
                     if (!ex.getAttributes().equals(ex2.getAttributes())){               //checking for identical example(self)
                         if (metric.dist(ex, ex2) < min){                                //checking if distance to ex2 is smaller than minimum so far
                             min = metric.dist(ex, ex2);
@@ -68,7 +69,8 @@ public class Condensed {
                 }
                 if (minEx.getValue() != ex.getValue()){                     //adds the closest example to the reduced set if it has different class than 
                     reduced.addExample(ex);                              //example we are comparing to
-                    iterator.remove();
+                    copy.delExample(j);
+                    j--;
                 }
             }
             i++;

@@ -20,13 +20,10 @@ public class ClassificationEvaluator implements IEvaluator {
         
         // Find number of items classified correctly
         accuracy = 0;
-        int index = 0;
-        Iterator<Example> iterator = actual.iterator();
-        while(iterator.hasNext()) {
-            if(Math.round(iterator.next().getValue()) == Math.round(predicted[index])) {
+        for (int i = 0; i < actual.getNumExamples(); i++) {
+            if (Math.round(actual.getExample(i).getValue()) == Math.round(predicted[i])) {
                 accuracy++;
             }
-            index++;
         }
         // Divide by the number of examples to yield accuracy
         accuracy /= (double)num_examples;
@@ -37,12 +34,9 @@ public class ClassificationEvaluator implements IEvaluator {
         //Start by adding up the class predictions and the actual classes
         int[] actual_class_totals = new int[actual.getNumClasses()];
         int[] pred_class_totals = new int[actual.getNumClasses()];
-        index = 0;
-        iterator = actual.iterator();
-        while(iterator.hasNext()) {
-            actual_class_totals[(int)iterator.next().getValue()]++;
-            pred_class_totals[(int)predicted[index]]++;
-            index++;
+        for (int i = 0; i < actual.getNumExamples(); i ++) {
+            actual_class_totals[(int)actual.getExample(i).getValue()]++;
+            pred_class_totals[(int)predicted[i]]++;
         }
         //Find the difference
         double distances_sum = 0;

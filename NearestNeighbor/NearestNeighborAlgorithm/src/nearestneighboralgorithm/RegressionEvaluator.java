@@ -22,14 +22,13 @@ public class RegressionEvaluator implements IEvaluator{
         me = 0;
         //---------------------------------------------------------------
         //Calculate the mean squared error and mean absolute error
-        int index = 0;
-        Iterator<Example> iterator = actual.iterator();
-        while(iterator.hasNext()) {
-            double difference = predicted[index] - iterator.next().getValue();
+        //int index = 0;
+        //Iterator<Example> iterator = actual.iterator();
+        for (int i = 0; i < actual.getNumExamples(); i++) {
+            double difference = predicted[i] - actual.getExample(i).getValue();
             me += difference;
             mae += Math.abs(difference);
             mse += Math.pow(difference, 2);
-            index++;
         }
         //Take the average
         mse /= num_examples;

@@ -67,10 +67,12 @@ public class KNNRegressor implements IKNearestNeighbor {
     public double[] test(Set testing_set) {
         double[] predictions = new double[testing_set.getNumExamples()];
         // Iterate through all examples, predicting their real values
-        Iterator<Example> iterator = testing_set.iterator();
-        int i = 0; //Track which example is being handled
-        while(iterator.hasNext()) {
-            predictions[i] = predict(iterator.next());
+        //Iterator<Example> iterator = testing_set.iterator();
+        //int i = 0; //Track which example is being handled
+        //while(iterator.hasNext()) {
+            //predictions[i] = predict(iterator.next());
+        for (int i = 0; i < testing_set.getNumExamples(); i++) {
+            predictions[i] = predict(testing_set.getExample(i));
         }
         return predictions;
     }
@@ -94,10 +96,9 @@ public class KNNRegressor implements IKNearestNeighbor {
         
         // Iterate through all neighbors, calculating their distance from the
         // example and comparing to the current k-nn.
-        Iterator<Example> iterator = neighbors.iterator();
-        while(iterator.hasNext()) {
+        for (int a = 0; a < neighbors.getNumExamples(); a++) {
             // Calculate the distance
-            Example neighbor = iterator.next();
+            Example neighbor = neighbors.getExample(a);
             double dist = dist_metric.dist(example, neighbor);
             // Check if the distance is smaller than any current k-nn
             for(int i = 0; i < k; i++) {

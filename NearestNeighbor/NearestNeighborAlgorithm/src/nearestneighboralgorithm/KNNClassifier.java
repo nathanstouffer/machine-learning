@@ -68,11 +68,8 @@ public class KNNClassifier implements IKNearestNeighbor {
     public double[] test(Set testing_set) {
         double[] classifications = new double[testing_set.getNumExamples()];
         // Iterate through all examples, classifying them
-        Iterator<Example> iterator = testing_set.iterator();
-        int i = 0; //Track which example is being classified
-        while(iterator.hasNext()) {
-            classifications[i] = classify(iterator.next());
-            i++;
+        for (int i = 0; i < testing_set.getNumExamples(); i++) {
+            classifications[i] = classify(testing_set.getExample(i));
         }
         return classifications;
     }
@@ -96,10 +93,9 @@ public class KNNClassifier implements IKNearestNeighbor {
         
         // Iterate through all neighbors, calculating their distance from the
         // example and comparing to the current k-nn.
-        Iterator<Example> iterator = neighbors.iterator();
-        while(iterator.hasNext()) {
+        for (int a = 0; a < neighbors.getNumExamples(); a++) {
             // Calculate the distance
-            Example neighbor = iterator.next();
+            Example neighbor = neighbors.getExample(a);
             double dist = dist_metric.dist(example, neighbor);
             // Check if the distance is smaller than any current k-nn
             for(int i = 0; i < k; i++) {
@@ -110,14 +106,6 @@ public class KNNClassifier implements IKNearestNeighbor {
                     // Delete last k-nn
                     nn_classes.remove(k);
                     nn_distances.remove(k);
-                    
-                    //Print out new distances
-//                    Iterator<Double> iter1 = nn_classes.iterator();
-//                    Iterator<Double> iter2 = nn_distances.iterator();
-//                    while(iter1.hasNext()) {
-//                        System.out.print("-CLASS: " + iter1.next() + " DIST: " + iter2.next() + "-");
-//                    }
-//                    System.out.println();
                     
                     break; // Exit for-loop
                 } //Otherwise, check next k-nn
