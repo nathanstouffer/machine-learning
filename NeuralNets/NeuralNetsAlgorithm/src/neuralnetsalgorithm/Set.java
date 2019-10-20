@@ -41,14 +41,14 @@ public class Set implements Cloneable {
      * should be used when creating a single set to train with in 10-fold
      * cross validation.
      * 
-     * if validation_set is passed as true, the constructor assumes
+     * if need_validation_set is passed as true, the constructor assumes
      * that the 0th element in subsets will be used as a validation set
      * 
      * @param subsets
      * @param exclude 
-     * @param validation_set
+     * @param need_validation_set
      */
-    Set(Set[] subsets, int exclude, boolean validation_set){
+    Set(Set[] subsets, int exclude, boolean need_validation_set){
         // initialize global final variables
         this.num_attributes = subsets[0].getNumAttributes();
         this.num_classes = subsets[0].getNumClasses();
@@ -56,7 +56,7 @@ public class Set implements Cloneable {
         
         // ensure that the subset to be excluded is a valid subset
         boolean valid_index = false;
-        if (validation_set){
+        if (need_validation_set){
             // we will use subsets[0] as the validation set
             // therefore it is not used in 10-fold cross validation
             if (exclude >= 1 && exclude < subsets.length){ valid_index = true; }
@@ -68,7 +68,7 @@ public class Set implements Cloneable {
             // i begins at the 0th element in subsets
             int i = 0;
             // ignore the 0th element in subsets if a validation set is needed
-            if (validation_set){ i = 1; }
+            if (need_validation_set){ i = 1; }
             // iterate through subsets
             for ( ; i < subsets.length; i++){
                 // add subset to set if subset should not be excluded
