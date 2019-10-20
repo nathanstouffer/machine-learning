@@ -182,7 +182,7 @@ public class OldClient {
             // PERFORM 9 FOLD CROSS VALIDATION
             for(int i = 1; i < 10; i++) {
                 System.out.println("Test " + (i));
-                Set training_set = new Set(reader.getSubsets(), i, false); // Combine 9 of the subsets
+                Set training_set = new Set(reader.getSubsets(), i, true); // Combine 9 of the subsets
 
                 Set edited_set = edited_knn.reduce(training_set.clone());
                 knn.setK((int)Math.sqrt(edited_set.getNumExamples()));

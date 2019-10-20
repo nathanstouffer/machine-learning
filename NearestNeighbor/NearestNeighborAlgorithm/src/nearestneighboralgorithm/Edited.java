@@ -13,9 +13,9 @@ import java.util.Random;
  * a Nearest Neighbor algorithm.
  * 
  * The Edited Nearest Neighbor (E-NN) algorithm edits removes examples
- * from the data set that are misclassified by their k-nearest
- * neighbors. This process is iteratively repeated until performance
- * on a validation set decreases.
+ from the data set that are misclassified by their K-nearest
+ neighbors. This process is iteratively repeated until performance
+ on a validation set decreases.
  * 
  * @author natha
  */
@@ -23,7 +23,7 @@ public class Edited implements IDataReducer {
     
     // variable to determine how many neighbors the learning
     // algorithm will view
-    private int k;
+    private int K;
     // metric that the reduciing algorithm will use
     private IDistMetric metric;
     // learner used for reducing purposes
@@ -41,7 +41,7 @@ public class Edited implements IDataReducer {
      * @param validation_set 
      */
     Edited(int k, IDistMetric metric, Set validation_set){
-        this.k = k;
+        this.K = k;
         this.metric = metric;
         this.learner = new KNNClassifier();
         this.learner.setK(k);
@@ -51,8 +51,8 @@ public class Edited implements IDataReducer {
     }
     
     /**
-     * method to reduce the size of a set for the use of k-nearest
-     * neighbors as long as performance does not degrade.
+     * method to reduce the size of a set for the use of K-nearest
+ neighbors as long as performance does not degrade.
      * This will be determined using
      * the accuracy metric since Edited Nearest Neighbors is
      * used only on classification problems
@@ -126,7 +126,7 @@ public class Edited implements IDataReducer {
     }
     
     /**
-     * method to find the misclassified examples using k-NN
+     * method to find the misclassified examples using K-NN
      * @param clone
      * @return 
      */
