@@ -7,7 +7,7 @@ package reducedata;
 
 import datastorage.Example;
 import java.util.ArrayList;
-import measuredistance.IDistMetric;
+import knearestneighbor.measuredistance.IDistMetric;
 
 /**
  * Cluster class has a rep example and set of points in it examples

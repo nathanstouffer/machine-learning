@@ -9,7 +9,7 @@ import datastorage.Set;
 import datastorage.Example;
 import java.util.ArrayList; 
 import java.util.Random;
-import measuredistance.IDistMetric;
+import knearestneighbor.measuredistance.IDistMetric;
 /**
  * Class to reduce the size of a set for use with
  * a Nearest Neighbor algorithm.

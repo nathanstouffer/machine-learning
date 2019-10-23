@@ -9,7 +9,7 @@ import datastorage.Example;
 import datastorage.Set;
 import java.util.ArrayList;
 import evaluatelearner.ClassificationEvaluator;
-import measuredistance.IDistMetric;
+import knearestneighbor.measuredistance.IDistMetric;
 import knearestneighbor.KNNClassifier;
 
 /**

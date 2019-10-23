@@ -9,7 +9,7 @@ import datastorage.Example;
 import datastorage.Set;
 import java.util.ArrayList;
 import java.util.Random;
-import measuredistance.IDistMetric;
+import knearestneighbor.measuredistance.IDistMetric;
 
 /**
  * Class implement K medoids algorithm and outputs Set of medoids for use by KNN algorithm

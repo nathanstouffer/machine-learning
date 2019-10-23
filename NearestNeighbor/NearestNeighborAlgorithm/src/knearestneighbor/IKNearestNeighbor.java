@@ -1,6 +1,6 @@
 package knearestneighbor;
 
-import measuredistance.IDistMetric;
+import knearestneighbor.measuredistance.IDistMetric;
 import datastorage.Set;
 
 /**

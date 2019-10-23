@@ -2,7 +2,7 @@ package knearestneighbor;
 
 import datastorage.Example;
 import datastorage.Set;
-import measuredistance.IDistMetric;
+import knearestneighbor.measuredistance.IDistMetric;
 import java.util.ArrayList;
 
 /**
