@@ -3,9 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package neuralnetsalgorithm;
+package reducedata;
 
 import java.util.ArrayList;
+import evaluatelearner.ClassificationEvaluator;
+import datastorage.Example;
+import measuredistance.IDistMetric;
+import knearestneighbor.KNNClassifier;
+import datastorage.Set;
 
 /**
  * Class to reduce the size of a data set for the use of 
@@ -39,7 +44,7 @@ public class Edited implements IDataReducer {
      * @param metric
      * @param validation_set 
      */
-    Edited(int k, IDistMetric metric, Set validation_set){
+    public Edited(int k, IDistMetric metric, Set validation_set){
         this.k = k;
         this.metric = metric;
         this.learner = new KNNClassifier();
@@ -51,7 +56,7 @@ public class Edited implements IDataReducer {
     
     /**
      * method to reduce the size of a set for the use of k-nearest
-     * neighbors as long as performance does not degrade.
+ neighbors as long as performance does not degrade.
      * This will be determined using
      * the accuracy metric since Edited Nearest Neighbors is
      * used only on classification problems

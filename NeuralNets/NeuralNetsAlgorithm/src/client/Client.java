@@ -3,8 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package neuralnetsalgorithm;
+package client;
 
+import datastorage.Set;
+import knearestneighbor.*;
+import evaluatelearner.*;
+import reducedata.*;
+import measuredistance.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -20,8 +25,25 @@ public class Client {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-        // TODO code application logic here
-        //testENN();
+        // List the files we want to test
+        String[] knn_datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
+        
+        for (int f = 0; f < knn_datafiles.length; f++) {
+            System.out.println("--- Handling " + knn_datafiles[f] + " data set ---");
+            // Create the data reader to read in our preprocessed files
+            DataReader reader = new DataReader(knn_datafiles[f]);
+            
+            // get the subsets
+            Set[] subsets = reader.getSubsets();
+            
+            // determine whether data set is classification
+            boolean classification = true;
+            if (subsets[0].getClassNames() == null) { classification = false; }
+            
+            
+        }
+        
+        testENN();
         testKNNCondensed();
     }
     

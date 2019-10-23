@@ -1,7 +1,9 @@
-package neuralnetsalgorithm;
+package knearestneighbor;
 
+import datastorage.Set;
+import datastorage.Example;
 import java.util.ArrayList;
-import java.util.Iterator;
+import measuredistance.IDistMetric;
 
 /**
  *  K-NN Classifier

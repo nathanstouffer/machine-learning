@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package neuralnetsalgorithm;
+package reducedata;
 
 import java.util.ArrayList;
 import java.util.Random;
+import datastorage.Example;
+import measuredistance.IDistMetric;
+import datastorage.Set;
 
 /**
  *
@@ -23,7 +26,7 @@ public class CMeans implements IDataReducer {
     // maximum difference in distances to be considered converged
     private final double CONVERGENCE_LEVEL = 0.01;
     
-    CMeans(int c, IDistMetric metric){
+    public CMeans(int c, IDistMetric metric){
         this.C = c;
         this.metric = metric;
     }

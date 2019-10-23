@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package neuralnetsalgorithm;
+package reducedata;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
+import datastorage.Example;
+import measuredistance.IDistMetric;
+import datastorage.Set;
 
 /**
  * Class implement K medoids algorithm and outputs Set of medoids for use by KNN algorithm
@@ -29,7 +31,7 @@ public class CMedoids implements IDataReducer {
      * @param c
      * @param met 
      */
-    CMedoids(int c, IDistMetric met) {
+    public CMedoids(int c, IDistMetric met) {
         this.c = c;
         this.metric = met;
         this.distortion = 0.0;

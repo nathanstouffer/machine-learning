@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package neuralnetsalgorithm;
+package datastorage;
 
 /**
  * Class to represent a Similarity Matrix. 
@@ -27,7 +27,7 @@ public class SimilarityMatrix {
     // it is a 2-dim array accessed first by the attribute value, then the class
     private double[][] matrix; //= new double[this.num_options][this.num_bins]; ------BRUH STOUFF
     
-    SimilarityMatrix(int attr_index, int num_options, int num_classes){
+    public SimilarityMatrix(int attr_index, int num_options, int num_classes){
         this.attr_index = attr_index;
         this.num_options = num_options;
         this.num_bins = num_classes;

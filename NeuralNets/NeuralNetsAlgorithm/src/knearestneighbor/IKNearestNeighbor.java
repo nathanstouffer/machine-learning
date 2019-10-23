@@ -1,4 +1,7 @@
-package neuralnetsalgorithm;
+package knearestneighbor;
+
+import datastorage.Set;
+import measuredistance.IDistMetric;
 
 /**
  * IKNearestNeigbor Interface

@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package neuralnetsalgorithm;
+package measuredistance;
+
+import datastorage.Example;
 
 /**
  * Interface that requires realizing classes to provide a 

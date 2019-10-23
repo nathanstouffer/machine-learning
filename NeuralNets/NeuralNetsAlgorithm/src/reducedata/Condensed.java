@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package neuralnetsalgorithm;
+package reducedata;
 
 import java.lang.Double;
 import java.util.Random;
+import datastorage.Example;
+import measuredistance.IDistMetric;
+import datastorage.Set;
 
 
 /**
@@ -34,7 +37,7 @@ public class Condensed {
 
      * @param metric 
      */
-    Condensed(IDistMetric metric){
+    public Condensed(IDistMetric metric){
         this.metric = metric;
     }
     

@@ -1,4 +1,4 @@
-package neuralnetsalgorithm;
+package evaluatelearner;
 
 /**
  *
