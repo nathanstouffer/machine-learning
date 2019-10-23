@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package measuredistance;
+
+import datastorage.SimilarityMatrix;
 
 /**
  * Class to compute the distance between two categorical

@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package reducedata;
 
+import datastorage.Set;
+import datastorage.Example;
 import java.util.ArrayList; 
 import java.util.Random;
+import measuredistance.IDistMetric;
 /**
  * Class to reduce the size of a set for use with
  * a Nearest Neighbor algorithm.
@@ -31,7 +34,7 @@ public class OldCMeans implements IDataReducer{
      * @param k
      * @param metric 
      */
-    OldCMeans(int k, IDistMetric metric){
+    public OldCMeans(int k, IDistMetric metric){
         this.c = k;
         this.metric = metric;
         this.clusterList = new ArrayList<Cluster>();

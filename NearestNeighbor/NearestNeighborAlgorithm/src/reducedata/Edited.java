@@ -3,10 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package reducedata;
 
+import datastorage.Example;
+import datastorage.Set;
 import java.util.ArrayList;
-import java.util.Random;
+import evaluatelearner.ClassificationEvaluator;
+import measuredistance.IDistMetric;
+import knearestneighbor.KNNClassifier;
 
 /**
  * Class to reduce the size of a data set for the use of 
@@ -40,7 +44,7 @@ public class Edited implements IDataReducer {
      * @param metric
      * @param validation_set 
      */
-    Edited(int k, IDistMetric metric, Set validation_set){
+    public Edited(int k, IDistMetric metric, Set validation_set){
         this.K = k;
         this.metric = metric;
         this.learner = new KNNClassifier();

@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package reducedata;
+
+import datastorage.Set;
 
 /**
  * Interface that requires a realizing class to implement a

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package datastorage;
 
 // import libraries
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class Example {
      * @param input
      * @param num_attr 
      */
-    Example(String line, int num_attr){
+    public Example(String line, int num_attr){
         // initialize size of attr array
         this.attr = new ArrayList<Double>(num_attr);
 
@@ -44,7 +44,7 @@ public class Example {
         for (int i = 0; i < num_attr; i++){ this.attr.add(Double.parseDouble(data[i+2])); }
     }
     
-    Example(double value, ArrayList<Double> attributes){
+    public Example(double value, ArrayList<Double> attributes){
         this.attr = attributes;
         this.value = value;
         this.subset_index = -1;

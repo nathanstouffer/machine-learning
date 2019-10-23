@@ -1,4 +1,4 @@
-package nearestneighboralgorithm;
+package evaluatelearner;
 
 /**
  *

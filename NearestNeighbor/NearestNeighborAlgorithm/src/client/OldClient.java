@@ -1,9 +1,19 @@
-package nearestneighboralgorithm;
+package client;
 
+import evaluatelearner.IEvaluator;
+import evaluatelearner.RegressionEvaluator;
+import evaluatelearner.ClassificationEvaluator;
+import measuredistance.EuclideanSquared;
+import datastorage.Set;
+import client.DataReader;
+import reducedata.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import knearestneighbor.IKNearestNeighbor;
+import knearestneighbor.KNNClassifier;
+import knearestneighbor.KNNRegressor;
 
 /**
  *

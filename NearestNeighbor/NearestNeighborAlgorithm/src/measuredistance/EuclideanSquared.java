@@ -3,27 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package measuredistance;
 
+import datastorage.Example;
 import java.util.ArrayList;
+import datastorage.SimilarityMatrix;
 
 /**
- * class that implements code to compute the distance
- * between two examples using the Manhattan Metric
+ * Class that implements code to compute the distance
+ * between two examples using the square of the 
+ * Euclidean Metric
  * 
  * @author natha
  */
-public class Manhattan implements IDistMetric{
+public class EuclideanSquared implements IDistMetric {
     
     private SimilarityMatrix[] sim_matr;
     
     /**
      * constructor to initialize global variable
      */
-    Manhattan(SimilarityMatrix[] sim_matr){ this.sim_matr = sim_matr; }
+    public EuclideanSquared(SimilarityMatrix[] sim_matr){ this.sim_matr = sim_matr; }
     
     /**
-     * method to compute the Manhattan distance between two points
+     * method to compute the squared Euclidean distance between two examples
      * 
      * @param ex1
      * @param ex2
@@ -34,7 +37,7 @@ public class Manhattan implements IDistMetric{
         ArrayList<Double> attr1 = ex1.getAttributes();
         ArrayList<Double> attr2 = ex2.getAttributes();
         
-        double dist = 0;
+        double sqrd_dist = 0.0;
         // iterate through attribute arrays
         for (int i = 0; i < attr2.size(); i++){
             // variable to store difference in attributes
@@ -46,22 +49,24 @@ public class Manhattan implements IDistMetric{
                 int option1 = (int)Math.round(attr1.get(i));
                 int option2 = (int)Math.round(attr2.get(i));
                 
-                // call categorical dist function
+                // call categorical dist function (computes difference between corresponding values)
                 diff = ValueDifferenceMetric.dist(option1, option2, this.sim_matr[cat_index]);
             }
             else{
                 // compute the difference between corresponding values
                 diff = (double)(attr2.get(i) - attr1.get(i));
-                // take the absolute value
-                diff = Math.abs(diff);
             }
             
+            // square diff
+            double sqrd_diff = Math.pow(diff, 2);
+            //System.out.println(sqrd_diff);
             // add dist to a running total
-            dist += diff;
+            sqrd_dist += sqrd_diff;
         }
         
-        // return the manhattan distance
-        return dist;
+        //System.out.println("FINAL DIST: " + sqrd_dist);
+        // return the squared Euclidean distance
+        return sqrd_dist;
     }
     
     /**
@@ -76,5 +81,5 @@ public class Manhattan implements IDistMetric{
         }
         return -1;
     }
-    
+   
 }

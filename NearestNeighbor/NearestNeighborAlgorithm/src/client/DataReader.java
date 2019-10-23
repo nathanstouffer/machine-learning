@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package client;
 
 // import libraries
+import datastorage.SimilarityMatrix;
+import datastorage.Example;
+import datastorage.Set;
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;

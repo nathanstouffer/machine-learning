@@ -1,7 +1,6 @@
-package nearestneighboralgorithm;
+package datastorage;
 
 // import libraries
-import java.util.Iterator;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +27,7 @@ public class Set implements Cloneable {
      * @param num_attributes
      * @param class_names 
      */
-    Set(int num_attributes, int num_classes, String[] class_names){
+    public Set(int num_attributes, int num_classes, String[] class_names){
         // populate final global variables
         this.num_attributes = num_attributes;
         this.num_classes = num_classes;
@@ -48,7 +47,7 @@ public class Set implements Cloneable {
      * @param exclude 
      * @param validation_set
      */
-    Set(Set[] subsets, int exclude, boolean validation_set){
+    public Set(Set[] subsets, int exclude, boolean validation_set){
         // initialize global final variables
         this.num_attributes = subsets[0].getNumAttributes();
         this.num_classes = subsets[0].getNumClasses();

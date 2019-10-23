@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package reducedata;
 
+import datastorage.Example;
 import java.util.ArrayList;
+import measuredistance.IDistMetric;
 
 /**
  * Cluster class has a rep example and set of points in it examples
@@ -30,7 +32,7 @@ public class Cluster {
      * @param regression
      * @param dist_met
      */
-    Cluster(Example rep, int num_classes, IDistMetric dist_met) {
+    public Cluster(Example rep, int num_classes, IDistMetric dist_met) {
         this.metric = dist_met;
         this.rep = rep;
         

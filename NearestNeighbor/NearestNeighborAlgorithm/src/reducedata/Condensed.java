@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nearestneighboralgorithm;
+package reducedata;
 
+import datastorage.Example;
+import datastorage.Set;
 import java.lang.Double;
 import java.util.Random;
-import java.util.Iterator;
+import measuredistance.IDistMetric;
 
 
 /**
@@ -35,7 +37,7 @@ public class Condensed {
 
      * @param metric 
      */
-    Condensed(IDistMetric metric){
+    public Condensed(IDistMetric metric){
         this.metric = metric;
     }
     
