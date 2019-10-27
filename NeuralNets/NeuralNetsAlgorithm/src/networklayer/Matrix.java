@@ -71,6 +71,15 @@ public class Matrix {
     }
     
     /**
+     * method to multiply each value in the Matrix by the multiplier
+     * @param mulitiplier 
+     */
+    public void timesEquals(double multiplier) {
+        // iterate through Matrix
+        for (int i = 0; i < this.getNumRows(); i++) { this.getRow(i).timesEquals(multiplier); }
+    }
+    
+    /**
      * method to randomly populate the matrix with values
      * between lower and upper
      * 

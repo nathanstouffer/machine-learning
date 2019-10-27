@@ -58,6 +58,12 @@ public class Layer {
     }
     
     /**
+     * method to add a Matrix to the weights in the current layer
+     * @param to_add must be a Matrix
+     */
+    public void plusEquals(Matrix to_add) { this.weights.plusEquals(to_add); }
+    
+    /**
      * method to randomly populate weights in a layer
      * @param lower
      * @param upper 

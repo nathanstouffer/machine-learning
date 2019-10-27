@@ -141,6 +141,15 @@ public class Vector {
     }
     
     /**
+     * method to multiply each value in the Vector by the multiplier
+     * @param multiplier 
+     */
+    protected void timesEquals(double multiplier) {
+        // iterate through vector
+        for (int i = 0; i < this.getLength(); i++) { this.set(i, multiplier * this.get(i)); }
+    }
+    
+    /**
      * method to divide each value in the Vector by the divisor
      * @param divisor 
      */
