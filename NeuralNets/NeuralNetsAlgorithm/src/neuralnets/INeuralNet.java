@@ -18,5 +18,6 @@ public interface INeuralNet {
     public double[] test (Set testing_set);
     public double predict(Example ex);
     public Vector[] genLayerOutputs(Example ex);
+    public Vector[] genLayerDeriv();
     
 }
