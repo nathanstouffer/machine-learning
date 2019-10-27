@@ -10,8 +10,8 @@ import datastorage.Set;
 /**
  * Interface that requires a realizing class to implement a
  * method called reduce. This method will take in a Set object
- * and use an algorithm (specified by the realizing class) to
- * reduce the size of Set argument
+ and use an algorithm (specified by the realizing class) to
+ reduce the size of Set argument
  * 
  * @author natha
  */

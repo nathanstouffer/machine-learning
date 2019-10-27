@@ -71,7 +71,7 @@ public class Condensed {
                 }
                 if (minEx.getValue() != ex.getValue()){                     //adds the closest example to the reduced set if it has different class than 
                     reduced.addExample(ex);                              //example we are comparing to
-                    copy.delExample(j);
+                    copy.rmExample(j);
                     j--;
                 }
             }

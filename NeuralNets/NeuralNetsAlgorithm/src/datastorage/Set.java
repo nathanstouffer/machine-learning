@@ -126,13 +126,13 @@ public class Set implements Cloneable {
      * overloaded method to delete the ith example in a set
      * @param index 
      */
-    public void delExample(int index){ this.examples.remove(index); }
+    public void rmExample(int index){ this.examples.remove(index); }
     
     /**
      * overloaded method to delete an example in a set
      * @param ex 
      */
-    public void delExample(Example ex){ this.examples.remove(ex); }
+    public void rmExample(Example ex){ this.examples.remove(ex); }
     
     public void replaceExample(int index, Example ex){ this.examples.set(index, ex); }
     

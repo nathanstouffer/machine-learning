@@ -18,10 +18,10 @@ import java.io.IOException;
  * Class to take in a file containing a dataset and
  * store its values in memory.
  * Specifically, each example in the file is stored 
- * the appropriate Set (also based on the input file)
- * 
- * The input file is assumed to have an agreed upon format
- * so that DataReader can be generalized
+ the appropriate Set (also based on the input file)
+ 
+ The input file is assumed to have an agreed upon format
+ so that DataReader can be generalized
  * @author natha
  */
 public class DataReader {

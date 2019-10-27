@@ -216,7 +216,7 @@ public class CMedoids implements IDataReducer {
             this.clusters[i] = temp;
             
             // delete medoid from data so it will not be chosen again
-            data.delExample(medoid);
+            data.rmExample(medoid);
         }
     }
 }

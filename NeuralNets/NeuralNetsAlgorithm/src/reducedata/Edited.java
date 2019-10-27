@@ -92,7 +92,7 @@ public class Edited implements IDataReducer {
             // initialize edited set
             edited = excessive.clone();
             // delete missclassified examples from edited
-            for (int i = 0; i < to_remove.size(); i++) { edited.delExample(to_remove.get(i)); }
+            for (int i = 0; i < to_remove.size(); i++) { edited.rmExample(to_remove.get(i)); }
             
             // train learner with edited data set
             this.learner.train(edited);
@@ -152,7 +152,7 @@ public class Edited implements IDataReducer {
             double actual = ex.getValue();
             
             // this removes ex from the training set
-            orig.delExample(i);
+            orig.rmExample(i);
             // find predicted classification
             double pred = learner.classify(ex);
             // add ex back into training set
@@ -182,7 +182,7 @@ public class Edited implements IDataReducer {
             double actual = ex.getValue();
             
             // this removes ex from the training set
-            orig.delExample(i);
+            orig.rmExample(i);
             // find predicted classification
             double pred = learner.classify(ex);
             // add ex back into training set
