@@ -2,6 +2,7 @@ package datastorage;
 
 // import libraries
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Class that represents a set of examples from a dataset
@@ -137,6 +138,35 @@ public class Set implements Cloneable {
     public void replaceExample(int index, Example ex){ this.examples.set(index, ex); }
     
     public void clearSet(){ this.examples.clear(); }
+    
+    /**
+    * Make random batches out of the current set
+     * @param batch_size The percentage of examples to be put in each batch.
+    * @return Set[] The randomized batches to be used as desired.
+    */
+    public Set[] getRandomBatches(double batch_size) {
+        // Clone current set so that we can randomize it
+        Set clone = clone();
+        // Initialize new batches
+        Set[] batches = new Set[(int)Math.ceil(1/batch_size)];
+        for(int i = 0; i < batches.length; i++) {
+            batches[i] = new Set(getNumAttributes(), getNumClasses(), getClassNames());
+        }
+        int current_batch = 0;
+        // Fill the batches
+        for(int i = 0; i < getNumExamples(); i++) {
+            // Generate random index to put in the batch
+            Random rand = new Random();
+            int rand_index = rand.nextInt(clone.getNumExamples());
+            batches[current_batch].addExample(clone.getExample(rand_index));
+            clone.rmExample(rand_index);
+            // Increment to next batch if necessary
+            if ( (i+1) % (int)(getNumExamples() * batch_size) == 0) {
+                current_batch++;
+            }
+        }
+        return batches;
+    }
     
     // getter methods
     public Example getExample(int index){ return this.examples.get(index); }

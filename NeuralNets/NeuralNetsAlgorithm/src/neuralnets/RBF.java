@@ -7,6 +7,7 @@ import measuredistance.IDistMetric;
 import networklayer.Layer;
 import networklayer.Linear;
 import networklayer.Logistic;
+import networklayer.Matrix;
 import networklayer.Vector;
 
 /**
@@ -47,10 +48,9 @@ public class RBF implements INeuralNet {
     
     /**
      * The output layer weights are contained in output_layer. The output_layer
-     * is initialized during training. Although there is only one layer here, it
-     * is stored as an array for ease of use with the backpropagator class.
+     * is initialized during training.
      */
-    private Layer[] output_layer;
+    private Layer output_layer;
     
     /**
      * Create a radial basis function neural network given a set of
@@ -88,28 +88,36 @@ public class RBF implements INeuralNet {
      */
     @Override
     public void train(Set training_set) {
-        // Construct the output layer
-        output_layer = new Layer[1];
-        if(training_set.getNumClasses() == -1) { // The set is regression
-            // The output layer consists of one node with a linear activation function
-            output_layer[1] = new Layer(new Linear(), 1, representatives.getNumExamples());
-        } else { // The set is classification
-            // The output layer consists of one node for each class with a sigmoidal activation function
-            output_layer[1] = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples());
-        }
-        // Randomly initialize the output layer weights
-        output_layer[1].randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
-        
-        // Save the aggregated gradient that will be applied at the end of each batch
-        // Layer gradient = new Layer(); SOMETHING LIKE THIS
-        for(int i = 0; i < training_set.getNumExamples(); i++) { // Iterate through all examples
-            // Call the backpropagator class to apply gradient descent to the output layer
-            // GRADIENT UPDATE += RETURNED GRADIENT FROM BACKPROP-
-            // Check if the current example is the last in a batch or the last example to train with
-            if( ((i+1) % ((int)(training_set.getNumExamples() * batch_size)) == 0)
-                    || (i == training_set.getNumExamples())) {
-                // Apply the aggregated gradient change
-                // output_layer[1]  APPLY CHANGES
+        boolean converged = false;
+        int iterations = 0;
+        while(!converged) {
+            // Construct the output layer
+            if(training_set.getNumClasses() == -1) { // The set is regression
+                // The output layer consists of one node with a linear activation function
+                output_layer = new Layer(new Linear(), 1, representatives.getNumExamples());
+            } else { // The set is classification
+                // The output layer consists of one node for each class with a sigmoidal activation function
+                output_layer = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples());
+            }
+            // Randomly initialize the output layer weights
+            output_layer.randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
+
+            // Create a backpropagator that will just train the output layer.
+            Backpropagator backprop = new Backpropagator(this);
+
+            // Send each batch through the output layer
+            Set[] batches = training_set.getRandomBatches(batch_size);
+            for(int i = 0; i < batches.length; i++) {
+                // Get gradient
+                Matrix gradient = backprop.computeGradient(batches[i])[0];
+                // Multiply gradient with learning rate
+                gradient.timesEquals(learning_rate);
+                // Apply gradient to output layer
+                output_layer.plusEquals(gradient);
+            }
+            iterations++;
+            if(iterations == 100) {
+                converged = true;
             }
         }
         // Output layer weights are done training!
@@ -161,7 +169,7 @@ public class RBF implements INeuralNet {
      * Returns the output of each layer, in this case the output of the RBF
      * layer and the output layer (in that order).
      * @param ex
-     * @return 
+     * @return A vector array containing the output of each layer.
      */
     @Override
     public Vector[] genLayerOutputs(Example ex) {
@@ -180,9 +188,37 @@ public class RBF implements INeuralNet {
         }
         outputs[0] = RBF_outputs;
         
-        outputs[1] = output_layer[1].feedForward(RBF_outputs);
+        outputs[1] = output_layer.feedForward(RBF_outputs);
         
         return outputs;
+    }
+
+    /**
+     * Returns the derivative of each layer, in this case, just the output
+     * layer.
+     * Note: genLayerOutputs() must be called prior to this function call, or
+     * there will be no current derivative.
+     * @return 
+     */
+    @Override
+    public Vector[] genLayerDeriv() {
+        Vector[] deriv = new Vector[1];
+        deriv[0] = output_layer.getDeriv();
+        return deriv;
+    }
+
+    /**
+     * Returns the dimensions of the layers.
+     * @return A two dimensional int array. First index is layer. Second index
+     * is: 0 -> # nodes and 1 -> # inputs to the layer.
+     */
+    @Override
+    public int[][] getLayerDim() {
+        // Backprop will only be using the output layer.
+        int[][] dim = new int[1][2];
+        dim[0][0] = output_layer.getNumRows();
+        dim[0][1] = output_layer.getNumCol();
+        return dim;
     }
     
 }
