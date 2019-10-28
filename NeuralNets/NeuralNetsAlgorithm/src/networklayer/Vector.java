@@ -33,7 +33,7 @@ public class Vector {
         // initialize array to correct size
         this.vals = new double[length];
         // set all values to 0.0
-        for (int i = 0; i < length; i++) { this.vals[i] = 0.0; }
+        for (int i = 0; i < length; i++) { this.set(i, 0.0); }
     }
     
     /**
@@ -157,6 +157,14 @@ public class Vector {
         // iterate through vector
         for (int i = 0; i < this.getLength(); i++) { this.set(i, this.get(i) / divisor); }
     }
+    
+    /**
+     * method to clear the Vector
+     * inserts 0.0 into every value in the Vector
+     */
+    protected void clear() { 
+        for (int i = 0; i < this.getLength(); i++) { this.set(i, 0.0); } 
+    }
   
     /**
      * method to find the index of the largest element in the Vector
@@ -165,7 +173,7 @@ public class Vector {
     public int getMaxIndex() {
         int max = 0;
         for(int i = 0; i < vals.length; i++) {
-            if( vals[i] > vals[max]) {
+            if(vals[i] > vals[max]) {
                 max = i;
             }
         }

@@ -48,6 +48,9 @@ public class Backpropagator {
      * @return 
      */
     public Matrix[] computeGradient(Set batch) {
+        // clear current gradient
+        for (int i = 0; i < this.gradient.length; i++) { this.gradient[i].clear(); }
+        
         // update gradient for each example
         for (int i = 0; i < batch.getNumExamples(); i++) {
             Example ex = batch.getExample(i);

@@ -80,6 +80,14 @@ public class Matrix {
     }
     
     /**
+     * method to clear the Matrix
+     * inserts 0.0 to every value in Matrix
+     */
+    public void clear() {
+        for (int i = 0; i < this.getNumRows(); i++) { this.getRow(i).clear(); }
+    }
+    
+    /**
      * method to randomly populate the matrix with values
      * between lower and upper
      * 
