@@ -88,29 +88,37 @@ public class RBF implements INeuralNet {
      */
     @Override
     public void train(Set training_set) {
-        // Construct the output layer
-        if(training_set.getNumClasses() == -1) { // The set is regression
-            // The output layer consists of one node with a linear activation function
-            output_layer = new Layer(new Linear(), 1, representatives.getNumExamples());
-        } else { // The set is classification
-            // The output layer consists of one node for each class with a sigmoidal activation function
-            output_layer = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples());
-        }
-        // Randomly initialize the output layer weights
-        output_layer.randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
-        
-        // Create a backpropagator that will just train the output layer.
-        Backpropagator backprop = new Backpropagator(this);
-        
-        // Send each batch through the output layer
-        Set[] batches = training_set.getRandomBatches(batch_size);
-        for(int i = 0; i < batches.length; i++) {
-            // Get gradient
-            Matrix gradient = backprop.computeGradient(batches[i])[0];
-            // Multiply gradient with learning rate
-            gradient.timesEquals(learning_rate);
-            // Apply gradient to output layer
-            output_layer.plusEquals(gradient);
+        boolean converged = false;
+        int iterations = 0;
+        while(!converged) {
+            // Construct the output layer
+            if(training_set.getNumClasses() == -1) { // The set is regression
+                // The output layer consists of one node with a linear activation function
+                output_layer = new Layer(new Linear(), 1, representatives.getNumExamples());
+            } else { // The set is classification
+                // The output layer consists of one node for each class with a sigmoidal activation function
+                output_layer = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples());
+            }
+            // Randomly initialize the output layer weights
+            output_layer.randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
+
+            // Create a backpropagator that will just train the output layer.
+            Backpropagator backprop = new Backpropagator(this);
+
+            // Send each batch through the output layer
+            Set[] batches = training_set.getRandomBatches(batch_size);
+            for(int i = 0; i < batches.length; i++) {
+                // Get gradient
+                Matrix gradient = backprop.computeGradient(batches[i])[0];
+                // Multiply gradient with learning rate
+                gradient.timesEquals(learning_rate);
+                // Apply gradient to output layer
+                output_layer.plusEquals(gradient);
+            }
+            iterations++;
+            if(iterations == 100) {
+                converged = true;
+            }
         }
         // Output layer weights are done training!
     }
