@@ -71,5 +71,5 @@ public class Layer {
     public void randPopulate(double lower, double upper) { this.weights.randPopulate(lower, upper); }
     
     public int getNumRows() { return this.weights.getNumRows(); }
-    public int getNumCol() { return this.weights.getNumColumns(); }
+    public int getNumCol() { return this.weights.getNumCol(); }
 }

@@ -47,7 +47,7 @@ public class Matrix {
         // assume the operation is valid until proven false
         boolean valid = true;
         if (this.getNumRows() != to_add.getNumRows()) { valid = false; }
-        if (this.getNumColumns() != to_add.getNumColumns()) { valid = false; }
+        if (this.getNumCol() != to_add.getNumCol()) { valid = false; }
         
         // if not valid, print an error message
         if (!valid) { System.err.println("Matrix addition not valid"); }
@@ -102,7 +102,7 @@ public class Matrix {
      */
     protected Vector mult(Vector vec) {
         // check that multiplying is valid
-        if (vec.getLength() != this.getNumColumns()) {
+        if (vec.getLength() != this.getNumCol()) {
             System.err.println("Matrix-vector multiplication not valid");
             return null;
         }
@@ -122,8 +122,8 @@ public class Matrix {
         }
     }
     
-    protected int getNumColumns() { return this.num_col; }
-    protected int getNumRows() { return this.mtx.length; }
-    protected Vector getRow(int index) { return this.mtx[index]; }
+    public int getNumCol() { return this.num_col; }
+    public int getNumRows() { return this.mtx.length; }
+    public Vector getRow(int index) { return this.mtx[index]; }
 
 }
