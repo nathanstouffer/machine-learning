@@ -157,6 +157,20 @@ public class Vector {
         // iterate through vector
         for (int i = 0; i < this.getLength(); i++) { this.set(i, this.get(i) / divisor); }
     }
+  
+    /**
+     * method to find the index of the largest element in the Vector
+     * @return The index of the largest element.
+     */
+    public int getMaxIndex() {
+        int max = 0;
+        for(int i = 0; i < vals.length; i++) {
+            if( vals[i] > vals[max]) {
+                max = i;
+            }
+        }
+        return max;
+    }
     
     public void set(int index, double val) { this.vals[index] = val; }
     public double get(int index) { return this.vals[index]; }

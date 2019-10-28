@@ -3,6 +3,7 @@ package neuralnets;
 import datastorage.Example;
 import datastorage.Set;
 import java.util.ArrayList;
+import measuredistance.IDistMetric;
 import networklayer.Layer;
 import networklayer.Linear;
 import networklayer.Logistic;
@@ -30,6 +31,11 @@ public class RBF implements INeuralNet {
     private final double learning_rate;
     private final double batch_size;
     
+    /**
+     * The RBFs need a way to compute distance from the representative example
+     * of the node. All RBFs will use the supplied distance metric dist_metric.
+     */
+    private final IDistMetric dist_metric;
     
     /**
      * Private variables representatives and variances are the examples and 
@@ -45,7 +51,7 @@ public class RBF implements INeuralNet {
      * is stored as an array for ease of use with the backpropagator class.
      */
     private Layer[] output_layer;
-
+    
     /**
      * Create a radial basis function neural network given a set of
      * representative examples and corresponding variances. 
@@ -58,12 +64,15 @@ public class RBF implements INeuralNet {
      * network will learn.
      * @param _batch_size The percentage of examples in each training set to use
      * at a time when applying gradient descent to the output layer.
+     * @param _dist_metric The distance metric that will be used in the Gaussian 
+     * radial basis function. Euclidean distance will be the most common.
      */
-    public RBF (Set _representatives, double[] _variances, double _learning_rate, double _batch_size) {
+    public RBF (Set _representatives, double[] _variances, double _learning_rate, double _batch_size, IDistMetric _dist_metric) {
         representatives = _representatives;
         variances = _variances;
         learning_rate = _learning_rate;
         batch_size = _batch_size;
+        dist_metric = _dist_metric;
     }
     
     /**
@@ -103,10 +112,9 @@ public class RBF implements INeuralNet {
                 // output_layer[1]  APPLY CHANGES
             }
         }
-        // Output layer weights are done training
+        // Output layer weights are done training!
     }
 
-    
     /** 
      * Tests a set, predicting classification or real value.
      * @param testing_set The set to test.
@@ -123,14 +131,58 @@ public class RBF implements INeuralNet {
         return predictions;
     }
 
+    /**
+     * Predict the real value or class of an example. This is done by inputing 
+     * the example, feeding forward, and making a decision from the outputs
+     * of the output layer. For classification, find the maximum output and take
+     * take that as the predicted class. For regression, take the value of the 
+     * output.
+     * @param ex The example to predict a class or real value of
+     * @return 
+     */
     @Override
     public double predict(Example ex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Propagate the example through the network and look at the output
+        Vector outputs = genLayerOutputs(ex)[1];
+        
+        // Check how many nodes are in the output layer to determine 
+        // classification or regression.
+        if(outputs.getLength() == 1) {
+            // The set is regression, so return the one output as the predicted real value.
+            return outputs.get(0);
+        } else {
+            // The set is classification, so return the class of the output node
+            // that has the highest activation value.
+            return (double)outputs.getMaxIndex();
+        }
     }
 
+    /**
+     * Returns the output of each layer, in this case the output of the RBF
+     * layer and the output layer (in that order).
+     * @param ex
+     * @return 
+     */
     @Override
     public Vector[] genLayerOutputs(Example ex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Initialize vector array
+        Vector[] outputs = new Vector[2];
+        
+        // Initialize vector for RBF layer
+        Vector RBF_outputs = new Vector(representatives.getNumExamples());
+        // Calculate each RBF node's output given the example as input
+        for(int i = 0; i < representatives.getNumExamples(); i++) {
+            // Output is the calculated using the radial basis function:
+            //          o = exp(-(x1 - x2)^2 / (2*variance))
+            double d = dist_metric.dist(representatives.getExample(i), ex);
+            double o = Math.exp( -(d) / (2 * variances[i]) );
+            RBF_outputs.set(i, o);
+        }
+        outputs[0] = RBF_outputs;
+        
+        outputs[1] = output_layer[1].feedForward(RBF_outputs);
+        
+        return outputs;
     }
     
 }
