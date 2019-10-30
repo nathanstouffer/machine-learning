@@ -64,11 +64,10 @@ public class Backpropagator {
             Vector[] derivatives = this.network.genLayerDeriv();
             
             // index variable for the current layer
-            int layer = derivatives.length;
+            int layer = derivatives.length - 1;
             
             // identify correct output
-            //Vector target = new Vector(outputs[layer+1].getLength());         //old
-            Vector target = new Vector(outputs[layer].getLength());           //CHANGED TO JUST LAYER (no +1) BC OUT OF BOUNDS
+            Vector target = new Vector(outputs[layer+1].getLength());
             if (target.getLength() == 1) { target.set(0, actual); }         // if the len(output) is 1, then this is a regression data set
             else {
                 // we now deal with classification
@@ -81,11 +80,9 @@ public class Backpropagator {
             }
             
             // get output of current layer
-            //Vector output = outputs[layer+1];         //old
-            Vector output = outputs[layer];           //CHANGED TO JUST LAYER (no +1) BC OUT OF BOUNDS
+            Vector output = outputs[layer+1];
             // get derivatives of output layer
-            //Vector deriv = derivatives[layer];        //old
-            Vector deriv = derivatives[layer-1];          //CHANGED TO LAYER -1 BC OUT OF BOUNDS (and the derivs vector is shorter dummy)
+            Vector deriv = derivatives[layer];
             // compute current deltas
             Vector deltas = new Vector(target.getLength());
             for (int j = 0; j < deltas.getLength(); j++) {
@@ -98,8 +95,7 @@ public class Backpropagator {
             }
 
             // update gradient
-            //this.updateGradient(this.gradient[layer], deltas, outputs[layer]);        //old
-            this.updateGradient(this.gradient[layer-1], deltas, outputs[layer-1]);          //CHANGED TO LAYER -1 BC OUT OF BOUNDs
+            this.updateGradient(this.gradient[layer], deltas, outputs[layer]);
             
             // propagate backwards through remaining layers
             this.backpropagate(layer-1, outputs, derivatives, deltas);
@@ -121,8 +117,7 @@ public class Backpropagator {
      */
     private void backpropagate(int layer, Vector[] outputs, Vector[] derivatives, Vector ds_deltas) {
         // can not propagate past inputs
-        //if (layer >= 0) {                                        //old
-        if (layer > 0) {                                                   //change to greater than 0 exclusively to fix boundary conditions
+        if (layer >= 0) {
             Matrix curr_layer = this.gradient[layer];
             Vector deriv = derivatives[layer];
             // compute deltas
