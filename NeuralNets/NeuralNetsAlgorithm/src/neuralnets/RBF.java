@@ -11,7 +11,7 @@ import networklayer.Matrix;
 import networklayer.Vector;
 
 /**
- *
+ * 
  * @author andy-
  */
 public class RBF implements INeuralNet {
@@ -88,23 +88,29 @@ public class RBF implements INeuralNet {
      */
     @Override
     public void train(Set training_set) {
+        // Construct the output layer
+        if(training_set.getNumClasses() == -1) { // The set is regression
+            // The output layer consists of one node with a linear activation function
+            output_layer = new Layer(new Linear(), 1, representatives.getNumExamples());
+        } else { // The set is classification
+            // The output layer consists of one node for each class with a sigmoidal activation function
+            output_layer = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples());
+        }
+        // Randomly initialize the output layer weights
+        output_layer.randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
+        
+        // Create a backpropagator that will just train the output layer.
+        Backpropagator backprop = new Backpropagator(this);
+        
+        //Set[] batches = training_set.getRandomBatches(batch_size);        //TEST IF YOU WANT IT TO RUN about 10% FASTER
+        
         boolean converged = false;
         int iterations = 0;
         while(!converged) {
-            // Construct the output layer
-            if(training_set.getNumClasses() == -1) { // The set is regression
-                // The output layer consists of one node with a linear activation function
-                output_layer = new Layer(new Linear(), 1, representatives.getNumExamples());
-            } else { // The set is classification
-                // The output layer consists of one node for each class with a sigmoidal activation function
-                output_layer = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples());
+            // Output progress to console
+            if(iterations % 100 == 0) {
+                System.out.println("-> Training RBF network iteration: " + iterations);
             }
-            // Randomly initialize the output layer weights
-            output_layer.randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
-
-            // Create a backpropagator that will just train the output layer.
-            Backpropagator backprop = new Backpropagator(this);
-
             // Send each batch through the output layer
             Set[] batches = training_set.getRandomBatches(batch_size);
             for(int i = 0; i < batches.length; i++) {
@@ -116,7 +122,7 @@ public class RBF implements INeuralNet {
                 output_layer.plusEquals(gradient);
             }
             iterations++;
-            if(iterations == 100) {
+            if(iterations == 500) {
                 converged = true;
             }
         }

@@ -184,4 +184,14 @@ public class Vector {
     public double get(int index) { return this.vals[index]; }
     public int getLength() { return this.vals.length; }
     
+    @Override
+    public String toString() {
+        String out = "[";
+        for(int i = 0; i < vals.length-1; i++) {
+            out += "" + vals[i] + ",";
+        }
+        out += "" + vals[vals.length-1] + "]";
+        return out;
+    }
+    
 }

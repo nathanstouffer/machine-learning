@@ -148,7 +148,7 @@ public class Set implements Cloneable {
         // Clone current set so that we can randomize it
         Set clone = clone();
         // Initialize new batches
-        Set[] batches = new Set[(int)Math.ceil(1/batch_size)];
+        Set[] batches = new Set[(int)Math.ceil(1/batch_size) + 1];
         for(int i = 0; i < batches.length; i++) {
             batches[i] = new Set(getNumAttributes(), getNumClasses(), getClassNames());
         }
