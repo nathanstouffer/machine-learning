@@ -1,0 +1,73 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package neuralnets;
+
+import datastorage.Example;
+import datastorage.Set;
+import java.util.ArrayList;
+import measuredistance.IDistMetric;
+import java.util.Random;
+/**
+ *
+ * @author erick
+ */
+public class Variance {
+    
+    private IDistMetric metric;
+    private int c;
+    Random rd;
+    
+    public Variance(IDistMetric metric, int c){
+        
+        //distance metric to use
+        this.metric = metric;
+        //number of points to find variance with
+        this.c = c;
+        //new random instance
+        this.rd = new Random();
+        
+        
+    }
+
+
+    public double computeVariance(Set data, Set reduced, int numAttr){
+        Set full = data.clone();
+        ArrayList<Double> mean = new ArrayList<Double>(numAttr);
+        ArrayList<Example> varianceList = new ArrayList<Example>();
+        for (int i = 0; i < numAttr; i++){
+            //initializes mean array to 0s
+            mean.add(0.0);
+        }
+        for (int i = 0; i < c; i++){
+            //Finding c number of closest examples from original set
+            Example centerVariance = reduced.getExample(rd.nextInt());
+            Example min = data.getExample(0);
+            for (Example ex : full.getExamples()){
+                //Looking through examples from full set to find the next closest to center
+                if (metric.dist(centerVariance, ex) < metric.dist(centerVariance, min)){
+                    min = ex;
+                }
+            }
+            full.rmExample(min);
+            varianceList.add(min);
+            for (int j = 0; j < numAttr; j++){
+                double newValue = mean.get(j) + min.getAttributes().get(j);
+                mean.set(j, newValue);
+            }
+        }
+        double variance = 0.0;
+        for (Example ex : varianceList){
+            ArrayList<Double> attributes = ex.getAttributes();
+            for (int i = 0; i < attributes.size(); i++){
+                double difference = attributes.get(i) - mean.get(i);
+                variance += difference * difference;
+            }
+        }
+        variance /= c;
+        return variance;
+    }
+
+}
