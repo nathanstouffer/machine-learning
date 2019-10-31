@@ -31,7 +31,7 @@ public class CMedoids implements IDataReducer {
      * @param c
      * @param met 
      */
-    public CMedoids(int c, IDistMetric met) {
+    public CMedoids(IDistMetric met, int c) {
         this.c = c;
         this.metric = met;
         this.distortion = 0.0;

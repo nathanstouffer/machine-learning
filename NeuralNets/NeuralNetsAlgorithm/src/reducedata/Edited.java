@@ -44,7 +44,7 @@ public class Edited implements IDataReducer {
      * @param metric
      * @param validation_set 
      */
-    public Edited(int k, IDistMetric metric, Set validation_set){
+    public Edited(IDistMetric metric, int k, Set validation_set){
         this.k = k;
         this.metric = metric;
         this.learner = new KNNClassifier();

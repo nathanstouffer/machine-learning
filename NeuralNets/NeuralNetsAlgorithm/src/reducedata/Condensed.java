@@ -22,14 +22,11 @@ import datastorage.Set;
  * in the set. This process is repeated until the set does not change.
  * @author erick
  */
-public class Condensed {
+public class Condensed implements IDataReducer {
     
-    // variable to determine how many neighbors the learning
-    // algorithm will view
-    private int k;
     // metric that the reduciing algorithm will use
     private IDistMetric metric;
-    Random rd = new Random();
+    private Random rd = new Random();
 
  
     /**
@@ -37,9 +34,7 @@ public class Condensed {
 
      * @param metric 
      */
-    public Condensed(IDistMetric metric){
-        this.metric = metric;
-    }
+    public Condensed(IDistMetric metric){ this.metric = metric; }
     
     /**
      * Method that takes in a set and returns the reduced version after running the condensing algorithm on it
