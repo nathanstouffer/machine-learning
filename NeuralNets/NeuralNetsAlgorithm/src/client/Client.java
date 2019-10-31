@@ -31,7 +31,6 @@ public class Client {
      */
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
         
-        
         String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
         
         DataReader[] data = new DataReader[datafiles.length];
@@ -130,7 +129,7 @@ public class Client {
             
             System.out.println("Performing CV Fold #" + i);
             
-            Set training_set = new Set(data.getSubsets(), i, false);
+            Set training_set = new Set(data.getSubsets(), i);
             Set testing_set = data.getSubsets()[i];
             
             // Train and test the RBF network

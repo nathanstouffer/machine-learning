@@ -26,7 +26,7 @@ public class CMeans implements IDataReducer {
     // maximum difference in distances to be considered converged
     private final double CONVERGENCE_LEVEL = 0.01;
     
-    public CMeans(int c, IDistMetric metric){
+    public CMeans(IDistMetric metric, int c){
         this.C = c;
         this.metric = metric;
     }
