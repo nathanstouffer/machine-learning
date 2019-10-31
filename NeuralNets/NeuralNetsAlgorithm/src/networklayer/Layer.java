@@ -21,9 +21,9 @@ public class Layer {
     // derivative of each value in the output vector
     private Vector deriv;
     
-    public Layer(IActFunct act_funct, int num_rows, int num_col) {
+    public Layer(IActFunct act_funct, int num_nodes, int num_inputs) {
         this.act_funct = act_funct;
-        this.weights = new Matrix(num_rows, num_col);
+        this.weights = new Matrix(num_nodes, num_inputs);
         this.deriv = null;
     }
     
@@ -70,6 +70,7 @@ public class Layer {
      */
     public void randPopulate(double lower, double upper) { this.weights.randPopulate(lower, upper); }
     
+    // change these method names
     public int getNumRows() { return this.weights.getNumRows(); }
     public int getNumCol() { return this.weights.getNumCol(); }
 }

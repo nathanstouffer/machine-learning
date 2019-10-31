@@ -77,10 +77,13 @@ public class Client {
         for(int i = 0; i < data.length; i++) {
             clusters[i] = new Clusterer(new EuclideanSquared(data[i].getSimMatrices()));
             clusters[i].cluster(data[i].getSubsets(), final_k);
+            // output information
+            System.out.println(String.format("num clusters for %s: %d", datafiles[i], 
+                    clusters[i].getReps()[2].getNumExamples()));
         }
 
         // RUN TEST
-        int TODO = 2;
+        int TODO = 3;
         runRBF(output_file, datafiles[TODO], data[TODO], final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), final_learning_rate, final_batch_size);
         
         

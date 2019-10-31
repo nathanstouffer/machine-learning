@@ -71,7 +71,7 @@ public class Clusterer {
         // compute variances for each set of representatives
         if (regression) { this.vars[0] = null; }
         else { this.vars[0] = this.computeVariances(this.reps[0]); }
-//        this.vars[1] = this.computeVariances(this.reps[1]);
+        this.vars[1] = this.computeVariances(this.reps[1]);
         this.vars[2] = this.computeVariances(this.reps[2]);
     }
     
@@ -112,10 +112,13 @@ public class Clusterer {
             num_clust = this.reps[0].getNumExamples();
         }
         
+        // print out number of clusters used for CMeans and CMedoids
+        //System.out.println(String.format("NUM CLUSTERS: %d", num_clust));
+        
         // instantiate CMeans
         reducer = new CMeans(this.euclidean, num_clust);
         // reduce orig and store in reps[1]
-//        this.reps[1] = reducer.reduce(this.orig);
+        this.reps[1] = reducer.reduce(this.orig);
         
         // instantiate CMedoids
         reducer = new CMedoids(this.euclidean, num_clust);
@@ -169,7 +172,11 @@ public class Clusterer {
         ArrayList<Double> distances = new ArrayList<Double>(this.k);
         
         // initialize all distances to Double.MAX_VALUE
-        for (int i = 0; i < this.k; i++) { distances.add(Double.MAX_VALUE); neighbors.add(null);}
+        for (int i = 0; i < this.k; i++) { 
+            // add dummy neighbor with maximum distance
+            neighbors.add(new Example(-1, rep.getAttributes()));
+            distances.add(Double.MAX_VALUE); 
+        }
         
         // iterate through entire dataset
         for (int i = 0; i < this.orig.getNumExamples(); i++) {
