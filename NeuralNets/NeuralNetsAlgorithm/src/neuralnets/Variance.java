@@ -14,6 +14,7 @@ import java.util.Random;
  *
  * @author erick
  */
+
 public class Variance {
     
     private IDistMetric metric;
@@ -32,16 +33,23 @@ public class Variance {
         
     }
 
-
+/**
+ * Method for computing variance between a set and a reduced set for a
+ * specified number of examples.
+ * @param data
+ * @param reduced
+ * @param numAttr
+ * @return 
+ */
     public double computeVariance(Set data, Set reduced, int numAttr){
         Set full = data.clone();
         ArrayList<Double> mean = new ArrayList<Double>(numAttr);
         ArrayList<Example> varianceList = new ArrayList<Example>();
+        Example centerVariance = reduced.getExample(rd.nextInt(reduced.getNumExamples()));
         for (int i = 0; i < numAttr; i++){
             //initializes mean array to 0s
             mean.add(0.0);
         }
-        Example centerVariance = reduced.getExample(rd.nextInt(reduced.getNumExamples()));
         for (int i = 0; i < c; i++){
             //Finding c number of closest examples from original set
             Example min = data.getExample(0);
@@ -55,12 +63,14 @@ public class Variance {
             varianceList.add(min);
             //moving closest example into variance cluster
             for (int j = 0; j < numAttr; j++){
+                //Finding the mean value of variance cluster (needed for variance calculation)
                 double newValue = mean.get(j) + min.getAttributes().get(j);
                 mean.set(j, newValue);
             }
         }
         double variance = 0.0;
         for (Example ex : varianceList){
+            //Calculating variance for all points in varianceList
             ArrayList<Double> attributes = ex.getAttributes();
             for (int i = 0; i < attributes.size(); i++){
                 double difference = attributes.get(i) - mean.get(i);
