@@ -71,7 +71,7 @@ public class Clusterer {
         // compute variances for each set of representatives
         if (regression) { this.vars[0] = null; }
         else { this.vars[0] = this.computeVariances(this.reps[0]); }
-        this.vars[1] = this.computeVariances(this.reps[1]);
+//        this.vars[1] = this.computeVariances(this.reps[1]);
         this.vars[2] = this.computeVariances(this.reps[2]);
     }
     
@@ -115,7 +115,7 @@ public class Clusterer {
         // instantiate CMeans
         reducer = new CMeans(this.euclidean, num_clust);
         // reduce orig and store in reps[1]
-        this.reps[1] = reducer.reduce(this.orig);
+//        this.reps[1] = reducer.reduce(this.orig);
         
         // instantiate CMedoids
         reducer = new CMedoids(this.euclidean, num_clust);
@@ -169,7 +169,7 @@ public class Clusterer {
         ArrayList<Double> distances = new ArrayList<Double>(this.k);
         
         // initialize all distances to Double.MAX_VALUE
-        for (int i = 0; i < distances.size(); i++) { distances.set(i, Double.MAX_VALUE); }
+        for (int i = 0; i < this.k; i++) { distances.add(Double.MAX_VALUE); neighbors.add(null);}
         
         // iterate through entire dataset
         for (int i = 0; i < this.orig.getNumExamples(); i++) {
@@ -185,8 +185,8 @@ public class Clusterer {
                 // test if dist is less than any current neighbor
                 if (dist < distances.get(j)) {
                     // update neighbors and distances ArrayLists
-                    neighbors.add(i, ex);
-                    distances.add(i, dist);
+                    neighbors.add(j, ex);
+                    distances.add(j, dist);
                     // remove last element in each ArrayList
                     neighbors.remove(this.k);
                     distances.remove(this.k);

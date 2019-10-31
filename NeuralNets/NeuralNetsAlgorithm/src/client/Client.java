@@ -67,8 +67,8 @@ public class Client {
         
         output_file = "../Output/" + "RBF_out.csv";
         // << Add funct to clear file contents here >>
-        int final_k = 10;
-        double final_learning_rate = 0.50;
+        int final_k = 20;
+        double final_learning_rate = 0.01;
         double final_batch_size = 0.10;
         
         // CLUSTER DATA
@@ -80,7 +80,7 @@ public class Client {
         }
 
         // RUN TEST
-        int TODO = 0;
+        int TODO = 2;
         runRBF(output_file, datafiles[TODO], data[TODO], final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), final_learning_rate, final_batch_size);
         
         
@@ -106,7 +106,7 @@ public class Client {
         
         String[] clustering_methods = {"Edited/Condensed", "KMeans", "PAM"};
         for(int meth = 0; meth < 3; meth++) {
-            if(representatives[0] == null) {meth++;} //Skip editted/condensed if regression set
+            if(representatives[meth] == null) {meth++;} //Skip editted/condensed if regression set
             
             System.out.println("TESTING RBF ON DATASET " + data_set + " WITH " + clustering_methods[meth] + " CLUSTERING");
             
