@@ -41,9 +41,9 @@ public class Variance {
             //initializes mean array to 0s
             mean.add(0.0);
         }
+        Example centerVariance = reduced.getExample(rd.nextInt(reduced.getNumExamples()));
         for (int i = 0; i < c; i++){
             //Finding c number of closest examples from original set
-            Example centerVariance = reduced.getExample(rd.nextInt());
             Example min = data.getExample(0);
             for (Example ex : full.getExamples()){
                 //Looking through examples from full set to find the next closest to center
@@ -53,6 +53,7 @@ public class Variance {
             }
             full.rmExample(min);
             varianceList.add(min);
+            //moving closest example into variance cluster
             for (int j = 0; j < numAttr; j++){
                 double newValue = mean.get(j) + min.getAttributes().get(j);
                 mean.set(j, newValue);
