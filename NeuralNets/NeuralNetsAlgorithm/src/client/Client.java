@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import measuredistance.EuclideanSquared;
+import neuralnets.Clusterer;
 import neuralnets.RBF;
 import reducedata.IDataReducer;
 
@@ -33,6 +34,7 @@ public class Client {
         
         String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
         
+        // READ IN DATA
         DataReader[] data = new DataReader[datafiles.length];
         for(int i = 0; i < data.length; i++) {
             data[i] = new DataReader(datafiles[i]);
@@ -69,31 +71,17 @@ public class Client {
         double final_learning_rate = 0.50;
         double final_batch_size = 0.10;
         
-        // Loop through data sets
-//        for(int d = 0; d < datafiles.length; d++) {
-//            // Loop through clustering methods
-//            // Cluster data w/ object (passing in final k)
-//            // Put each cluster through
-//            for(int c = 0; c < 3; c++) {
-//                runRBF(output_file, datafiles[d], data[d], 
-//                        "clustermethod", final_k, null, null, 
-//                        final_learning_rate, final_batch_size);
-//            }
-//        }
-
-        int TODO = 1;
-        Set rep = new Set(data[TODO].getSubsets()[0].getNumAttributes(), data[TODO].getSubsets()[0].getNumClasses(), data[TODO].getSubsets()[0].getClassNames());
-        rep.addExample(data[TODO].getSubsets()[0].getExamples().get(0));
-        rep.addExample(data[TODO].getSubsets()[0].getExamples().get(1));
-        rep.addExample(data[TODO].getSubsets()[0].getExamples().get(2));
-        rep.addExample(data[TODO].getSubsets()[0].getExamples().get(3));
-        rep.addExample(data[TODO].getSubsets()[0].getExamples().get(4));
-        rep.addExample(data[TODO].getSubsets()[0].getExamples().get(5));
-        double[] var = new double[rep.getNumExamples()];
-        for(int i = 0; i < var.length; i++) {
-            var[i] = 10;
+        // CLUSTER DATA
+        System.out.println("Clustering datasets...");
+        Clusterer[] clusters = new Clusterer[datafiles.length];
+        for(int i = 0; i < data.length; i++) {
+            clusters[i] = new Clusterer(new EuclideanSquared(data[i].getSimMatrices()));
+            clusters[i].cluster(data[i].getSubsets(), final_k);
         }
-        runRBF(output_file, datafiles[TODO], data[TODO], "clustermeth", final_k, rep, var, final_learning_rate, final_batch_size);
+
+        // RUN TEST
+        int TODO = 0;
+        runRBF(output_file, datafiles[TODO], data[TODO], final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), final_learning_rate, final_batch_size);
         
         
     }
@@ -104,7 +92,7 @@ public class Client {
      * @param output_file
      * @param data_set
      * @param data
-     * @param clustering_method
+     * @param k
      * @param representatives
      * @param variances
      * @param learning_rate
@@ -113,60 +101,67 @@ public class Client {
      * @throws java.io.UnsupportedEncodingException 
      */
     public static void runRBF(String output_file, String data_set, DataReader data, 
-            String clustering_method, int k, Set representatives, double[] variances, 
+            int k, Set[] representatives, double[][] variances, 
             double learning_rate, double batch_size) throws FileNotFoundException, UnsupportedEncodingException {
         
-        double starttime = System.currentTimeMillis();
-        
-        EuclideanSquared dist = new EuclideanSquared(data.getSimMatrices());
-        
-        // Initialize metrics
-        double metric1 = 0;
-        double metric2 = 0;
-        
-        // Perform 10-fold cross validation
-        for(int i = 0; i < 10; i++) {
+        String[] clustering_methods = {"Edited/Condensed", "KMeans", "PAM"};
+        for(int meth = 0; meth < 3; meth++) {
+            if(representatives[0] == null) {meth++;} //Skip editted/condensed if regression set
             
-            System.out.println("Performing CV Fold #" + i);
+            System.out.println("TESTING RBF ON DATASET " + data_set + " WITH " + clustering_methods[meth] + " CLUSTERING");
             
-            Set training_set = new Set(data.getSubsets(), i);
-            Set testing_set = data.getSubsets()[i];
-            
-            // Train and test the RBF network
-            RBF rbf = new RBF(representatives, variances, learning_rate, batch_size, dist);
-            rbf.train(training_set);
-            double[] results = rbf.test(testing_set);
-            
-            // Get metrics
-            if(training_set.getNumClasses() == -1) {
-                // Regression
-                RegressionEvaluator eval = new RegressionEvaluator(results, testing_set);
-                metric1 += eval.getMSE();
-                metric2 += eval.getME();
-            } else {
-                // Classification
-                ClassificationEvaluator eval = new ClassificationEvaluator(results, testing_set);
-                metric1 += eval.getAccuracy();
-                metric2 += eval.getMSE();
+            double starttime = System.currentTimeMillis();
+
+            EuclideanSquared dist = new EuclideanSquared(data.getSimMatrices());
+
+            // Initialize metrics
+            double metric1 = 0;
+            double metric2 = 0;
+
+            // Perform 10-fold cross validation
+            for(int i = 0; i < 10; i++) {
+
+                System.out.println("Performing CV Fold #" + i);
+
+                Set training_set = new Set(data.getSubsets(), i);
+                Set testing_set = data.getSubsets()[i];
+
+                // Train and test the RBF network
+                RBF rbf = new RBF(representatives[meth], variances[meth], learning_rate, batch_size, dist);
+                rbf.train(training_set);
+                double[] results = rbf.test(testing_set);
+
+                // Get metrics
+                if(training_set.getNumClasses() == -1) {
+                    // Regression
+                    RegressionEvaluator eval = new RegressionEvaluator(results, testing_set);
+                    metric1 += eval.getMSE();
+                    metric2 += eval.getME();
+                } else {
+                    // Classification
+                    ClassificationEvaluator eval = new ClassificationEvaluator(results, testing_set);
+                    metric1 += eval.getAccuracy();
+                    metric2 += eval.getMSE();
+                }
+
+
             }
-            
-           
+
+            // Take average of metrics
+            metric1 /= 10;
+            metric2 /= 10;
+
+            // Create output string
+            String output = data_set + "," + clustering_methods[meth] + "," + k + "," + learning_rate + "," + metric1 + "," + metric2;
+            // Write to file
+            PrintWriter writer = new PrintWriter(new FileOutputStream(new File(output_file), true /* append = true */));
+            writer.println(output);
+            writer.close();
+            // Write to console
+            double endtime = System.currentTimeMillis();
+            double runtime = (endtime - starttime) / 1000;
+            System.out.println("RBF trained and tested in " + runtime + " seconds");
+            System.out.println(output);
         }
-        
-        // Take average of metrics
-        metric1 /= 10;
-        metric2 /= 10;
-        
-        // Create output string
-        String output = data_set + "," + clustering_method + "," + k + "," + learning_rate + "," + metric1 + "," + metric2;
-        // Write to file
-        PrintWriter writer = new PrintWriter(new FileOutputStream(new File(output_file), true /* append = true */));
-        writer.println(output);
-        writer.close();
-        // Write to console
-        double endtime = System.currentTimeMillis();
-        double runtime = (endtime - starttime) / 1000;
-        System.out.println("RBF trained and tested in " + runtime + " seconds");
-        System.out.println(output);
     }
 }

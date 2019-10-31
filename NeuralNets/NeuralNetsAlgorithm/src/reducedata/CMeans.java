@@ -29,6 +29,7 @@ public class CMeans implements IDataReducer {
     public CMeans(IDistMetric metric, int c){
         this.C = c;
         this.metric = metric;
+        this.clusters = new Cluster[this.C];
     }
     
     public Set reduce(Set orig){
