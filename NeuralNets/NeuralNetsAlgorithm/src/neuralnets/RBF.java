@@ -91,10 +91,10 @@ public class RBF implements INeuralNet {
         // Construct the output layer
         if(training_set.getNumClasses() == -1) { // The set is regression
             // The output layer consists of one node with a linear activation function
-            output_layer = new Layer(new Linear(), 1, representatives.getNumExamples());
+            output_layer = new Layer(new Linear(), 1, representatives.getNumExamples() + 1);
         } else { // The set is classification
             // The output layer consists of one node for each class with a sigmoidal activation function
-            output_layer = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples());
+            output_layer = new Layer(new Logistic(), training_set.getNumClasses(), representatives.getNumExamples() + 1);
         }
         // Randomly initialize the output layer weights
         output_layer.randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
@@ -183,9 +183,11 @@ public class RBF implements INeuralNet {
         Vector[] outputs = new Vector[2];
         
         // Initialize vector for RBF layer
-        Vector RBF_outputs = new Vector(representatives.getNumExamples());
+        Vector RBF_outputs = new Vector(representatives.getNumExamples() + 1);
+        // Add in bias node (activation value of 1)
+        RBF_outputs.set(0, 1);
         // Calculate each RBF node's output given the example as input
-        for(int i = 0; i < representatives.getNumExamples(); i++) {
+        for(int i = 1; i < representatives.getNumExamples(); i++) {
             // Output is the calculated using the radial basis function:
             //          o = exp(-(x1 - x2)^2 / (2*variance))
             double d = dist_metric.dist(representatives.getExample(i), ex);
