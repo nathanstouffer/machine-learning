@@ -7,7 +7,7 @@ package neuralnets;
 
 import datastorage.*;
 import reducedata.*;
-import measuredistance.IDistMetric;
+import measuredistance.EuclideanSquared;
 import java.util.ArrayList;
 
 /**
@@ -17,14 +17,14 @@ import java.util.ArrayList;
 
 public class Clusterer {
     
-    // distance metric used in computation
-    private final IDistMetric METRIC;
+    // distance euclidean used in computation
+    private final EuclideanSquared euclidean;
     // original data set
-    private final Set orig;
+    private Set orig;
     // original subsets
     private Set[] subsets;
     // number of neighbors to consider when computing variance
-    private final int k;
+    private int k;
     // cluster array of the form { Edited/Condensed, CMeans, CMedoids }
     private Set[] reps;
     // variance array of the form { Edited/Condensed, CMeans, CMedoids }
@@ -33,18 +33,26 @@ public class Clusterer {
     private double[][] vars;
     
     /**
-     * constructor to compute the reps and their variance
-     * this is to be used as the nodes in a hidden layer for an RBF
-     * network
+     * constructor to instantiate a Cluster object with a EuclideanSquared
+     * distance metric
      * 
-     * @param metric distance metric used
-     * @param subsets original subsets that will be clustered
+     * @param euc Euclidean distance metric to use
+     */
+    public Clusterer(EuclideanSquared euc) {
+        // initialize global variables
+        this.euclidean = euc;
+        // insantiate to correct size
+        this.reps = new Set[3];
+        this.vars = new double[3][];
+    }
+    
+    /**
+     * method to cluster the data and compute the variance for
+     * each cluster
+     * @param subsets subsets that compose the data to be clustered
      * @param k number of neighbors to consider when computing variance
      */
-    public Clusterer(IDistMetric metric, Set[] subsets, int k){
-        // initialize global variables
-        // distance metric
-        this.METRIC = metric;
+    public void cluster(Set[] subsets, int k) {
         // number of neighbors to consider when computing variance
         this.k = k;
         // subsets that compose dataset
@@ -52,10 +60,6 @@ public class Clusterer {
         // build entire data set from subsets
         // pass in -1 so entire set is constructed
         this.orig = new Set(this.subsets, -1);
-        
-        // insantiate to correct size
-        this.reps = new Set[3];
-        this.vars = new double[3][];
         
         // determine if data set is classification or regression
         boolean regression = false;     // assume data set is not regression
@@ -91,12 +95,12 @@ public class Clusterer {
             // instantiate edited
             // 1 is used as the number of neighbors to consider
             // while reducing the data set
-            reducer = new Edited(this.METRIC, 1, validation_set);
+            reducer = new Edited(this.euclidean, 1, validation_set);
             // reduce edited_orig and store in reps[0]
             this.reps[0] = reducer.reduce(edited_orig);
             
             // instantiate condensed
-            reducer = new Condensed(this.METRIC);
+            reducer = new Condensed(this.euclidean);
             // reduce orig
             Set reduced = reducer.reduce(this.orig);
             // store in clusers[0] if condensed's size is smaller
@@ -109,12 +113,12 @@ public class Clusterer {
         }
         
         // instantiate CMeans
-        reducer = new CMeans(this.METRIC, num_clust);
+        reducer = new CMeans(this.euclidean, num_clust);
         // reduce orig and store in reps[1]
         this.reps[1] = reducer.reduce(this.orig);
         
         // instantiate CMedoids
-        reducer = new CMedoids(this.METRIC, num_clust);
+        reducer = new CMedoids(this.euclidean, num_clust);
         // reduce orig and store in reps[2]
         this.reps[2] = reducer.reduce(this.orig);
     }
@@ -140,7 +144,7 @@ public class Clusterer {
             double variance = 0.0;
             // add squared distance from curr_rep to variance
             for (int j = 0; j < this.k; j++) { 
-                variance += this.METRIC.dist(curr_rep, neighbors.get(j)); 
+                variance += this.euclidean.dist(curr_rep, neighbors.get(j)); 
             }
             variance /= this.k;
             variance = Math.sqrt(variance);
@@ -153,6 +157,11 @@ public class Clusterer {
         return vars;
     }
     
+    /**
+     * method to find the k nearest neighbors of a representative
+     * @param rep
+     * @return 
+     */
     private ArrayList<Example> computeKNeighbors(Example rep) {
         // k nearest neighbors
         ArrayList<Example> neighbors = new ArrayList<Example>(this.k);
@@ -167,7 +176,7 @@ public class Clusterer {
             Example ex = this.orig.getExample(i);
             
             // compute distance between rep and ex
-            double dist = this.METRIC.dist(rep, ex);
+            double dist = this.euclidean.dist(rep, ex);
             
             // variable to tell whether the example has been added to the neighbors
             boolean added = false;
