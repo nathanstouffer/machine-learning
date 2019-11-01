@@ -70,7 +70,7 @@ public class Edited implements IDataReducer {
         // declare the edited set
         Set edited;
         
-        System.out.println("ORIG SIZE: " + excessive.getNumExamples());
+        //System.out.println("EDITED ORIG SIZE: " + excessive.getNumExamples());
         
         this.learner.train(excessive);        
         double orig_acc = this.computeValidationAcc();

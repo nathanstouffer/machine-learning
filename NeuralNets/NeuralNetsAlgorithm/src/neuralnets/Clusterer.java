@@ -112,6 +112,9 @@ public class Clusterer {
             num_clust = this.reps[0].getNumExamples();
         }
         
+        // print out number of clusters used for CMeans and CMedoids
+        //System.out.println(String.format("NUM CLUSTERS: %d", num_clust));
+        
         // instantiate CMeans
         reducer = new CMeans(this.euclidean, num_clust);
         // reduce orig and store in reps[1]
@@ -169,7 +172,11 @@ public class Clusterer {
         ArrayList<Double> distances = new ArrayList<Double>(this.k);
         
         // initialize all distances to Double.MAX_VALUE
-        for (int i = 0; i < distances.size(); i++) { distances.set(i, Double.MAX_VALUE); }
+        for (int i = 0; i < this.k; i++) { 
+            // add dummy neighbor with maximum distance
+            neighbors.add(new Example(-1, rep.getAttributes()));
+            distances.add(Double.MAX_VALUE); 
+        }
         
         // iterate through entire dataset
         for (int i = 0; i < this.orig.getNumExamples(); i++) {
@@ -185,8 +192,8 @@ public class Clusterer {
                 // test if dist is less than any current neighbor
                 if (dist < distances.get(j)) {
                     // update neighbors and distances ArrayLists
-                    neighbors.add(i, ex);
-                    distances.add(i, dist);
+                    neighbors.add(j, ex);
+                    distances.add(j, dist);
                     // remove last element in each ArrayList
                     neighbors.remove(this.k);
                     distances.remove(this.k);

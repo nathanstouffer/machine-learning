@@ -32,6 +32,11 @@ public class CMeans implements IDataReducer {
         this.clusters = new Cluster[this.C];
     }
     
+    /**
+     * method to reduce the size of the dataset using CMeans
+     * @param orig
+     * @return 
+     */
     public Set reduce(Set orig){
         // clone set
         Set clone = orig.clone();
@@ -57,7 +62,7 @@ public class CMeans implements IDataReducer {
             // test convergence and update centroids
             for (int j = 0; j < this.C; j++){
                 // test convergence
-                double dist = metric.dist(new_centroids[j], clusters[j].getRep());
+                double dist = this.metric.dist(new_centroids[j], clusters[j].getRep());
                 if (dist > this.CONVERGENCE_LEVEL){ converged = false; }
                 // update centroid
                 clusters[j].setRep(new_centroids[j]);
@@ -69,6 +74,11 @@ public class CMeans implements IDataReducer {
         return reduced;
     }
     
+    /**
+     * method to compute find the new centroids
+     * @param num_attr
+     * @return 
+     */
     private Example[] computeNewCentroids(int num_attr){
         // array for new means
         Example[] new_centroids = new Example[this.C];
@@ -108,7 +118,7 @@ public class CMeans implements IDataReducer {
             for (int k = 0; k < num_attr; k++){
                 double prev = mean.get(k);
                 double to_add = ex.getAttributes().get(k);
-                mean.add(k, prev + to_add);
+                mean.set(k, prev + to_add);
             }
         }
         // divide each sum by the number of examples in the cluster
@@ -154,8 +164,9 @@ public class CMeans implements IDataReducer {
             // current example
             Example ex = dataset.getExample(i);
             // defining variables for closest mean
-            double min_dist = Double.MAX_VALUE;
             int closest_index = 0;
+            // distance between 0th centroid and example
+            double min_dist = this.metric.dist(ex, this.clusters[0].getRep());
             // iterate through the centroids, finding the closest mean
             for (int j = 1; j < this.C; j++){
                 // current centroid

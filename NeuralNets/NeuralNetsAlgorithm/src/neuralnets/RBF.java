@@ -122,7 +122,7 @@ public class RBF implements INeuralNet {
                 output_layer.plusEquals(gradient);
             }
             iterations++;
-            if(iterations == 500) {
+            if(iterations == 10000) {
                 converged = true;
             }
         }
