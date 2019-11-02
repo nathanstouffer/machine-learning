@@ -104,6 +104,9 @@ public class Backpropagator {
         // average gradient over the size of the batch
         for (int i = 0; i < this.gradient.length; i++) { this.gradient[i].divEquals(batch.getNumExamples()); }
         
+        // multiply gradient by -1 for minimizing loss function
+        for (int i = 0; i < this.gradient.length; i++) { this.gradient[i].timesEquals(-1); }
+        
         // return gradient
         return this.gradient;
     }
@@ -142,14 +145,14 @@ public class Backpropagator {
     }
     
     /**
-     * method to update the gradient for the current layer
+     * method to update the gradient for the current weights
      * @param deltas
      * @param input 
      */
-    private void updateGradient(Matrix layer, Vector deltas, Vector input) {
-        // iterate through rows
-        for (int i = 0; i < layer.getNumRows(); i++) {
-            Vector row = layer.getRow(i);
+    private void updateGradient(Matrix weights, Vector deltas, Vector input) {
+        // iterate through nodes
+        for (int i = 0; i < weights.getNumRows(); i++) {
+            Vector row = weights.getRow(i);
             // compute row update
             Vector update = new Vector(input.getLength());
             for (int j = 0; j < input.getLength(); j++) { 

@@ -64,6 +64,14 @@ public class EuclideanSquared implements IDistMetric {
             sqrd_dist += sqrd_diff;
         }
         
+        // check if distance is NaN
+        if (Double.isNaN(sqrd_dist)) { 
+            System.out.print("ex1: ");
+            System.out.println(ex1.getAttributes());
+            System.out.print("ex2: ");
+            System.out.println(ex2.getAttributes());
+        }
+        
         //System.out.println("FINAL DIST: " + sqrd_dist);
         // return the squared Euclidean distance
         return sqrd_dist;
