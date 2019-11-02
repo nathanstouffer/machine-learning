@@ -13,13 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Random;
 import measuredistance.EuclideanSquared;
 import neuralnets.Clusterer;
 import neuralnets.RBF;
-import reducedata.IDataReducer;
 
 /**
  *
@@ -62,12 +58,15 @@ public class Client {
         int final_k = 20;
         double final_learning_rate = 0.001;
         double final_batch_size = 0.1;
+        double final_convergence_thresh = 0.0005;
+        int final_max_iterations = 100000;
+        
         
         // CLUSTER DATA
         System.out.println("Clustering datasets...");
         Clusterer[] clusters = new Clusterer[datafiles.length];
         
-        int TODO = 0;
+        int TODO = 5;
         
         for(int i = 0; i < data.length; i++) {
             if(i == TODO) {
@@ -80,15 +79,17 @@ public class Client {
         }
 
         // RUN TEST
-//        runRBF(output_file, datafiles[TODO], data[TODO], final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), final_learning_rate, final_batch_size);
-        runRBFquick(output_file, datafiles[TODO], data[TODO], final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), final_learning_rate, final_batch_size);
+        runRBF(output_file, datafiles[TODO], data[TODO], 
+                final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), 
+                final_learning_rate, final_batch_size, 
+                final_convergence_thresh, final_max_iterations,
+                1);
         
         
     }
     
     /**
-     * Runs the RBF network given the parameters. Will run 10-fold cross validation
-     * on the data set given to it.
+     * Runs the RBF network given the parameters.
      * @param output_file
      * @param data_set
      * @param data
@@ -97,12 +98,17 @@ public class Client {
      * @param variances
      * @param learning_rate
      * @param batch_size 
+     * @param convergence_threshold 
+     * @param max_iterations 
+     * @param folds Number of cross validation folds to run (for official use, do 10!). Must be between 1 and 10.
      * @throws java.io.FileNotFoundException 
      * @throws java.io.UnsupportedEncodingException 
      */
     public static void runRBF(String output_file, String data_set, DataReader data, 
             int k, Set[] representatives, double[][] variances, 
-            double learning_rate, double batch_size) throws FileNotFoundException, UnsupportedEncodingException {
+            double learning_rate, double batch_size, 
+            double convergence_threshold, int max_iterations,
+            int folds) throws FileNotFoundException, UnsupportedEncodingException {
         
         String[] clustering_methods = {"Edited/Condensed", "KMeans", "PAM"};
         for(int meth = 0; meth < 3; meth++) {
@@ -119,7 +125,7 @@ public class Client {
             double metric2 = 0;
 
             // Perform 10-fold cross validation
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i < folds; i++) {
 
                 System.out.println("Performing CV Fold #" + i);
 
@@ -127,7 +133,10 @@ public class Client {
                 Set testing_set = data.getSubsets()[i];
 
                 // Train and test the RBF network
-                RBF rbf = new RBF(representatives[meth], variances[meth], learning_rate, batch_size, dist);
+                RBF rbf = new RBF(representatives[meth], variances[meth], 
+                                    learning_rate, batch_size, 
+                                    convergence_threshold, max_iterations,
+                                    dist);
                 rbf.train(training_set);
                 double[] results = rbf.test(testing_set);
 
@@ -148,8 +157,8 @@ public class Client {
             }
 
             // Take average of metrics
-            metric1 /= 10;
-            metric2 /= 10;
+            metric1 /= folds;
+            metric2 /= folds;
 
             // Create output string
             String output = data_set + "," + clustering_methods[meth] + "," + k + "," + learning_rate + "," + metric1 + "," + metric2;
@@ -160,85 +169,8 @@ public class Client {
             // Write to console
             double endtime = System.currentTimeMillis();
             double runtime = (endtime - starttime) / 1000;
-            System.out.println("RBF trained and tested in " + runtime + " seconds");
-            System.out.println(output);
-        }
-    }
-    
-    /**
-     * Runs the RBF network given the parameters quickly (no 10 fold CV)
-     * on the data set given to it.
-     * @param output_file
-     * @param data_set
-     * @param data
-     * @param k
-     * @param representatives
-     * @param variances
-     * @param learning_rate
-     * @param batch_size 
-     * @throws java.io.FileNotFoundException 
-     * @throws java.io.UnsupportedEncodingException 
-     */
-    public static void runRBFquick(String output_file, String data_set, DataReader data, 
-            int k, Set[] representatives, double[][] variances, 
-            double learning_rate, double batch_size) throws FileNotFoundException, UnsupportedEncodingException {
-        
-        String[] clustering_methods = {"Edited/Condensed", "KMeans", "PAM"};
-        for(int meth = 0; meth < 3; meth++) {
-            if(representatives[meth] == null) {meth++;} //Skip editted/condensed if regression set
-            
-            System.out.println("TESTING RBF ON DATASET " + data_set + " WITH " + clustering_methods[meth] + " CLUSTERING");
-            
-            double starttime = System.currentTimeMillis();
-
-            EuclideanSquared dist = new EuclideanSquared(data.getSimMatrices());
-
-            // Initialize metrics
-            double metric1 = 0;
-            double metric2 = 0;
-
-            Random rand = new Random();
-            int test_set_index = rand.nextInt(10);
-            // Just use subset 1 for testing for quicks
-            Set training_set = new Set(data.getSubsets(), test_set_index);
-            Set testing_set = data.getSubsets()[test_set_index];
-
-            System.out.println("CLUSTER VARIS: " + Arrays.toString(variances[meth]));
-            
-            // Train and test the RBF network
-            RBF rbf = new RBF(representatives[meth], variances[meth], learning_rate, batch_size, dist);
-            rbf.train(training_set);
-            double[] results = rbf.test(testing_set);
-            
-            System.out.print("ORIGINAL: [");
-            for(int i = 0; i < testing_set.getNumExamples(); i++) {System.out.print(testing_set.getExample(i).getValue() + ", ");}
-            System.out.println("]");
-            System.out.println("RESULTS: " + Arrays.toString(results));
-
-            // Get metrics
-            if(training_set.getNumClasses() == -1) {
-                // Regression
-                RegressionEvaluator eval = new RegressionEvaluator(results, testing_set);
-                metric1 += eval.getMSE();
-                metric2 += eval.getME();
-            } else {
-                // Classification
-                ClassificationEvaluator eval = new ClassificationEvaluator(results, testing_set);
-                metric1 += eval.getAccuracy();
-                metric2 += eval.getMSE();
-            }
-            // Create output string
-            String output = data_set + "," + clustering_methods[meth] + "," + k + "," + learning_rate + "," + metric1 + "," + metric2;
-            // Write to file
-//            PrintWriter writer = new PrintWriter(new FileOutputStream(new File(output_file), true /* append = true */));
-//            writer.println(output);
-//            writer.close();
-            // Write to console
-            double endtime = System.currentTimeMillis();
-            double runtime = (endtime - starttime) / 1000;
-            System.out.println("RBF trained and tested in " + runtime + " seconds");
+            System.out.println("\u001B[35m" + "RBF trained and tested in " + runtime + " seconds");
             System.out.println("\u001B[35m" + output);
-            System.out.println();
         }
     }
 }

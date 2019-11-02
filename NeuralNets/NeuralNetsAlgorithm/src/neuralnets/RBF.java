@@ -22,10 +22,6 @@ public class RBF implements INeuralNet {
      * layer.
      */
     private static final double STARTING_WEIGHT_BOUND = 0.0001;
-    private static final double CONVERGENCE_THRESHOLD = 0.0001;
-    private static final int CONVERGENCE_CHECK_INTERVAL = 100;
-    private static final int MAXIMUM_ITERATIONS = 100000;
-
 
     /**
      * The learning rate for the network is a tunable parameter that affects
@@ -35,6 +31,17 @@ public class RBF implements INeuralNet {
      */
     private final double learning_rate;
     private final double batch_size;
+    
+    /**
+     * The convergence threshold and maximum iterations determine the 
+     * termination characteristics during training. Training the output layer
+     * weights will terminate when the gradient updates are all weighted less
+     * than the convergence threshold (as a percentage) multiplied by the
+     * current weights or when the number of training iterations reaches the
+     * specified maximum.
+     */
+    private final double convergence_threshold;
+    private final int maximum_iterations;
 
     /**
      * The RBFs need a way to compute distance from the representative example
@@ -68,14 +75,23 @@ public class RBF implements INeuralNet {
      * network will learn.
      * @param _batch_size The percentage of examples in each training set to use
      * at a time when applying gradient descent to the output layer.
+     * @param _convergence_threshold The threshold to determine when to stop
+     * training the output layer.
+     * @param _maximum_iterations The maximum iterations allowed during training
+     * of the output layer.
      * @param _dist_metric The distance metric that will be used in the Gaussian
      * radial basis function. Euclidean distance will be the most common.
      */
-    public RBF (Set _representatives, double[] _variances, double _learning_rate, double _batch_size, IDistMetric _dist_metric) {
+    public RBF (Set _representatives, double[] _variances,
+                double _learning_rate, double _batch_size, 
+                double _convergence_threshold, int _maximum_iterations,
+                IDistMetric _dist_metric) {
         representatives = _representatives;
         variances = _variances;
         learning_rate = _learning_rate;
         batch_size = _batch_size;
+        convergence_threshold = _convergence_threshold;
+        maximum_iterations = _maximum_iterations;
         dist_metric = _dist_metric;
     }
 
@@ -110,7 +126,7 @@ public class RBF implements INeuralNet {
 
         boolean converged = false;
         int iterations = 0;
-        while(!converged && iterations < MAXIMUM_ITERATIONS) {
+        while(!converged && iterations < maximum_iterations) {
             // Send the first batch through
             Set[] batches = training_set.getRandomBatches(batch_size);
             Random rand = new Random();
@@ -123,7 +139,7 @@ public class RBF implements INeuralNet {
             // Apply gradient to output layer
             output_layer.plusEquals(gradient);
 
-            if( (iterations == 0) || (iterations == MAXIMUM_ITERATIONS / 2) || (iterations == MAXIMUM_ITERATIONS - 2) ) {
+            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
                     System.out.println("GRADIENT");
                     System.out.println(gradient);
                     System.out.println("OUTPUT LAYER WEIGHTS");
@@ -131,7 +147,7 @@ public class RBF implements INeuralNet {
             }
 
             // Output progress to console and check for convergence
-            if(iterations % CONVERGENCE_CHECK_INTERVAL == 0) {
+            if(iterations % (maximum_iterations/100) == 0) {
                 System.out.print("-> Training RBF network iteration: " + iterations);
                 converged = hasConverged(gradient, true); // Verbose to print status
             } else {
@@ -264,9 +280,9 @@ public class RBF implements INeuralNet {
                 double g = Math.abs(grad_row.get(col));
                 double w = Math.abs(weight_row.get(col));
                 // Test if the value exceeds the threshol
-                if( g > w*CONVERGENCE_THRESHOLD) {
+                if( g > w*convergence_threshold) {
                     if(verbose) {
-                        System.out.print("    ---> GRADIENT TO WEIGHT RATIO = " + (g/w) + " WHERE THRESHOLD = " + CONVERGENCE_THRESHOLD);
+                        System.out.print("    ---> GRADIENT TO WEIGHT RATIO = " + (g/w) + " WHERE THRESHOLD = " + convergence_threshold);
                         System.out.println("    ---> W = " + w + " G = " + g);
                     }
                     return false;
