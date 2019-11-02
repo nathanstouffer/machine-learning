@@ -3,6 +3,7 @@ package neuralnets;
 import datastorage.Example;
 import datastorage.Set;
 import java.util.ArrayList;
+import java.util.Random;
 import measuredistance.IDistMetric;
 import networklayer.Layer;
 import networklayer.Linear;
@@ -20,7 +21,10 @@ public class RBF implements INeuralNet {
      * The absolute value of the bounds on the starting weights in the output
      * layer.
      */
-    private static final double STARTING_WEIGHT_BOUND = 0.01;
+    private static final double STARTING_WEIGHT_BOUND = 0.0001;
+    private static final double CONVERGENCE_THRESHOLD = 0.0001;
+    private static final int CONVERGENCE_CHECK_INTERVAL = 100;
+    private static final int MAXIMUM_ITERATIONS = 100000;
     
     
     /**
@@ -102,29 +106,37 @@ public class RBF implements INeuralNet {
         // Create a backpropagator that will just train the output layer.
         Backpropagator backprop = new Backpropagator(this);
         
-        //Set[] batches = training_set.getRandomBatches(batch_size);        //TEST IF YOU WANT IT TO RUN about 10% FASTER
+//        Set[] batches = training_set.getRandomBatches(batch_size);        //TEST IF YOU WANT IT TO RUN about 10% FASTER
         
         boolean converged = false;
         int iterations = 0;
-        while(!converged) {
-            // Output progress to console
-            if(iterations % 100 == 0) {
-                System.out.println("-> Training RBF network iteration: " + iterations);
-            }
-            // Send each batch through the output layer
+        while(!converged && iterations < MAXIMUM_ITERATIONS) {
+            // Send the first batch through
             Set[] batches = training_set.getRandomBatches(batch_size);
-            for(int i = 0; i < batches.length; i++) {
-                // Get gradient
-                Matrix gradient = backprop.computeGradient(batches[i])[0];
-                // Multiply gradient with learning rate
-                gradient.timesEquals(learning_rate);
-                // Apply gradient to output layer
-                output_layer.plusEquals(gradient);
+            Random rand = new Random();
+            int i = rand.nextInt(batches.length);
+            
+            // Get gradient
+            Matrix gradient = backprop.computeGradient(batches[i])[0];
+            // Multiply gradient with learning rate
+            gradient.timesEquals(learning_rate);
+            // Apply gradient to output layer
+            output_layer.plusEquals(gradient);
+            
+            if( (iterations == 0) || (iterations == MAXIMUM_ITERATIONS / 2) || (iterations == MAXIMUM_ITERATIONS - 2) ) {
+                    System.out.println("GRADIENT");
+                    System.out.println(gradient);
+                    System.out.println("OUTPUT LAYER WEIGHTS");
+                    System.out.println(output_layer.getWeights());
+            }
+            // Output progress to console and check for convergence
+            if(iterations % CONVERGENCE_CHECK_INTERVAL == 0) {
+                System.out.print("-> Training RBF network iteration: " + iterations);
+                converged = hasConverged(gradient, true); // Verbose to print status
+            } else {
+                converged = hasConverged(gradient, false);
             }
             iterations++;
-            if(iterations == 10000) {
-                converged = true;
-            }
         }
         // Output layer weights are done training!
     }
@@ -159,14 +171,18 @@ public class RBF implements INeuralNet {
         // Propagate the example through the network and look at the output
         Vector outputs = genLayerOutputs(ex)[1];
         
+        //System.out.println("OUTPUTS: " + outputs);
+        
         // Check how many nodes are in the output layer to determine 
         // classification or regression.
         if(outputs.getLength() == 1) {
             // The set is regression, so return the one output as the predicted real value.
+            //System.out.println("PREDICTED VALUE: " + outputs.get(0));
             return outputs.get(0);
         } else {
             // The set is classification, so return the class of the output node
             // that has the highest activation value.
+            //System.out.println("PREDICTED CLASS: " + (double)outputs.getMaxIndex());
             return (double)outputs.getMaxIndex();
         }
     }
@@ -227,6 +243,36 @@ public class RBF implements INeuralNet {
         dim[0][0] = output_layer.getNumRows();
         dim[0][1] = output_layer.getNumCol();
         return dim;
+    }
+    
+    /**
+     * Check if the network has converged. Will return true if no values within
+     * the gradient are higher than CONVERGENCE_THRESHOLD (a percentage) of the
+     * existing layer weights.
+     * @return 
+     */
+    private boolean hasConverged(Matrix gradient, boolean verbose) {    
+        double avg = 0;
+        Matrix weights = output_layer.getWeights();
+        // Iterate through rows
+        for(int row = 0; row < weights.getNumRows(); row++) {
+            Vector grad_row = gradient.getRow(row);
+            Vector weight_row = weights.getRow(row);
+            // Iterate through cols
+            for(int col = 0; col < weights.getNumCol(); col++) {
+                double g = Math.abs(grad_row.get(col));
+                double w = Math.abs(weight_row.get(col));
+                // Test if the value exceeds the threshol
+                if( g > w*CONVERGENCE_THRESHOLD) {
+                    if(verbose) {
+                        System.out.print("    ---> GRADIENT TO WEIGHT RATIO = " + (g/w) + " WHERE THRESHOLD = " + CONVERGENCE_THRESHOLD);
+                        System.out.println("    ---> W = " + w + " G = " + g);
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     
 }

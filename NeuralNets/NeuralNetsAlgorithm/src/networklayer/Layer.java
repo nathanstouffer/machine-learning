@@ -73,4 +73,6 @@ public class Layer {
     // change these method names
     public int getNumRows() { return this.weights.getNumRows(); }
     public int getNumCol() { return this.weights.getNumCol(); }
+    
+    public Matrix getWeights() { return this.weights; }
 }
