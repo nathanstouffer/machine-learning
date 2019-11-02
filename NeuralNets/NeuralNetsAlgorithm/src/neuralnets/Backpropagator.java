@@ -104,6 +104,9 @@ public class Backpropagator {
         // average gradient over the size of the batch
         for (int i = 0; i < this.gradient.length; i++) { this.gradient[i].divEquals(batch.getNumExamples()); }
         
+        // multiply gradient by -1 for minimizing loss function
+        for (int i = 0; i < this.gradient.length; i++) { this.gradient[i].timesEquals(-1); }
+        
         // return gradient
         return this.gradient;
     }

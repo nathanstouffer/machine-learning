@@ -117,7 +117,7 @@ public class RBF implements INeuralNet {
                 // Get gradient
                 Matrix gradient = backprop.computeGradient(batches[i])[0];
                 // Multiply gradient with learning rate
-                gradient.timesEquals(-1.0 * learning_rate);                     // CHANGE TO NEGATIVE GRADIENT
+                gradient.timesEquals(learning_rate);                     // CHANGE TO NEGATIVE GRADIENT
                 // Apply gradient to output layer
                 output_layer.plusEquals(gradient);
             }

@@ -79,7 +79,7 @@ public class MLP implements INeuralNet {
                 Matrix[] gradient = backprop.computeGradient(batches[j]);
                 // Multiply gradient with learning rate
                 
-                for (int k = 0; k < gradient.length; k++) { gradient[k].timesEquals(-1.0 * learning_rate); }
+                for (int k = 0; k < gradient.length; k++) { gradient[k].timesEquals(learning_rate); }
                 // apply momentum if necessary
                 if (momentum != 0.0 && prev_gradient == null) {
                     // multiply by momentum rate
