@@ -142,14 +142,14 @@ public class Backpropagator {
     }
     
     /**
-     * method to update the gradient for the current layer
+     * method to update the gradient for the current weights
      * @param deltas
      * @param input 
      */
-    private void updateGradient(Matrix layer, Vector deltas, Vector input) {
-        // iterate through rows
-        for (int i = 0; i < layer.getNumRows(); i++) {
-            Vector row = layer.getRow(i);
+    private void updateGradient(Matrix weights, Vector deltas, Vector input) {
+        // iterate through nodes
+        for (int i = 0; i < weights.getNumRows(); i++) {
+            Vector row = weights.getRow(i);
             // compute row update
             Vector update = new Vector(input.getLength());
             for (int j = 0; j < input.getLength(); j++) { 
