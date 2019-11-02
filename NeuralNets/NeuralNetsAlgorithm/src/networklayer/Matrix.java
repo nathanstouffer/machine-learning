@@ -133,5 +133,16 @@ public class Matrix {
     public int getNumCol() { return this.num_col; }
     public int getNumRows() { return this.mtx.length; }
     public Vector getRow(int index) { return this.mtx[index]; }
+    
+    public String toString() {
+        String s = "[";
+        for(int i = 0; i < mtx.length-1; i++) {
+            s += mtx[i].toString();
+            s += '\n';
+        }
+        s += mtx[mtx.length-1].toString();
+        s +="]";
+        return s;
+    }
 
 }
