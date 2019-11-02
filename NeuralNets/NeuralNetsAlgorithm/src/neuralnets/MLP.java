@@ -46,15 +46,15 @@ public class MLP implements INeuralNet {
     public void train(Set training_set) {
         layers[0] = new Layer(new Logistic(), num_hidden_nodes, training_set.getNumAttributes() + 1);
         for (int i = 1; i < layers.length - 1; i++) {
-            layers[i] = new Layer(new Logistic(), num_hidden_nodes, layers[i].getNumRows() + 1);
+            layers[i] = new Layer(new Logistic(), num_hidden_nodes, layers[i].getNumNodes() + 1);
         }
         // Construct the output layer
         if (training_set.getNumClasses() == -1) { // The set is regression
             // The output layer consists of one node with a linear activation function
-            layers[layers.length - 1] = new Layer(new Linear(), 1, layers[layers.length - 2].getNumRows());
+            layers[layers.length - 1] = new Layer(new Linear(), 1, layers[layers.length - 2].getNumNodes());
         } else { // The set is classification
             // The output layer consists of one node for each class with a sigmoidal activation function
-            layers[layers.length - 1] = new Layer(new Logistic(), training_set.getNumClasses(), layers[layers.length - 2].getNumRows());
+            layers[layers.length - 1] = new Layer(new Logistic(), training_set.getNumClasses(), layers[layers.length - 2].getNumNodes());
         }
         // Randomly initialize the output layer weights
         for (int i = 0; i < layers.length; i++) {
@@ -78,7 +78,7 @@ public class MLP implements INeuralNet {
                 // Get gradient
                 Matrix[] gradient = backprop.computeGradient(batches[j]);
                 // Multiply gradient with learning rate
-                for (int k = 0; k < gradient.length; k++) { gradient[k].timesEquals(learning_rate); }
+                for (int k = 0; k < gradient.length; k++) { gradient[k].timesEquals(-1.0 * learning_rate); }
                 // apply momentum if necessary
                 if (momentum != 0.0 && prev_gradient == null) {
                     // multiply by momentum rate
@@ -177,8 +177,8 @@ public class MLP implements INeuralNet {
         // calculate dimesions for all layers
         int[][] dim = new int[layers.length][2];
         for (int i = 0; i < layers.length; i++) {
-            dim[i][0] = layers[i].getNumRows();
-            dim[i][1] = layers[i].getNumCol();
+            dim[i][0] = layers[i].getNumNodes();
+            dim[i][1] = layers[i].getNumInputs();
         }
         return dim;
     }

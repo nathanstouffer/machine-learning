@@ -124,7 +124,10 @@ public class CMeans implements IDataReducer {
         // divide each sum by the number of examples in the cluster
         for (int j = 0; j < num_attr; j++){
             double orig = mean.get(j);
-            mean.set(j, orig / cluster.getClusterSize());
+            // check that cluster size is greater than zero
+            if (cluster.getClusterSize() > 0) {
+                mean.set(j, orig / cluster.getClusterSize());
+            }
         }
         
         // instantiate a centroid with mean as the attributes

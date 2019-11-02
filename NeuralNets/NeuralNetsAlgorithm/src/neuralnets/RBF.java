@@ -117,12 +117,12 @@ public class RBF implements INeuralNet {
                 // Get gradient
                 Matrix gradient = backprop.computeGradient(batches[i])[0];
                 // Multiply gradient with learning rate
-                gradient.timesEquals(learning_rate);
+                gradient.timesEquals(-1.0 * learning_rate);                     // CHANGE TO NEGATIVE GRADIENT
                 // Apply gradient to output layer
                 output_layer.plusEquals(gradient);
             }
             iterations++;
-            if(iterations == 10000) {
+            if(iterations == 1000) {
                 converged = true;
             }
         }
@@ -187,12 +187,13 @@ public class RBF implements INeuralNet {
         // Add in bias node (activation value of 1)
         RBF_outputs.set(0, 1);
         // Calculate each RBF node's output given the example as input
-        for(int i = 1; i < representatives.getNumExamples(); i++) {
+        for(int i = 0; i < representatives.getNumExamples(); i++) {             // CHANGED
+        //for(int i = 1; i < representatives.getNumExamples(); i++) {
             // Output is the calculated using the radial basis function:
             //          o = exp(-(x1 - x2)^2 / (2*variance))
             double d = dist_metric.dist(representatives.getExample(i), ex);
             double o = Math.exp( -(d) / (2 * variances[i]) );
-            RBF_outputs.set(i, o);
+            RBF_outputs.set(i + 1, o);                                          // CHANGED
         }
         outputs[0] = RBF_outputs;
         
@@ -224,8 +225,8 @@ public class RBF implements INeuralNet {
     public int[][] getLayerDim() {
         // Backprop will only be using the output layer.
         int[][] dim = new int[1][2];
-        dim[0][0] = output_layer.getNumRows();
-        dim[0][1] = output_layer.getNumCol();
+        dim[0][0] = output_layer.getNumNodes();
+        dim[0][1] = output_layer.getNumInputs();
         return dim;
     }
     
