@@ -145,6 +145,7 @@ public class RBF implements INeuralNet {
                     System.out.println("OUTPUT LAYER WEIGHTS");
                     System.out.println(output_layer.getWeights());
             }
+
             // Output progress to console and check for convergence
             if(iterations % (maximum_iterations/100) == 0) {
                 System.out.print("-> Training RBF network iteration: " + iterations);
@@ -215,18 +216,17 @@ public class RBF implements INeuralNet {
         Vector[] outputs = new Vector[2];
 
         // Initialize vector for RBF layer
-        Vector RBF_outputs = new Vector(representatives.getNumExamples() + 1);
-        // Add in bias node (activation value of 1)
-        RBF_outputs.set(0, 1);
+        Vector RBF_outputs = new Vector(representatives.getNumExamples());
         // Calculate each RBF node's output given the example as input
-        for(int i = 0; i < representatives.getNumExamples(); i++) {             // CHANGED
-        //for(int i = 1; i < representatives.getNumExamples(); i++) {
+        for(int i = 0; i < representatives.getNumExamples(); i++) { 
             // Output is the calculated using the radial basis function:
             //          o = exp(-(x1 - x2)^2 / (2*variance))
             double d = dist_metric.dist(representatives.getExample(i), ex);
             double o = Math.exp( -(d) / (2 * variances[i]) );
-            RBF_outputs.set(i + 1, o);                                          // CHANGED
+            RBF_outputs.set(i, o);
         }
+        // insert multiplier for the weight
+        RBF_outputs.insertBiasMultiplier();
         outputs[0] = RBF_outputs;
 
         outputs[1] = output_layer.feedForward(RBF_outputs);
