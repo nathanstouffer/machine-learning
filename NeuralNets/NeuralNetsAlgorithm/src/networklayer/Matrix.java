@@ -134,6 +134,7 @@ public class Matrix {
     public int getNumRows() { return this.mtx.length; }
     public Vector getRow(int index) { return this.mtx[index]; }
     
+    @Override
     public String toString() {
         String s = "[";
         for(int i = 0; i < mtx.length-1; i++) {
@@ -141,7 +142,7 @@ public class Matrix {
             s += '\n';
         }
         s += mtx[mtx.length-1].toString();
-        s +="]";
+        s += "]";
         return s;
     }
 

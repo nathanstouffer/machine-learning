@@ -128,12 +128,10 @@ public class RBF implements INeuralNet {
         int iterations = 0;
         while(!converged && iterations < maximum_iterations) {
             // Send the first batch through
-            Set[] batches = training_set.getRandomBatches(batch_size);
-            Random rand = new Random();
-            int i = rand.nextInt(batches.length);
+            Set batch = training_set.getRandomBatch(batch_size);
 
             // Get gradient
-            Matrix gradient = backprop.computeGradient(batches[i])[0];
+            Matrix gradient = backprop.computeGradient(batch)[0];
             // Multiply gradient with learning rate
             gradient.timesEquals(learning_rate);
             // Apply gradient to output layer

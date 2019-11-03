@@ -112,10 +112,31 @@ public class Set implements Cloneable {
     public void clearSet(){ this.examples.clear(); }
     
     /**
-    * Make random batches out of the current set
+     * 
+     * @param batch_size
+     * @return 
+     */
+    public Set getRandomBatch(double batch_size) {
+        // Clone current set so that we can randomize it
+        Set clone = clone();
+        // Initialize new batch
+        Set batch = new Set(getNumAttributes(), getNumClasses(), getClassNames());
+        // Fill the batch
+        for(int i = 0; i < (int)(getNumExamples() * batch_size); i++) {
+            // Generate random index to put in the batch
+            Random rand = new Random();
+            int rand_index = rand.nextInt(clone.getNumExamples());
+            batch.addExample(clone.getExample(rand_index));
+            clone.rmExample(rand_index);
+        }
+        return batch;
+    }
+    
+    /**
+     * Make random batches out of the current set
      * @param batch_size The percentage of examples to be put in each batch.
-    * @return Set[] The randomized batches to be used as desired.
-    */
+     * @return Set[] The randomized batches to be used as desired.
+     */
     public Set[] getRandomBatches(double batch_size) {
         // Clone current set so that we can randomize it
         Set clone = clone();

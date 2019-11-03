@@ -58,7 +58,7 @@ public class Client {
         int final_k = 20;
         double final_learning_rate = 0.001;
         double final_batch_size = 0.1;
-        double final_convergence_thresh = 0.0005;
+        double final_convergence_thresh = 0.0001;
         int final_max_iterations = 100000;
         
         
@@ -66,7 +66,7 @@ public class Client {
         System.out.println("Clustering datasets...");
         Clusterer[] clusters = new Clusterer[datafiles.length];
         
-        int TODO = 5;
+        int TODO = 1;
         
         for(int i = 0; i < data.length; i++) {
             if(i == TODO) {
