@@ -17,15 +17,47 @@ public class RegressionEvaluator implements IEvaluator{
     public RegressionEvaluator(double[] predicted, Set actual) {
         int num_examples = actual.getNumExamples();
         
+        // standardize the values using z-scores
+        // the mean and standard deviation will be computed
+        // using the values from the actual dataset
+        
+        // compute mean of training data
+        double mean = 0.0;
+        for (int i = 0; i < num_examples; i++) { mean += actual.getExample(i).getValue(); }
+        mean /= num_examples;
+        
+        // compute standard deviation of training data
+        double sd = 0.0;
+        for (int i = 0; i < num_examples; i++) { 
+            sd += Math.pow(actual.getExample(i).getValue() - mean, 2);
+        }
+        sd /= (num_examples - 1);
+        sd = Math.sqrt(sd);
+        
+        // instantiate z-score arrays for predictions and actuals
+        double[] actz = new double[num_examples];
+        double[] predz = new double[num_examples];
+        
+        // populate z-score arrays
+        for (int i = 0; i < num_examples; i++) {
+            // find difference between value and mean
+            actz[i] = actual.getExample(i).getValue() - mean;
+            predz[i] = predicted[i] - mean;
+            // divide by standard deviation
+            actz[i] /= sd;
+            predz[i] /= sd;
+        }
+        
+        // the output has now been standardized using z-scores so
+        // the metrics are comparable between datasets
+        
         mse = 0;
         mae = 0;
         me = 0;
         //---------------------------------------------------------------
-        //Calculate the mean squared error and mean absolute error
-        //int index = 0;
-        //Iterator<Example> iterator = actual.iterator();
+        // Calculate the mean squared error and mean absolute error
         for (int i = 0; i < actual.getNumExamples(); i++) {
-            double difference = predicted[i] - actual.getExample(i).getValue();
+            double difference = predz[i] - actz[i];
             me += difference;
             mae += Math.abs(difference);
             mse += Math.pow(difference, 2);
