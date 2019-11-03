@@ -23,20 +23,22 @@ import neuralnets.RBF;
  */
 public class Client {
 
+    public static String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
+    public static DataReader[] data;
+    
     /**
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
      * @throws java.io.UnsupportedEncodingException
      */
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-        
-        String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
-        
+                
         // READ IN DATA
-        DataReader[] data = new DataReader[datafiles.length];
+        data = new DataReader[datafiles.length];
         for(int i = 0; i < data.length; i++) {
             data[i] = new DataReader(datafiles[i]);
         }
+        
         
         String output_file = "out.csv";
         
@@ -46,44 +48,84 @@ public class Client {
         
         // Tune K
         // Tune learning rate
+        System.out.println("~~~ ~~~ ~~~ TUNING RBF LEARNING RATE ~~~ ~~~ ~~~");
+        tuneRBF_learning_rate();
         
         // ------------------------------------------------------------
         // --- RUN FINAL RBF TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
        
-        System.out.println(" --- TESTING FINAL RBF CONFIG ---");
+//        System.out.println(" --- TESTING FINAL RBF CONFIG ---");
         
-        output_file = "../Output/" + "RBF_out.csv";
-        // << Add funct to clear file contents here >>
-        int final_k = 20;
-        double final_learning_rate = 0.001;
-        double final_batch_size = 0.1;
-        double final_convergence_thresh = 0.0001;
-        int final_max_iterations = 100000;
+//        output_file = "../Output/" + "RBF_out.csv";
+//        // << Add funct to clear file contents here >>
+//        int final_k = 20;
+//        double final_learning_rate = 0.001;
+//        double final_batch_size = 0.1;
+//        double final_convergence_thresh = 0.0001;
+//        int final_max_iterations = 100000;
+//        
+//        
+//        // CLUSTER DATA
+//        System.out.println("Clustering datasets...");
+//        Clusterer[] clusters = new Clusterer[datafiles.length];
+//        
+//        int TODO = 1;
+//        
+//        for(int i = 0; i < data.length; i++) {
+//            if(i == TODO) {
+//                clusters[i] = new Clusterer(new EuclideanSquared(data[i].getSimMatrices()));
+//                clusters[i].cluster(data[i].getSubsets(), final_k);
+//                // output information
+//                System.out.println(String.format("num clusters for %s: %d", datafiles[i], 
+//                        clusters[i].getReps()[2].getNumExamples()));
+//            }
+//        }
+//
+//        // RUN TEST
+//        runRBF(output_file, datafiles[TODO], data[TODO], 
+//                final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), 
+//                final_learning_rate, final_batch_size, 
+//                final_convergence_thresh, final_max_iterations,
+//                1);
         
         
-        // CLUSTER DATA
-        System.out.println("Clustering datasets...");
-        Clusterer[] clusters = new Clusterer[datafiles.length];
-        
-        int TODO = 1;
-        
+    }
+    
+    /**
+     * Runs the RBF network at a variety of given learning rates, outputting
+     * the results to console.
+     */
+    public static void tuneRBF_learning_rate() throws FileNotFoundException, UnsupportedEncodingException {
+        String output = "../Output/" + "RBF_tune_learning_rate.csv";
+        double[] learning_rates = {0.1, 0.01, 0.001, 0.0001};
+        int k = 25;
+        double batch_size = 0.10;
+        double conv_thresh = 0.0005;
+        int[] max_iter = {1000, 10000, 10000, 10000, 10000, 10000, 10000};
+        int folds = 1;
+        // Cluster data
+        System.out.println("CLUSTERING DATA SETS");
+        Clusterer[] clusters = new Clusterer[data.length];
         for(int i = 0; i < data.length; i++) {
-            if(i == TODO) {
                 clusters[i] = new Clusterer(new EuclideanSquared(data[i].getSimMatrices()));
-                clusters[i].cluster(data[i].getSubsets(), final_k);
+                clusters[i].cluster(data[i].getSubsets(), k);
                 // output information
                 System.out.println(String.format("num clusters for %s: %d", datafiles[i], 
                         clusters[i].getReps()[2].getNumExamples()));
+        }
+        //Iterate through data sets
+        for(int dataset = 0; dataset < data.length; dataset++) {
+            //Iterate through learning rates
+            for(int lr = 0; lr < learning_rates.length; lr++) {
+                runRBF(output, datafiles[dataset], data[dataset], 
+                        25, // K
+                        clusters[dataset].getReps(), clusters[dataset].getVars(),
+                        learning_rates[lr], batch_size,
+                        conv_thresh, max_iter[dataset],
+                        folds);
             }
         }
-
-        // RUN TEST
-        runRBF(output_file, datafiles[TODO], data[TODO], 
-                final_k, clusters[TODO].getReps(), clusters[TODO].getVars(), 
-                final_learning_rate, final_batch_size, 
-                final_convergence_thresh, final_max_iterations,
-                1);
         
         
     }

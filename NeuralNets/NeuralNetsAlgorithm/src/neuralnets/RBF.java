@@ -153,6 +153,7 @@ public class RBF implements INeuralNet {
             }
             iterations++;
         }
+        System.out.println("-> Trained RBF on iteration: " + iterations);
         // Output layer weights are done training!
     }
 
