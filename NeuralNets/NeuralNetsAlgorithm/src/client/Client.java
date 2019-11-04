@@ -129,7 +129,6 @@ public class Client {
         }
         //Iterate through data sets
         for(int dataset = 0; dataset < data.length; dataset++) {
-            dataset++;
             //Iterate through learning rates
             for(int lr = 0; lr < learning_rates.length; lr++) {
                 runRBF(output, datafiles[dataset], data[dataset],
