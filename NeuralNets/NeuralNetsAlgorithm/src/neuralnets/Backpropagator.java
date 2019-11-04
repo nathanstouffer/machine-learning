@@ -124,13 +124,13 @@ public class Backpropagator {
             Matrix curr_layer = this.gradient[layer];
             Vector deriv = derivatives[layer];
             // compute deltas
-            Vector deltas = new Vector(curr_layer.getNumCol());
+            Vector deltas = new Vector(curr_layer.getNumRows());
             for (int i = 0; i < deltas.getLength(); i++) {
                 // initialize delta to 0.0
                 double delta = 0.0;
                 // sum the effects of delta in next layer
                 for (int j = 0; j < ds_deltas.getLength(); j++) {     // DOUBLE CHECK THIS LOOP
-                    Vector row = curr_layer.getRow(j);
+                    Vector row = curr_layer.getRow(i);
                     delta += ds_deltas.get(j) * row.get(i);
                 }
                 delta *= deriv.get(i);
