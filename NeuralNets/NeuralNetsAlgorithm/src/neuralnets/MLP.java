@@ -124,7 +124,7 @@ public class MLP implements INeuralNet {
             for (int k = 0; k < gradient.length; k++) { gradient[k].timesEquals(learning_rate); }
                 
             // apply momentum if necessary
-            if (momentum != 0.0 && prev_gradient == null) {
+            if (momentum != 0.0 && prev_gradient != null) {
                 // multiply by momentum rate
                 for (int k = 0; k < prev_gradient.length; k++) {
                     prev_gradient[k].timesEquals(momentum);
@@ -178,17 +178,17 @@ public class MLP implements INeuralNet {
     @Override
     public double predict(Example ex) {
         // Propagate the example through the network and look at the output
-        Vector[] outputs = genLayerOutputs(ex);
+        Vector outputs = genLayerOutputs(ex)[layers.length - 1];
 
         // Check how many nodes are in the output layer to determine 
         // classification or regression.
-        if (outputs[layers.length - 1].getLength() == 1) {
+        if (outputs.getLength() == 1) {
             // The set is regression, so return the one output as the predicted real value.
-            return outputs[layers.length - 1].get(0);
+            return outputs.get(0);
         } else {
             // The set is classification, so return the class of the output node
             // that has the highest activation value.
-            return (double) outputs[layers.length - 1].getMaxIndex();
+            return (double) outputs.getMaxIndex();
         }
     }
 
@@ -202,8 +202,7 @@ public class MLP implements INeuralNet {
     public Vector[] genLayerOutputs(Example ex) {
         Vector[] outputs = new Vector[layers.length + 1];
         outputs[0] = new Vector(ex);
-        outputs[1] = layers[0].feedForward(outputs[0]);
-        for (int i = 1; i < layers.length; i++) {
+        for (int i = 0; i < layers.length; i++) {
             outputs[i].insertBiasMultiplier();
             outputs[i + 1] = layers[i].feedForward(outputs[i]);
         }
@@ -277,5 +276,12 @@ public class MLP implements INeuralNet {
         // if we made it through the loops, the weights have converged
         return true;
     }
+    
+    /**
+     * method to return the layer at the specified index
+     * @param index
+     * @return 
+     */
+    public Layer getLayer(int index) { return this.layers[index]; }
 
 }

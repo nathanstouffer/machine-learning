@@ -289,5 +289,12 @@ public class RBF implements INeuralNet {
         }
         return true;
     }
+    
+    /**
+     * method to return a layer
+     * @param index useless parameter to satisfy interface
+     * @return 
+     */
+    public Layer getLayer(int index) { return this.output_layer; }
 
 }

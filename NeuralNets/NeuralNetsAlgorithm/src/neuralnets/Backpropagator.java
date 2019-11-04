@@ -120,27 +120,29 @@ public class Backpropagator {
      */
     private void backpropagate(int layer, Vector[] outputs, Vector[] derivatives, Vector ds_deltas) {
         // can not propagate past inputs
-        if (layer >= 0) {
-            Matrix curr_layer = this.gradient[layer];
+        if (layer >= 0) { 
+            Matrix curr_layer = this.network.getLayer(layer).getWeights();
+            Matrix next_layer = this.network.getLayer(layer+1).getWeights();
             Vector deriv = derivatives[layer];
             // compute deltas
             Vector deltas = new Vector(curr_layer.getNumRows());
-            for (int i = 0; i < deltas.getLength(); i++) {
+            for (int j = 0; j < deltas.getLength(); j++) {
                 // initialize delta to 0.0
                 double delta = 0.0;
-                // sum the effects of delta in next layer
-                for (int j = 0; j < ds_deltas.getLength(); j++) {     // DOUBLE CHECK THIS LOOP
-                    Vector row = curr_layer.getRow(i);
-                    delta += ds_deltas.get(j) * row.get(i);
+                // sum the effects of delta from next layer
+                for (int k = 0; k < ds_deltas.getLength(); k++) { 
+                    Vector row = next_layer.getRow(k);
+                    delta += ds_deltas.get(k) * row.get(j);
                 }
-                delta *= deriv.get(i);
+                delta *= deriv.get(j);
+                deltas.set(j, delta);
             }
             
             // update gradient
             this.updateGradient(this.gradient[layer], deltas, outputs[layer]);
             
             // recursive call
-            this.backpropagate(layer-1, outputs, derivatives, ds_deltas);
+            this.backpropagate(layer-1, outputs, derivatives, deltas);
         }
     }
     
@@ -160,13 +162,6 @@ public class Backpropagator {
                 update.set(j, val);
             }
             // add to row
-//            System.out.println("HERE?");                                  //testing styuffffff
-//            System.out.println("ROW: " + row);
-//            System.out.println("ROW LEN: " + row.getLength());
-//            System.out.println("UPDATE: " + update);
-//            System.out.println("UPDATE LEN: " + update.getLength());
-//            System.out.println("INPUT: " + input);
-//            System.out.println("INPUT LEN: " + input.getLength());
             row.plusEquals(update);
         }
     }

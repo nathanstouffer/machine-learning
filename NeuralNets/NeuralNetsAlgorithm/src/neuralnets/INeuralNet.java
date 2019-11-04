@@ -19,6 +19,7 @@ public interface INeuralNet {
     public double predict(Example ex);
     public Vector[] genLayerOutputs(Example ex);
     public Vector[] genLayerDeriv();
+    public Layer getLayer(int index);
     public int[][] getLayerDim();
     
 }

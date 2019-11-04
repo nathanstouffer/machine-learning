@@ -47,12 +47,12 @@ public class Vector {
         // get attributes
         ArrayList<Double> attr = ex.getAttributes();
         // instantiate vals to correct size
-        this.vals = new double[attr.size() + 1];
+        this.vals = new double[attr.size()];// + 1];
         // add in bias term for dot product
-        this.vals[0] = 1.0;
+        //this.vals[0] = 1.0;
         
         // add each attribute to the vector
-        for (int i = 0; i < attr.size(); i++) { this.set(i+1, attr.get(i)); }
+        for (int i = 0; i < attr.size(); i++) { this.set(i, attr.get(i)); }//+1, attr.get(i)); }
     }
     
     /**
