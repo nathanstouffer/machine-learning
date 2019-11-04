@@ -3,7 +3,6 @@ package neuralnets;
 import datastorage.Example;
 import datastorage.Set;
 import java.util.ArrayList;
-import java.util.Random;
 import measuredistance.IDistMetric;
 import networklayer.Layer;
 import networklayer.Linear;
@@ -153,6 +152,7 @@ public class RBF implements INeuralNet {
             }
             iterations++;
         }
+        System.out.println("-> Trained RBF on iteration: " + iterations);
         // Output layer weights are done training!
     }
 
