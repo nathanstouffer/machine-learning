@@ -21,18 +21,18 @@ public class SimilarityMatrix {
     // global variables
     private int attr_index;
     private int num_options;
-    private int num_bins;
+    private int num_classes;
     
     // this is the similarity matrix
     // it is a 2-dim array accessed first by the attribute value, then the class
-    private double[][] matrix; //= new double[this.num_options][this.num_bins]; ------BRUH STOUFF
+    private double[][] matrix; //= new double[this.num_options][this.num_classes]; ------BRUH STOUFF
     
     public SimilarityMatrix(int attr_index, int num_options, int num_classes){
         this.attr_index = attr_index;
         this.num_options = num_options;
-        this.num_bins = num_classes;
+        this.num_classes = num_classes;
         
-        matrix = new double[this.num_options][this.num_bins];
+        matrix = new double[this.num_options][this.num_classes];
     }
     
     /**
@@ -60,6 +60,7 @@ public class SimilarityMatrix {
     
     // getter methods
     public int getAttrIndex(){ return this.attr_index; }
-    public int getNumBins(){ return this.num_bins; }
+    public int getNumClasses(){ return this.num_classes; }
+    public int getNumOptions() { return this.num_options; }
     
 }

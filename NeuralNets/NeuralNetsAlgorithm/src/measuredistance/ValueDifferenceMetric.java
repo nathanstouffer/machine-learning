@@ -34,7 +34,7 @@ public class ValueDifferenceMetric {
             // stores the distance between two options
             double dist = 0.0;
             // iterate through each class
-            for (int classification = 0; classification < mtr.getNumBins(); classification ++){
+            for (int classification = 0; classification < mtr.getNumClasses(); classification ++){
                 // compute difference in each class
                 double diff = mtr.getProb(option2, classification) - mtr.getProb(option1, classification);
                 
@@ -48,7 +48,7 @@ public class ValueDifferenceMetric {
                 dist += diff;
             }
             // regularize the distance by dividing by the number of classes
-            dist /= mtr.getNumBins();
+            dist /= mtr.getNumClasses();
             // return the distance
             return dist;
         }
