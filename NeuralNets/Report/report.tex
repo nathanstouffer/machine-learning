@@ -22,9 +22,15 @@ yeet
 \section{Problem Statement}
 
 \subsection*{Hypothesis}
-
+RBF is expected to preform better than MLP because it handles categorical variables where MLP does not take them into account. MLP and RBF on the raw data will out preform the clustering methods because they have more data to train on. This is especially important for the MLP with more layers because more layers require more data to adequately train.
 \section{Algorithms}
+\subsection{RBF}
 
+\subsection{MLP}
+The Multilayer Perceptron (MLP) is a type of feed forward neural network used for classification and regression. \\
+\indent At its core, the MLP is made up of an input layer, arbitrary number of hidden layers and an output layer. Each hidden layer can contain an arbitrary number of hidden nodes which is a tuneable parameter, see section 3.2.  When using a sigmoidal activation function an MLP is a universal approximator. The algorithm functions by passing in an example to the input layer and activating nodes in the hidden layers towards the output layer and finally reaching the output layer producing either a class or a regression value. The algorithm is trained using stochastic gradient decent and starts by passing data to the network one example at a time. The data is first run through the network from input layer to output layer. The output is then compared to the expected value and an error is calculated from the difference. This data is then back propagated through the network and the contributing weights are adjusted accordingly. 
+TODO: ADD MATH SHIT	
+TODO: ADD MORE
 \subsection{Distance Metrics}
 
 The nearest neighbor rule, and therefore K-NN, requires a distance metric to determine the theoretical ``distance" between two examples. A common distance metric---and the one used in this paper---is Euclidean distance. The Euclidean distance $D$ between two examples $x_1$ and $x_2$ is computed as:
@@ -44,9 +50,16 @@ This difference is considered to be the distance $v$ between the two categorical
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
-
+First, all the examples in the data set are randomly scrambled and then assigned to sets
+for ten-fold cross validation. All categorical variables are converted to integers and the
+preprocessor also generates a similarity matrix for each categorical variable that is used for
+determining distances between categorical variables. All numerical variables are normalized
+between 0 and 1. The data sets did not contain any missing variables so preprocessing did
+not to handle that.
 \subsection{Tuning}
-
+TODO: FIX THIS
+Starting with the feed forward network, the most important attribute to tune will be the number of nodes in each hidden layer. The optimum number of nodes in a hidden layer is somewhere between the number of nodes in the input and output layers (Heaton 2008). Tuning will start with the mean of the number of nodes in the input and output layers for classification problems and half the number of nodes in the input layer for regression. The momentum will also be tuned. Tuning of momentum will start at .5 as it is a common value to start tuning with (Goodfellow 2016). From the starting value we will tune downwards to find a more optimal local minimum. Lastly the learning rate will be tuned. Since the input data is normalized between 0 and 1, learning rates should be between 106 and 1 and the starting value will be .1 because it is a standard starting value (Bengio 2012). We will tune in both directions from this starting value to find an optimal resolution and speed. This will be the same for both the feed forward network and the RBF network.
+The variance of the clusters in the RBF networks is the last attribute that will be tuned. This will be tuned by modifying k in K Nearest Neighbors (K-NN) which is how variance will be calculated. The number of  neighbors k for the K-NN algorithm will be chosen initially to be the square root of the size of the data set, a common value for k (Shichao 2017). From this initial value k will be tuned both up and down to determine the optimal number of neighbors.
 \section{Results}
 
 \section{Summary}
