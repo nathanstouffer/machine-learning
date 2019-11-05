@@ -42,7 +42,7 @@ public class Client {
         // ------------------------------------------------------------
 
         // Tune learning rate
-        //tuneMLPLearningRate();
+        tuneMLPLearningRate();
         // Tune number of hidden nodes
         //tuneMLPHiddenNodes();
         // Tune momentum
@@ -54,7 +54,7 @@ public class Client {
 
         // Tune K
         // Tune learning rate
-        tuneRBF_learning_rate();
+        //tuneRBF_learning_rate();
 
         // ------------------------------------------------------------
         // --- RUN FINAL MLP TESTS WITH OPTIMUM PARAMETERS SELECTED ---
@@ -154,20 +154,19 @@ public class Client {
         String output_file = "../Output/" + "MLP-learning-rate-out.csv";
         clearFile(output_file);
         double[] learning_rates = { 0.1, 0.01, 0.001, 0.0001 };
-        double[] convergence_thresh = { 0.0001, 0.00001, 0.00001, 0.000001 };
-        double momentum = 0.5;
+        double[] convergence_thresh = { 0.00005, 0.00005, 0.00005, 0.000005 };
+        double momentum = 0.25;
         double hidden_nodes_mult = 2.0;       // multiply by the number of attributes to compute the number of hidden nodes
         double batch_size = 0.1;
-        int max_iterations = 100;
-        int num_layers = 2;                         // for tuning, assume num_hidden layers is 1
+        int max_iterations = 10000;
+        int num_layers = 1;                         // for tuning, assume num_hidden layers is 1
 
         // iterate through data files
         for (int f = 0; f < data.length; f++) {
-            f = 5;
             // get current dataset
             DataReader curr_data = data[f];
             // iterate through learning rates
-            for (int lr = 0; lr < learning_rates.length; lr++) {
+            for (int lr = 0; lr < learning_rates.length; lr++) { 
                 runMLP(output_file, datafiles[f], curr_data,
                         num_layers, hidden_nodes_mult, learning_rates[lr],
                         batch_size, momentum, convergence_thresh[lr],
@@ -274,7 +273,9 @@ public class Client {
             if(representatives[meth] == null) {meth++;} //Skip editted/condensed if regression set
 
             System.out.println("TESTING RBF ON DATASET " + data_set + " WITH " + clustering_methods[meth] + " CLUSTERING");
-
+            System.out.println("LEARNING RATE: " + learning_rate + " WITH THRESH: " +
+                    convergence_threshold);
+            
             double starttime = System.currentTimeMillis();
 
             EuclideanSquared dist = new EuclideanSquared(data.getSimMatrices());
@@ -357,7 +358,10 @@ public class Client {
 
         System.out.println("TESTING MLP ON DATASET " + data_set + " WITH " + num_hidden_layers
                 + " HIDDEN LAYERS AND (" + hidden_nodes_mult + " * NUM_ATTR) HIDDEN NODES");
-
+        System.out.println("LEARNING RATE: " + learning_rate + " WITH THRESH: " +
+                convergence_threshold);
+        System.out.println("MOMENTUM: " + momentum);
+        
         double starttime = System.currentTimeMillis();
 
         // Initialize metrics
@@ -381,7 +385,7 @@ public class Client {
             // Train and test the RBF network
             MLP mlp = new MLP(num_hidden_layers, num_hidden_nodes, learning_rate,
                                 batch_size, momentum, convergence_threshold,
-                                max_iterations);
+                                max_iterations, data.getSimMatrices());
             mlp.train(training_set);
             double[] results = mlp.test(testing_set);
 

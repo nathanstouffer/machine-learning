@@ -6,6 +6,7 @@
 package networklayer;
 
 import datastorage.Example;
+import datastorage.SimilarityMatrix;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -39,20 +40,55 @@ public class Vector {
     /**
      * constructor to build a Vector from an Example
      * 
-     * The result automatically includes a bias multiplier
-     * 
      * @param ex 
      */
-    public Vector(Example ex){
+    public Vector(Example ex, SimilarityMatrix[] sim){
         // get attributes
         ArrayList<Double> attr = ex.getAttributes();
+        int size = attr.size();
+        for (int i = 0; i < sim.length; i++) {
+            // add the number of categorical options to the size 
+            // of the array (subracting one for the attribute already
+            // in the example)
+            size += sim[i].getNumOptions() - 1;
+        }
         // instantiate vals to correct size
-        this.vals = new double[attr.size()];// + 1];
-        // add in bias term for dot product
-        //this.vals[0] = 1.0;
+        this.vals = new double[size];
         
         // add each attribute to the vector
-        for (int i = 0; i < attr.size(); i++) { this.set(i, attr.get(i)); }//+1, attr.get(i)); }
+        int s = 0;      // index of similarity matrix
+        int a = 0;      // index of attributes
+        for (int i = 0; i < this.vals.length; i++) { 
+            // check for indexing error
+            if (s < sim.length) {
+                // test if attribute is categorical
+                if (a == sim[s].getAttrIndex()) {
+                    double val = attr.get(a);
+                    a++;
+                    // iterate through options
+                    int j = 0;
+                    for (j = 0; j < sim[s].getNumOptions(); j++) {
+                        // test if value of attribute is the current option
+                        if ((int)val == j) { this.set(i + j, 1.0); }
+                        else { this.set(i + j, 0.0); }
+                    }
+                    // set i to appropriate value
+                    i += j - 1;
+                    // increment s
+                    s++;
+                }
+                // otherwise, just add the value
+                else { 
+                    this.set(i, attr.get(a)); 
+                    a++;
+                }
+            }
+            // otherwise just add the value
+            else { 
+                this.set(i, attr.get(a)); 
+                a++;
+            }
+        }
     }
     
     /**

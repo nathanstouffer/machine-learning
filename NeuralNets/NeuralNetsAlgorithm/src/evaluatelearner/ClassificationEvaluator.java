@@ -13,6 +13,7 @@ public class ClassificationEvaluator implements IEvaluator {
     double mse; //Holds the mean squared error
     
     public ClassificationEvaluator(double[] predicted, Set actual) {
+        this.printPred(predicted);
         int num_examples = actual.getNumExamples();
         
         //---------------------------------------------------------------
@@ -65,6 +66,21 @@ public class ClassificationEvaluator implements IEvaluator {
     @Override
     public double getME() {
         return -1; // Unimplemented
+    }
+    
+    private void printPred(double[] pred) {
+        String output = "PREDICTIONS:\n[";
+        int line_count = 0;
+        for (int i = 0; i < pred.length; i++) {
+            line_count++;
+            output += Double.toString(pred[i]) + ", ";
+            if (line_count == 22) { 
+                output += "\n "; 
+                line_count = 0;
+            }
+        }
+        output += pred[pred.length-1] + "]";
+        System.out.println(output);
     }
     
 }
