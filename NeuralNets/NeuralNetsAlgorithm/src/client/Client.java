@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import measuredistance.EuclideanSquared;
 import neuralnets.Clusterer;
 import neuralnets.RBF;
@@ -24,7 +25,7 @@ import neuralnets.MLP;
  */
 public class Client {
 
-    private static String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
+    private static String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv"}; //, "winequality-white.csv"};
     private static DataReader[] data = new DataReader[datafiles.length];
 
     /**
@@ -114,8 +115,8 @@ public class Client {
         double[] learning_rates = {0.1, 0.01, 0.001, 0.0001};
         int k = 25;
         double batch_size = 0.10;
-        double conv_thresh = 0.0005;
-        int[] max_iter = {1000, 10000, 10000, 10000, 10000, 10000, 10000};
+        double conv_thresh = 0.0001;
+        int[] max_iter = {5000, 100000, 100000, 100000, 100000, 5000, 5000};
         int folds = 1;
         // Cluster data
         System.out.println("CLUSTERING DATA SETS");
@@ -274,7 +275,9 @@ public class Client {
             if(representatives[meth] == null) {meth++;} //Skip editted/condensed if regression set
 
             System.out.println("TESTING RBF ON DATASET " + data_set + " WITH " + clustering_methods[meth] + " CLUSTERING");
-
+            
+            System.out.println("CLUSTER VARIS: " + Arrays.toString(variances[meth]));
+            
             double starttime = System.currentTimeMillis();
 
             EuclideanSquared dist = new EuclideanSquared(data.getSimMatrices());

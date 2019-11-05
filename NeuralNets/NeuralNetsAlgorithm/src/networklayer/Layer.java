@@ -40,6 +40,7 @@ public class Layer {
         // get derivation
         this.deriv = this.act_funct.getDeriv();
         // return output
+//        System.out.println("FEED FORWARD VAL " + output);
         return output;
     }
 

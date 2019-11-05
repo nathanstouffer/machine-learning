@@ -136,7 +136,7 @@ public class RBF implements INeuralNet {
             // Apply gradient to output layer
             output_layer.plusEquals(gradient);
 
-            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
+            if(( iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
                     System.out.println("GRADIENT");
                     System.out.println(gradient);
                     System.out.println("OUTPUT LAYER WEIGHTS");
@@ -186,7 +186,9 @@ public class RBF implements INeuralNet {
         // Propagate the example through the network and look at the output
         Vector outputs = genLayerOutputs(ex)[1];
 
-        //System.out.println("OUTPUTS: " + outputs);
+//        System.out.println("WEIGHTS " + output_layer.getWeights());
+//        System.out.println("HIDDEN ACTS " + genLayerOutputs(ex)[0]);
+//        System.out.println("OUTPUTS: " + outputs);
 
         // Check how many nodes are in the output layer to determine
         // classification or regression.
