@@ -52,9 +52,8 @@ public class Client {
         // --- TUNE RBF -----------------------------------------------
         // ------------------------------------------------------------
 
-        // Tune K
         // Tune learning rate
-        tuneRBF_learning_rate();
+//        tuneRBF_learning_rate();
 
         // ------------------------------------------------------------
         // --- RUN FINAL MLP TESTS WITH OPTIMUM PARAMETERS SELECTED ---
@@ -65,6 +64,7 @@ public class Client {
         // ------------------------------------------------------------
         // --- RUN FINAL RBF TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
+        finalRBF();
 
     }
 
@@ -104,6 +104,41 @@ public class Client {
         }
     }
 
+    
+    public static void finalRBF() throws FileNotFoundException, UnsupportedEncodingException {
+       System.out.println("~~~ ~~~ ~~~ RUNNING FINAL RBF TESTS ~~~ ~~~ ~~~");
+
+        String output = "../Output/" + "RBF_final.csv";
+        clearFile(output);
+        double[] learning_rates = {0.1, 0.5, 0.3, 0.001, 0.001, 0.01};
+        //                 kmeans, pam, kmeans, kmeans, pam,  pam   
+        int[] clust_meth = {1,      2,  1,      1,      2,     2};
+        int k = 25;
+        double batch_size = 0.10;
+        double conv_thresh = 0.0000000001;
+        int max_iter = 10000;
+        int folds = 10; 
+        // Cluster data
+        System.out.println("CLUSTERING DATA SETS");
+        Clusterer[] clusters = new Clusterer[data.length];
+        for(int i = 0; i < data.length; i++) {
+                clusters[i] = new Clusterer(new EuclideanSquared(data[i].getSimMatrices()));
+                clusters[i].cluster(data[i].getSubsets(), k);
+                // output information
+                System.out.println(String.format("num clusters for %s: %d", datafiles[i],
+                        clusters[i].getReps()[2].getNumExamples()));
+        }
+        //Iterate through data sets
+        for(int dataset = 0; dataset < data.length; dataset++) {
+                runRBF(output, datafiles[dataset], data[dataset],
+                        k,
+                        clusters[dataset].getReps(), clusters[dataset].getVars(),
+                        learning_rates[dataset], batch_size,
+                        conv_thresh, max_iter,
+                        folds);
+        }
+    }
+    
     /**
      * Runs the RBF network at a variety of given learning rates, outputting
      * the results to console.
