@@ -1,9 +1,10 @@
 Contributions Project 3
 Code:
-    Andy: 
-    Nathan: 
-    Kevin: 
-    Eric: 
+    Andy: RBF and Learner Evaluation classes
+    Nathan: Backpropagator and classes for Neural Network structure
+    Kevin: MLP
+    Eric: Clusterer class and research/writing the paper
 
 Paper:
-    
+  Each person wrote about their respective code. Everyone worked together on the Tuning, Results, Summary,
+  Abstract and Problem Statement.
