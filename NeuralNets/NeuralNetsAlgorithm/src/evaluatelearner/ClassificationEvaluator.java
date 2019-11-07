@@ -13,7 +13,7 @@ public class ClassificationEvaluator implements IEvaluator {
     double mse; //Holds the mean squared error
     
     public ClassificationEvaluator(double[] predicted, Set actual) {
-        this.printPred(predicted);
+        //this.printPred(predicted);
         int num_examples = actual.getNumExamples();
         
         //---------------------------------------------------------------

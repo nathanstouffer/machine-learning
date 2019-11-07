@@ -50,6 +50,7 @@ public class Linear implements IActFunct {
         }
         
         // return activation Vector
+//        System.out.println("ACTIVATION VECTOR " + activ);
         return activ;
     }
     

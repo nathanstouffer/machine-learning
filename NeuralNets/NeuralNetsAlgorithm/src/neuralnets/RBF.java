@@ -30,9 +30,9 @@ public class RBF implements INeuralNet {
      */
     private final double learning_rate;
     private final double batch_size;
-    
+
     /**
-     * The convergence threshold and maximum iterations determine the 
+     * The convergence threshold and maximum iterations determine the
      * termination characteristics during training. Training the output layer
      * weights will terminate when the gradient updates are all weighted less
      * than the convergence threshold (as a percentage) multiplied by the
@@ -82,7 +82,7 @@ public class RBF implements INeuralNet {
      * radial basis function. Euclidean distance will be the most common.
      */
     public RBF (Set _representatives, double[] _variances,
-                double _learning_rate, double _batch_size, 
+                double _learning_rate, double _batch_size,
                 double _convergence_threshold, int _maximum_iterations,
                 IDistMetric _dist_metric) {
         representatives = _representatives;
@@ -136,12 +136,12 @@ public class RBF implements INeuralNet {
             // Apply gradient to output layer
             output_layer.plusEquals(gradient);
 
-            /*if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
+            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
                     System.out.println("GRADIENT");
                     System.out.println(gradient);
                     System.out.println("OUTPUT LAYER WEIGHTS");
                     System.out.println(output_layer.getWeights());
-            }*/
+            }
 
             // Output progress to console and check for convergence
             if(iterations % (maximum_iterations/100) == 0) {
@@ -186,7 +186,9 @@ public class RBF implements INeuralNet {
         // Propagate the example through the network and look at the output
         Vector outputs = genLayerOutputs(ex)[1];
 
-        //System.out.println("OUTPUTS: " + outputs);
+//        System.out.println("WEIGHTS " + output_layer.getWeights());
+//        System.out.println("HIDDEN ACTS " + genLayerOutputs(ex)[0]);
+//        System.out.println("OUTPUTS: " + outputs);
 
         // Check how many nodes are in the output layer to determine
         // classification or regression.
@@ -216,7 +218,7 @@ public class RBF implements INeuralNet {
         // Initialize vector for RBF layer
         Vector RBF_outputs = new Vector(representatives.getNumExamples());
         // Calculate each RBF node's output given the example as input
-        for(int i = 0; i < representatives.getNumExamples(); i++) { 
+        for(int i = 0; i < representatives.getNumExamples(); i++) {
             // Output is the calculated using the radial basis function:
             //          o = exp(-(x1 - x2)^2 / (2*variance))
             double d = dist_metric.dist(representatives.getExample(i), ex);
@@ -289,11 +291,11 @@ public class RBF implements INeuralNet {
         }
         return true;
     }
-    
+
     /**
      * method to return a layer
      * @param index useless parameter to satisfy interface
-     * @return 
+     * @return
      */
     public Layer getLayer(int index) { return this.output_layer; }
 

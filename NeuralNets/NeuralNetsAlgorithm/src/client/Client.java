@@ -24,7 +24,7 @@ import neuralnets.MLP;
  */
 public class Client {
 
-    private static String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv", "winequality-white.csv"};
+    private static String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv"}; //, "winequality-white.csv"};
     private static DataReader[] data = new DataReader[datafiles.length];
 
     /**
@@ -54,7 +54,7 @@ public class Client {
 
         // Tune K
         // Tune learning rate
-        //tuneRBF_learning_rate();
+        tuneRBF_learning_rate();
 
         // ------------------------------------------------------------
         // --- RUN FINAL MLP TESTS WITH OPTIMUM PARAMETERS SELECTED ---
@@ -67,7 +67,7 @@ public class Client {
         // ------------------------------------------------------------
 
     }
-    
+
     /**
      * method to run the final configuration of a MLP network
      * @param datafiles
@@ -110,14 +110,14 @@ public class Client {
      */
     public static void tuneRBF_learning_rate() throws FileNotFoundException, UnsupportedEncodingException {
         System.out.println("~~~ ~~~ ~~~ TUNING RBF LEARNING RATE ~~~ ~~~ ~~~");
-        
+
         String output = "../Output/" + "RBF_tune_learning_rate.csv";
         clearFile(output);
-        double[] learning_rates = {0.1, 0.01, 0.001, 0.0001};
+        double[] learning_rates = {0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0, 2, 5};
         int k = 25;
         double batch_size = 0.10;
-        double conv_thresh = 0.0005;
-        int[] max_iter = {1000, 10000, 10000, 10000, 10000, 10000, 10000};
+        double conv_thresh = 0.0000000001;
+        int max_iter = 10000;
         int folds = 1;
         // Cluster data
         System.out.println("CLUSTERING DATA SETS");
@@ -137,34 +137,32 @@ public class Client {
                         25, // K
                         clusters[dataset].getReps(), clusters[dataset].getVars(),
                         learning_rates[lr], batch_size,
-                        conv_thresh, max_iter[dataset],
+                        conv_thresh, max_iter,
                         folds);
             }
         }
-
-
     }
 
     /**
-     * method to tune the learning rate (along with convergence threshold)
+     * method to tune the variances through our k value
      * @param datafiles
      * @param data
      */
     private static void tuneMLPLearningRate() throws FileNotFoundException, UnsupportedEncodingException {
         System.out.println("~~~ ~~~ ~~~ TUNING MLP LEARNING RATE ~~~ ~~~ ~~~");
-        
+
         String output_file = "../Output/" + "MLP-tuning-out.csv";
         clearFile(output_file);
         double[] learning_rates = { 0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0, 2.0, 5.0 };
         double convergence_thresh =  0.0000000001;
         double momentum = 0.0;
         // multiply by the number of attributes to compute the number of hidden nodes
-        double hidden_nodes_mult = 2.0;        
+        double hidden_nodes_mult = 2.0;
         double batch_size = 0.1;
         int[] max_iterations = { 500000, 500000, 500000, 500000, 500000, 500000, 500000 };
 
         // iterate through data files
-        for (int f = 1; f < data.length; f++) {//data.length; f++) {
+        for (int f = 0; f < data.length; f++) {
             // get current dataset
             DataReader curr_data = data[f];
             // iterate through layers
@@ -179,17 +177,17 @@ public class Client {
             }
         }
     }
-    
+
     /**
      * method to tune the number of hidden nodes in a network
      * @param datafiles
      * @param data
      * @throws FileNotFoundException
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     private static void tuneMLPHiddenNodes() throws FileNotFoundException, UnsupportedEncodingException {
         System.out.println("~~~ ~~~ ~~~ TUNING MLP NUMBER OF HIDDEN NODES ~~~ ~~~ ~~~");
-        
+
         String output_file = "../Output/" + "MLP-hidden-nodes-out.csv";
         clearFile(output_file);
         double[] learning_rates = { 0.2, 0.1, 0.1, 0.1, 0.1, 0.1 };
@@ -201,7 +199,7 @@ public class Client {
         int[] max_iterations = { 500000, 500000, 500000, 500000, 500000, 500000, 500000 };
 
         // iterate through data files
-        for (int f = 1; f < data.length; f++) { 
+        for (int f = 1; f < data.length; f++) {
             // get current dataset
             DataReader curr_data = data[f];
             // iterate through number of layers
@@ -222,11 +220,10 @@ public class Client {
      * @param datafiles
      * @param data
      * @throws FileNotFoundException
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     private static void tuneMLPMomentum() throws FileNotFoundException, UnsupportedEncodingException {
         System.out.println("~~~ ~~~ ~~~ TUNING MLP MOMENTUM ~~~ ~~~ ~~~");
-        
         String output_file = "../Output/" + "MLP-momentum-out.csv";
         clearFile(output_file);
         double[] learning_rate = { 0.2, 0.1, 0.1, 0.1, 0.1, 0.1 };
@@ -253,7 +250,7 @@ public class Client {
             }
         }
     }
-    
+
     /**
      * Runs the RBF network given the parameters.
      * @param output_file
@@ -283,7 +280,7 @@ public class Client {
             System.out.println("TESTING RBF ON DATASET " + data_set + " WITH " + clustering_methods[meth] + " CLUSTERING");
             System.out.println("LEARNING RATE: " + learning_rate + " WITH THRESH: " +
                     convergence_threshold);
-            
+
             double starttime = System.currentTimeMillis();
 
             EuclideanSquared dist = new EuclideanSquared(data.getSimMatrices());
@@ -369,7 +366,7 @@ public class Client {
         System.out.println("LEARNING RATE: " + learning_rate + " WITH THRESH: " +
                 convergence_threshold);
         System.out.println("MOMENTUM: " + momentum);
-        
+
         double starttime = System.currentTimeMillis();
 
         // Initialize metrics
@@ -418,7 +415,7 @@ public class Client {
         metric2 /= folds;
 
         // Create output string
-        String output = data_set + "," + num_hidden_layers + "," + hidden_nodes_mult + "," 
+        String output = data_set + "," + num_hidden_layers + "," + hidden_nodes_mult + ","
                 + learning_rate + "," + momentum + "," + metric1 + "," + metric2;
         // Write to file
         PrintWriter writer = new PrintWriter(new FileOutputStream(new File(output_file), true /* append = true */));
@@ -430,11 +427,11 @@ public class Client {
         System.out.println("\u001B[35m" + "MLP trained and tested in " + runtime + " seconds");
         System.out.println("\u001B[35m" + output);
     }
-    
+
     /**
      * method to clear file before writing
      * @param filename
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     private static void clearFile(String filename) throws FileNotFoundException {
         PrintWriter writer = new PrintWriter(filename);
