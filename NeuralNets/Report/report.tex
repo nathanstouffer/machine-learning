@@ -25,6 +25,16 @@ yeet
 RBF is expected to preform better than MLP because it handles categorical variables where MLP does not take them into account. MLP and RBF on the raw data will out preform the clustering methods because they have more data to train on. This is especially important for the MLP with more layers because more layers require more data to adequately train.
 \section{Algorithms}
 \subsection{RBF}
+	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer consist of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF).
+	
+	A popular RBF is Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
+	$$G(\vec{x}) = exp({\frac{-r^2}{2\sigma^2}})$$
+	where $r$ is the distance between $\vec x$ and some center $\vec c$, and $\sigma^2$ is a parameter treated as variance (CITE WUUUU RBF). The RBF networks discussed in this paper will use a Gaussian activation function with distance $r$ evaluated using Euclidean distance.
+	
+	A Gaussian RBF commonly utilizes clustering to find suitable centers. Edited Nearest Neighbor, Condensed Nearest Neighbor, KMeans, and Partitioning Around the Medoids clustering methods were used to determine RBF centers. Variance $\sigma^2$ of each center $\vec c$ returned by the clustering methods may be computed in a variety of methods, including calculating the variance among the $k$ nearest neighbors of each $\vec c$. 
+	
+	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3). 
+	
 
 \subsection{MLP}
 The Multilayer Perceptron (MLP) is a type of feed forward neural network used for classification and regression. \\
