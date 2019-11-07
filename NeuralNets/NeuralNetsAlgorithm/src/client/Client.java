@@ -42,11 +42,11 @@ public class Client {
         // ------------------------------------------------------------
 
         // Tune learning rate
-        tuneMLPLearningRate();
-        // Tune number of hidden nodes
-        //tuneMLPHiddenNodes();
+        //tuneMLPLearningRate();
         // Tune momentum
         //tuneMLPMomentum();
+        // Tune number of hidden nodes
+        //tuneMLPHiddenNodes();
 
         // ------------------------------------------------------------
         // --- TUNE RBF -----------------------------------------------
@@ -60,7 +60,7 @@ public class Client {
         // --- RUN FINAL MLP TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
 
-        //finalMLP(datafiles, data);
+        finalMLP();
 
         // ------------------------------------------------------------
         // --- RUN FINAL RBF TESTS WITH OPTIMUM PARAMETERS SELECTED ---
@@ -73,31 +73,33 @@ public class Client {
      * @param datafiles
      * @param data
      */
-    private static void finalMLP(String[] datafiles, DataReader[] data)
+    private static void finalMLP()
             throws FileNotFoundException, UnsupportedEncodingException {
         System.out.println(" --- TESTING FINAL MLP CONFIG ---");
 
         String output_file = "../Output/" + "MLP-final-out.csv";
         clearFile(output_file);
-        double final_learning_rate = 0.001;
-        double final_momentum = 0.0;
+        // best learning rates for each dataset
+        double[] final_learning_rates = { 0.2, 0.1, 0.1, 0.1, 0.1, 0.1 };
+        double final_momentum = 0.25;
         double final_batch_size = 0.1;
-        double final_convergence_thresh = 0.0001;
-        double final_hidden_nodes_mult = 1.0;         // multiply by the number of attributes to compute the number of hidden nodes
-        int final_max_iterations = 100000;
+        double final_convergence_thresh =  0.0000000001;
+        double final_hidden_nodes_mult = 2.0;         // multiply by the number of attributes to compute the number of hidden nodes
+        int[] final_max_iterations = { 500000, 500000, 500000, 500000, 500000, 500000, 500000 };
         int final_num_folds = 10;
 
         // iterate through data files
         for (int f = 0; f < data.length; f++) {
+        //for (int f = 0; f < data.length; f++) {
             // get current dataset
             DataReader curr_data = data[f];
             // iterate through number of layers
             for (int num_layers = 0; num_layers < 3; num_layers++) {
                 // run the network
                 runMLP(output_file, datafiles[f], curr_data,
-                        num_layers, final_hidden_nodes_mult, final_learning_rate,
+                        num_layers, final_hidden_nodes_mult, final_learning_rates[f],
                         final_batch_size, final_momentum, final_convergence_thresh,
-                        final_max_iterations, final_num_folds);
+                        final_max_iterations[f], final_num_folds);
             }
         }
     }
@@ -151,26 +153,29 @@ public class Client {
     private static void tuneMLPLearningRate() throws FileNotFoundException, UnsupportedEncodingException {
         System.out.println("~~~ ~~~ ~~~ TUNING MLP LEARNING RATE ~~~ ~~~ ~~~");
         
-        String output_file = "../Output/" + "MLP-learning-rate-out.csv";
+        String output_file = "../Output/" + "MLP-tuning-out.csv";
         clearFile(output_file);
-        double[] learning_rates = { 0.1, 0.01, 0.001, 0.0001 };
-        double[] convergence_thresh = { 0.00005, 0.00005, 0.00005, 0.000005 };
-        double momentum = 0.25;
-        double hidden_nodes_mult = 2.0;       // multiply by the number of attributes to compute the number of hidden nodes
+        double[] learning_rates = { 0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0, 2.0, 5.0 };
+        double convergence_thresh =  0.0000000001;
+        double momentum = 0.0;
+        // multiply by the number of attributes to compute the number of hidden nodes
+        double hidden_nodes_mult = 2.0;        
         double batch_size = 0.1;
-        int max_iterations = 10000;
-        int num_layers = 1;                         // for tuning, assume num_hidden layers is 1
+        int[] max_iterations = { 500000, 500000, 500000, 500000, 500000, 500000, 500000 };
 
         // iterate through data files
-        for (int f = 0; f < data.length; f++) {
+        for (int f = 1; f < data.length; f++) {//data.length; f++) {
             // get current dataset
             DataReader curr_data = data[f];
-            // iterate through learning rates
-            for (int lr = 0; lr < learning_rates.length; lr++) { 
-                runMLP(output_file, datafiles[f], curr_data,
-                        num_layers, hidden_nodes_mult, learning_rates[lr],
-                        batch_size, momentum, convergence_thresh[lr],
-                        max_iterations, 1);
+            // iterate through layers
+            for (int num_layers = 0; num_layers < 3; num_layers++) {
+                // iterate through learning rates
+                for (int lr = 0; lr < learning_rates.length; lr++) {
+                    runMLP(output_file, datafiles[f], curr_data,
+                            num_layers, hidden_nodes_mult, learning_rates[lr],
+                            batch_size, momentum, convergence_thresh,
+                            max_iterations[f], 1);
+                }
             }
         }
     }
@@ -187,26 +192,27 @@ public class Client {
         
         String output_file = "../Output/" + "MLP-hidden-nodes-out.csv";
         clearFile(output_file);
-        double learning_rates = 0.001;
-        double convergence_thresh = 0.00001;
-        double momentum = 0.5;
+        double[] learning_rates = { 0.2, 0.1, 0.1, 0.1, 0.1, 0.1 };
+        double convergence_thresh =  0.0000000001;
+        double momentum = 0.0;
         // multiply by the number of attributes to compute the number of hidden nodes
-        double[] hidden_nodes_mult = { 2.0/3.0, 1.0, 4.0/3.0, 5.0/3.0, 2.0 };
+        double[] hidden_nodes_mult = { 2.0/3.0, 1.0, 4.0/3.0, 5.0/3.0, 2.0, 7.0/3.0 };
         double batch_size = 0.1;
-        int max_iterations = 10000;
-        int num_layers = 1;                         // for tuning, assume num_hidden layers is 1
+        int[] max_iterations = { 500000, 500000, 500000, 500000, 500000, 500000, 500000 };
 
         // iterate through data files
-        for (int f = 0; f < data.length; f++) {
-            f++;
+        for (int f = 1; f < data.length; f++) { 
             // get current dataset
             DataReader curr_data = data[f];
-            // iterate through learning rates
-            for (int hn = 0; hn < hidden_nodes_mult.length; hn++) {
-                runMLP(output_file, datafiles[f], curr_data,
-                        num_layers, hidden_nodes_mult[hn], learning_rates,
-                        batch_size, momentum, convergence_thresh,
-                        max_iterations, 1);
+            // iterate through number of layers
+            for (int num_layers = 0; num_layers < 3; num_layers++) {
+                // iterate through learning rates
+                for (int hn = 0; hn < hidden_nodes_mult.length; hn++) {
+                    runMLP(output_file, datafiles[f], curr_data,
+                            num_layers, hidden_nodes_mult[hn], learning_rates[f],
+                            batch_size, momentum, convergence_thresh,
+                            max_iterations[f], 1);
+                }
             }
         }
     }
@@ -219,29 +225,31 @@ public class Client {
      * @throws UnsupportedEncodingException 
      */
     private static void tuneMLPMomentum() throws FileNotFoundException, UnsupportedEncodingException {
-        System.out.println("~~~ ~~~ ~~~ TUNING MLP LEARNING RATE ~~~ ~~~ ~~~");
+        System.out.println("~~~ ~~~ ~~~ TUNING MLP MOMENTUM ~~~ ~~~ ~~~");
         
         String output_file = "../Output/" + "MLP-momentum-out.csv";
         clearFile(output_file);
-        double learning_rate = 0.001;
-        double convergence_thresh = 0.00001;
-        double[] momentum = {0.0, 0.25, 0.5 };
-        double hidden_nodes_mult = 2.0;       // multiply by the number of attributes to compute the number of hidden nodes
+        double[] learning_rate = { 0.2, 0.1, 0.1, 0.1, 0.1, 0.1 };
+        double convergence_thresh =  0.0000000001;
+        // multiply by the number of attributes to compute the number of hidden nodes
+        double[] hidden_nodes_mult = { 2.0, 7.0/3.0, 2.0 };
+        double[] momentum = { 0.0, 0.25, 0.5 };
         double batch_size = 0.1;
-        int max_iterations = 10000;
-        int num_layers = 1;                         // for tuning, assume num_hidden layers is 1
+        int[] max_iterations = { 500000, 500000, 500000, 500000, 500000, 500000, 500000 };
 
         // iterate through data files
         for (int f = 0; f < data.length; f++) {
-            f++;
             // get current dataset
             DataReader curr_data = data[f];
-            // iterate through learning rates
-            for (int m = 0; m < momentum.length; m++) {
-                runMLP(output_file, datafiles[f], curr_data,
-                        num_layers, hidden_nodes_mult, learning_rate,
-                        batch_size, momentum[m], convergence_thresh,
-                        max_iterations, 1);
+            // iterate through layers
+            for (int num_layers = 0; num_layers < 3; num_layers++) {
+                // iterate through momentums
+                for (int m = 0; m < momentum.length; m++) {
+                    runMLP(output_file, datafiles[f], curr_data,
+                            num_layers, hidden_nodes_mult[f], learning_rate[f],
+                            batch_size, momentum[m], convergence_thresh,
+                            max_iterations[f], 1);
+                }
             }
         }
     }
