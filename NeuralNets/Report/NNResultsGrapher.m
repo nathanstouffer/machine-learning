@@ -1,16 +1,110 @@
 %% NEURAL NETWORK GRAPH GENERATOR
-% Author: Andy
-%
-%
+% Author: Andy Kirby
+% Last Edit: 11/6/2019
+% Generatess various graphs to visually evaluate the performance of our
+% network during tuning and final verification.
 
 %% Run plotting functions
-plotRBF_LR();
-plotMLP_LR();
+% Comment/uncomment the graphs that you want
+% plotRBF_LR();
+% plotMLP_LR();
+plotMLP_M();
 
+%% Read in and plot momentum tuning for MLP
+function plotMLP_M()
+    [file, path] = uigetfile('../Output/*.csv','Select MLP momentum data:');
+    data = readmatrix(strcat(path, file), 'OutputType','string');
+    
+    %%
+    colors = ["r", "g", "b", "c", "m", "k"];
+    textures = ["-", "--", ":"];
+    linewidth = 2.0;
+    
+    %%
+    % Make array types of values
+    datasets = unique(data(:,1), 'stable');       % colors
+    hidden_layers = unique(data(:,2), 'stable');  % texture
+    hidden_nodes = unique(data(:,3), 'stable');
+    learning_rates = unique(data(:,4), 'stable'); 
+    momentums = unique(data(:,5), 'stable'); % x-axis
+    
+    %% PLOT CLASSIFICATION STUFF
+    figure();
+    for d = 1:3 % Go through datasets
+        p1 = data(data(:) == datasets(d), :);
+            
+        accuracy = p1(:,6);
+        accuracy = str2double(accuracy);
+        mse = p1(:,7);
+        mse = str2double(mse);
+        
+        linetitle = strcat(datasets(d));
+        % Plot stuff
+        subplot(2,2,1);
+        plot(accuracy, strcat(textures(1), "", colors(d)), ...
+            'DisplayName', linetitle, ...
+            'LineWidth', linewidth);
+        xticks(1:length(momentums));
+        xticklabels(momentums);
+        xlabel('Momentum')
+        ylabel('Accuracy')
+        legend('FontSize', 7)
+        ylim([0 inf]);
+        hold on
+        subplot(2,2,2);
+        plot(mse, strcat(textures(1), "", colors(d)), ...
+            'DisplayName', linetitle, ...
+            'LineWidth', linewidth);
+        xticklabels(momentums);
+        xticks(1:length(mse));
+        xlabel('Momentum')
+        ylabel('MSE')
+        legend('FontSize', 7)
+        ylim([0 inf]);
+        hold on
+    end
+     %% PLOT REGRESSION STUFF
+    for d = 4:6
+        p1 = data(data(:) == datasets(d), :);
+           
+        mse = p1(:,6);
+        mse = str2double(mse);
+        me = p1(:,7);
+        me = str2double(me);
+        
+        linetitle = strcat(datasets(d));
+        % Plot stuff
+        subplot(2,2,3);
+        plot(mse, strcat(textures(1), "", colors(d)), ...
+            'DisplayName', linetitle, ...
+            'LineWidth', linewidth);
+        xticks(1:length(momentums));
+        xticklabels(momentums);
+        xlabel('Momentum')
+        ylabel('MSE')
+        legend('FontSize', 7)
+        %BOUND Y AXIS
+        %             ylim([0 1.4]);
+        ylim([0 inf]);
+        
+        hold on
+        subplot(2,2,4);
+        plot(me, strcat(textures(1), "", colors(d)), ...
+            'DisplayName', linetitle, ...
+            'LineWidth', linewidth);
+        xticklabels(momentums);
+        xticks(1:length(me));
+        xlabel('Momentum')
+        ylabel('ME')
+        legend('FontSize', 7)
+        yline(0,'HandleVisibility','off');
+        hold on
+    end
+end
 
 %% Read in and plot learning rate tuning for MLP
 function plotMLP_LR()
-    [file, path] = uigetfile('../Output/*.csv','Select learning rate data:');
+    [file, path] = uigetfile('../Output/*.csv','Select MLP learning rate data:');
     data = readmatrix(strcat(path, file), 'OutputType','string');
     
     %%
@@ -53,6 +147,7 @@ function plotMLP_LR()
             xlabel('Learning Rate')
             ylabel('Accuracy')
             legend('FontSize', 7)
+            ylim([0 inf]);
             hold on
             subplot(2,2,2);
             plot(mse, strcat(textures(h), "", colors(d)), ...
@@ -63,6 +158,7 @@ function plotMLP_LR()
             xlabel('Learning Rate')
             ylabel('MSE')
             legend('FontSize', 7)
+            ylim([0 inf]);
             hold on
         end
     end
@@ -92,7 +188,8 @@ function plotMLP_LR()
             ylabel('MSE')
             legend('FontSize', 7)
             %BOUND Y AXIS
-            ylim([0 1.4]);
+%             ylim([0 1.4]);
+            ylim([0 inf]);
             
             hold on
             subplot(2,2,4);
@@ -104,6 +201,7 @@ function plotMLP_LR()
             xlabel('Learning Rate')
             ylabel('ME')
             legend('FontSize', 7)
+            yline(0,'HandleVisibility','off');
             hold on
         end
     end
@@ -112,7 +210,7 @@ end
 
 %% Read in and plot learning rate tuning for RBF
 function plotRBF_LR()
-    [file, path] = uigetfile('../Output/*.csv','Select learning rate data:');
+    [file, path] = uigetfile('../Output/*.csv','Select RBF learning rate data:');
     data = readmatrix(strcat(path, file), 'OutputType','string');
     
     %%
@@ -149,6 +247,7 @@ function plotRBF_LR()
             xlabel('Learning Rate')
             ylabel('Accuracy')
             legend('FontSize', 7)
+            ylim([0 inf])
             hold on
             subplot(2,2,2);
             plot(mse, strcat(textures(c), "", colors(d)), ...
@@ -159,6 +258,7 @@ function plotRBF_LR()
             xlabel('Learning Rate')
             ylabel('MSE')
             legend('FontSize', 7)
+            ylim([0 inf])
             hold on
         end
     end
@@ -184,6 +284,7 @@ function plotRBF_LR()
             xlabel('Learning Rate')
             ylabel('MSE')
             legend('FontSize', 7)
+            ylim([0 inf])
             hold on
             subplot(2,2,4);
             plot(me, strcat(textures(c), "", colors(d)), ...
@@ -194,6 +295,7 @@ function plotRBF_LR()
             xlabel('Learning Rate')
             ylabel('ME')
             legend('FontSize', 7)
+            yline(0,'HandleVisibility','off');
             hold on
         end
     end
