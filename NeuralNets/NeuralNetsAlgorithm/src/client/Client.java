@@ -59,15 +59,79 @@ public class Client {
         // --- RUN FINAL MLP TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
 
-        finalMLP();
+        //finalMLP();
 
         // ------------------------------------------------------------
         // --- RUN FINAL RBF TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
-        finalRBF();
+        //finalRBF();
+        demo();
 
     }
-
+    private static void demo() 
+            throws FileNotFoundException, UnsupportedEncodingException {
+        System.out.println(" --- DEMO ---");
+        
+        String output_file = "../Output/" + "demo-out.csv";
+        clearFile(output_file);
+        double[] rbf_learning_rates = {0.1, 0.5, 0.3, 0.001, 0.001, 0.01};
+        //                 kmeans, pam, kmeans, kmeans, pam,  pam   
+        int[] clust_meth = {1,      2,  1,      1,      2,     2};
+        int k = 25;
+        double conv_thresh = 0.0000000001;
+        int rbf_max_iter = 100;
+        double mlp_final_learning_rates = .1;
+        double final_momentum = 0.5;
+        double final_batch_size = 0.1;
+        double final_hidden_nodes_mult = 2.0;         // multiply by the number of attributes to compute the number of hidden nodes
+        int mlp_final_max_iterations = 10000;
+        int folds = 1;
+        //run on car data set
+        System.out.println("MLP 1");
+        DataReader curr_data = data[1];
+        runMLP(output_file, datafiles[1], curr_data,
+                        2, final_hidden_nodes_mult, mlp_final_learning_rates,
+                        final_batch_size, final_momentum, conv_thresh,
+                        mlp_final_max_iterations, folds);
+        //run on machine data set
+        System.out.println("MLP 2");
+        curr_data = data[4];
+        runMLP(output_file, datafiles[4], curr_data,
+                        2, final_hidden_nodes_mult, mlp_final_learning_rates,
+                        final_batch_size, final_momentum, conv_thresh,
+                        mlp_final_max_iterations, folds);
+        
+        
+        // Cluster data
+        System.out.println("CLUSTERING DATA SETS");
+        Clusterer[] clusters = new Clusterer[data.length];
+        clusters[0] = new Clusterer(new EuclideanSquared(data[1].getSimMatrices()));
+        clusters[0].cluster(data[1].getSubsets(), k);
+        // output information
+        System.out.println(String.format("num clusters for %s: %d", datafiles[1],
+                clusters[0].getReps()[2].getNumExamples()));
+        clusters[1] = new Clusterer(new EuclideanSquared(data[4].getSimMatrices()));
+        clusters[1].cluster(data[4].getSubsets(), k);
+        // output information
+        System.out.println(String.format("num clusters for %s: %d", datafiles[4],
+                clusters[1].getReps()[2].getNumExamples()));
+        System.out.println("RBF 1");
+        int dataset = 1;
+        runRBF(output_file, datafiles[dataset], data[dataset],
+                        k,
+                        clusters[0].getReps(), clusters[0].getVars(),
+                        rbf_learning_rates[dataset], final_batch_size,
+                        conv_thresh, rbf_max_iter,
+                        folds);
+        System.out.println("RBF 2");
+        dataset = 4;
+        runRBF(output_file, datafiles[dataset], data[dataset],
+                        k,
+                        clusters[1].getReps(), clusters[1].getVars(),
+                        rbf_learning_rates[dataset], final_batch_size,
+                        conv_thresh, rbf_max_iter,
+                        folds);
+    }
     /**
      * method to run the final configuration of a MLP network
      * @param datafiles
