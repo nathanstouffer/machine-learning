@@ -136,23 +136,23 @@ public class RBF implements INeuralNet {
             // Apply gradient to output layer
             output_layer.plusEquals(gradient);
 
-            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
-                    System.out.println("GRADIENT");
-                    System.out.println(gradient);
-                    System.out.println("OUTPUT LAYER WEIGHTS");
-                    System.out.println(output_layer.getWeights());
-            }
+//            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
+//                    System.out.println("GRADIENT");
+//                    System.out.println(gradient);
+//                    System.out.println("OUTPUT LAYER WEIGHTS");
+//                    System.out.println(output_layer.getWeights());
+//            }
 
             // Output progress to console and check for convergence
             if(iterations % (maximum_iterations/100) == 0) {
-                System.out.print("-> Training RBF network iteration: " + iterations);
+                //System.out.print("-> Training RBF network iteration: " + iterations);
                 converged = hasConverged(gradient, true); // Verbose to print status
             } else {
                 converged = hasConverged(gradient, false);
             }
             iterations++;
         }
-        System.out.println("-> Trained RBF on iteration: " + iterations);
+        //System.out.println("-> Trained RBF on iteration: " + iterations);
         // Output layer weights are done training!
     }
 
@@ -282,8 +282,8 @@ public class RBF implements INeuralNet {
                 // Test if the value exceeds the threshol
                 if( g > w*convergence_threshold) {
                     if(verbose) {
-                        System.out.print("    ---> GRADIENT TO WEIGHT RATIO = " + (g/w) + " WHERE THRESHOLD = " + convergence_threshold);
-                        System.out.println("    ---> W = " + w + " G = " + g);
+//                        System.out.print("    ---> GRADIENT TO WEIGHT RATIO = " + (g/w) + " WHERE THRESHOLD = " + convergence_threshold);
+//                        System.out.println("    ---> W = " + w + " G = " + g);
                     }
                     return false;
                 }

@@ -116,16 +116,16 @@ public class MLP implements INeuralNet {
             // update prev_gradient
             prev_gradient = gradient;
             
-            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
-                    System.out.println("OUTPUT LAYER GRADIENT");
-                    System.out.println(gradient[gradient.length-1]);
-                    System.out.println("OUTPUT LAYER WEIGHTS");
-                    System.out.println(this.layers[layers.length-1].getWeights());
-            }
+//            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
+//                    System.out.println("OUTPUT LAYER GRADIENT");
+//                    System.out.println(gradient[gradient.length-1]);
+//                    System.out.println("OUTPUT LAYER WEIGHTS");
+//                    System.out.println(this.layers[layers.length-1].getWeights());
+//            }
             
             // Output progress to console and check for convergence
             if(iterations % (maximum_iterations/100) == 0) {
-                System.out.print("-> Training MLP network iteration: " + iterations);
+                //System.out.print("-> Training MLP network iteration: " + iterations);
                 converged = hasConverged(gradient, true); // Verbose to print status
             } else {
                 converged = hasConverged(gradient, false);
@@ -245,7 +245,7 @@ public class MLP implements INeuralNet {
                     // Test if the value exceeds the threshol
                     if( g > w*convergence_threshold) {
                         if(verbose) {
-                            System.out.println("    ---> GRADIENT TO WEIGHT RATIO = " + (g/w) + " WHERE THRESHOLD = " + convergence_threshold);
+                            //System.out.println("    ---> GRADIENT TO WEIGHT RATIO = " + (g/w) + " WHERE THRESHOLD = " + convergence_threshold);
                             //System.out.println("    ---> W = " + w + " G = " + g);
                         }
                         return false;

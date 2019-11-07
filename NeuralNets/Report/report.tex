@@ -4,6 +4,10 @@
 \usepackage{spverbatim}
 \usepackage{amsmath}
 
+\newcommand{\ith}{$i^{th}$ }
+\newcommand{\jth}{$j^{th}$ }
+\newcommand{\weight}{$w_{ji}$ }
+
 \begin{document}
 
 \title{Learning with Neural Nets}
@@ -41,6 +45,51 @@ The Multilayer Perceptron (MLP) is a type of feed forward neural network used fo
 \indent At its core, the MLP is made up of an input layer, arbitrary number of hidden layers and an output layer. Each hidden layer can contain an arbitrary number of hidden nodes which is a tuneable parameter, see section 3.2.  When using a sigmoidal activation function an MLP is a universal approximator. The algorithm functions by passing in an example to the input layer and activating nodes in the hidden layers towards the output layer and finally reaching the output layer producing either a class or a regression value. The algorithm is trained using stochastic gradient decent and starts by passing data to the network one example at a time. The data is first run through the network from input layer to output layer. The output is then compared to the expected value and an error is calculated from the difference. This data is then back propagated through the network and the contributing weights are adjusted accordingly. 
 %TODO: ADD MATH SHIT	
 %TODO: ADD MORE
+\subsection{Gradient Descent}
+Recall that the performance of a Neural Network can be evaluated with an error function.
+Most commonly, this error function is chosen to be the Mean Squared Error of each of the output nodes (applied appropriately to classification vs regression problems).
+
+A given network N performs best when it's error function Err is minimized.
+At first, this seems like a simple minimization problem: take the derivative of Err and find the weights that produces the smallest output in Err.
+While that would be a good solution for a problem with small dimensions, the dimension of Err is same as the number of weights in the network, which can be a massive number.
+This means that the classic optimization used in Calculus will be too computationally expensive to find the global minimum of Err. Thus, another technique must be used.
+The technique used while training Neural Networks is Gradient Descent (GD).
+
+Gradient Descent is an iterative process used to find a local minimum of a function. Note that only a local minimum is found, not a global minimum.
+This means the performance of the Neural Network trained with GD is not necessarily optimal.
+However, what is lost in performance is gained back in training time, as Gradient Descent's search for a local minimum is far more efficient than the standard search for a global minimum.
+
+For a function $f$, GD iteratively uses the following rule for finding a local minimum:
+$\Delta x_a = - \eta \dfrac{\partial f}{\partial x_a}$ where $x_a$ is value of the Err function in the $a^{th}$ dimension and $\eta$ is a tuned parameter (also called the learning rate). GD has found a local minimum once all the values of $x_a$ have converged.
+Applying this to Err, gives
+$$\Delta w_{ji} = - \eta \dfrac{\partial Err}{\partial w_{ji}}$$
+where $w_{ji}$ is the weight from the $i^{th}$ to the $j^{th}$ node and $\eta$ is the tuned learning rate. Using the chain rule,
+$\dfrac{\partial Err}{\partial w_{ji}} = \dfrac{\partial Err}{\partial net_{j}} * \dfrac{\partial net_j}{\partial w_{ji}}$. Note that $net_j = \sum w_{ji} * x_{ji}$ where $x_{ji}$ is the $i^{th}$ input to the $j^{th}$ node.
+
+Beginning with the simpler of the partial derivatives, $\dfrac{\partial net_j}{\partial w_{ji}} = x_{ji}$.
+The other partial derivative depends on two conditions: the activation function of a node and whether the node is in a hidden layer or an output layer. Let $A_j(net_j)$ denote the activation function of the \jth node, whether sigmoidal or linear. 
+The value of the partial derivative also depends on the layer type of node $j$. 
+
+Let $\delta _j^o$ denote $\dfrac{\partial Err}{\partial net_{j}}$ for the \jth node in the output layer and $\delta ^h_j$ denote $\dfrac{\partial Err}{\partial net_{j}}$ for the \jth hidden layer. 
+Then, 
+$$\delta _j^o = -A^\prime _j (net_j) * (d_j - o_j)$$
+where $d_j$ is the target of the \jth node. And, 
+$$\delta ^h_j = A^\prime _j (net_j) * \sum_{k \in ds(j)} \delta _k * w_{kj}$$ 
+where $ds(j)$ returns the deltas of the nodes that the \jth node directly affects (also called the downstream nodes).
+
+This sets up the Backpropagation Rule. This rule begins by computing each $\delta _j^o$ for each node in the output layer. Then update the weights that apply to the output layer according to 
+$\Delta w_{ji} = - \eta * \delta _j^o * x_{ji}$.
+Now the weights going to the output layer have been updated and the network has the necessary values of $\delta _j$ to begin a recursive call (from the last to the first hidden layer) that updates weights by the following rule
+$\Delta w_{ji} = - \eta * \delta _j^h * x_{ji}$ using $\delta _j^h$ 
+from above.
+
+A true Gradient Descent method would average $\dfrac{\partial Err}{\partial w_{ji}}$ over the entire training set. However, using Stochastic Gradient Descent (SGD). SGD selects a batch of random examples from the training set and averages $\dfrac{\partial Err}{\partial w_{ji}}$ over that batch. This method, while less stable, runs much faster than true GD.
+
+The final step in GD is to repeat batching and propagating the changes backwards until the weights in the network converge. Once the weights have converged, a local minimum has been found and the network is ready to use.
+
+Another option to with GD is to add a momentum term. For a given iteration 
+% TODO finish discussing momentum
+
 \subsection{Distance Metrics}
 
 The nearest neighbor rule, and therefore K-NN, requires a distance metric to determine the theoretical ``distance" between two examples. A common distance metric---and the one used in this paper---is Euclidean distance. The Euclidean distance $D$ between two examples $x_1$ and $x_2$ is computed as:
