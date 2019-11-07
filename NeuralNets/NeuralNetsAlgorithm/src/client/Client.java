@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import measuredistance.EuclideanSquared;
 import neuralnets.Clusterer;
 import neuralnets.RBF;
@@ -43,7 +42,7 @@ public class Client {
         // ------------------------------------------------------------
 
         // Tune learning rate
-        tuneMLPLearningRate();
+//        tuneMLPLearningRate();
         // Tune number of hidden nodes
         //tuneMLPHiddenNodes();
         // Tune momentum
@@ -55,7 +54,7 @@ public class Client {
 
         // Tune K
         // Tune learning rate
-        //tuneRBF_learning_rate();
+        tuneRBF_learning_rate();
 
         // ------------------------------------------------------------
         // --- RUN FINAL MLP TESTS WITH OPTIMUM PARAMETERS SELECTED ---
@@ -112,11 +111,11 @@ public class Client {
 
         String output = "../Output/" + "RBF_tune_learning_rate.csv";
         clearFile(output);
-        double[] learning_rates = {0.1, 0.01, 0.001, 0.0001};
+        double[] learning_rates = {0.0001, 0.001, 0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.75, 1.0, 2, 5};
         int k = 25;
         double batch_size = 0.10;
-        double conv_thresh = 0.0001;
-        int[] max_iter = {5000, 100000, 100000, 100000, 100000, 5000, 5000};
+        double conv_thresh = 0.0000000001;
+        int max_iter = 10000;
         int folds = 1;
         // Cluster data
         System.out.println("CLUSTERING DATA SETS");
@@ -136,16 +135,14 @@ public class Client {
                         25, // K
                         clusters[dataset].getReps(), clusters[dataset].getVars(),
                         learning_rates[lr], batch_size,
-                        conv_thresh, max_iter[dataset],
+                        conv_thresh, max_iter,
                         folds);
             }
         }
-
-
     }
 
     /**
-     * method to tune the learning rate (along with convergence threshold)
+     * method to tune the variances through our k value
      * @param datafiles
      * @param data
      */
@@ -154,16 +151,19 @@ public class Client {
 
         String output_file = "../Output/" + "MLP-learning-rate-out.csv";
         clearFile(output_file);
-        double[] learning_rates = { 0.1, 0.01, 0.001, 0.0001 };
-        double[] convergence_thresh = { 0.00005, 0.00005, 0.00005, 0.000005 };
-        double momentum = 0.25;
+//        double[] learning_rates = { 0.00001, 0.1, 0.01, 0.001, 0.0001 };
+        double[] learning_rates = {0.0001};
+        double[] convergence_thresh = { 0.00005, 0.00005, 0.00005, 0.000005, 0.000005, 0.000005, 0.000005};
+        double momentum = 0.0; //0.25;
         double hidden_nodes_mult = 2.0;       // multiply by the number of attributes to compute the number of hidden nodes
         double batch_size = 0.1;
-        int max_iterations = 10000;
-        int num_layers = 1;                         // for tuning, assume num_hidden layers is 1
+        int max_iterations = 500000;
+//        int num_layers = 1;                         // for tuning, assume num_hidden layers is 1
+        int num_layers = 1;     
 
         // iterate through data files
-        for (int f = 0; f < data.length; f++) {
+//        for (int f = 0; f < data.length; f++) {
+            for (int f = 0; f < 1; f++) {
             // get current dataset
             DataReader curr_data = data[f];
             // iterate through learning rates

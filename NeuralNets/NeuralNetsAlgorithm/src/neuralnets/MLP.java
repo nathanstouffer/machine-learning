@@ -116,12 +116,12 @@ public class MLP implements INeuralNet {
             // update prev_gradient
             prev_gradient = gradient;
             
-            /*if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
+            if( (iterations == 0) || (iterations == maximum_iterations / 2) || (iterations == maximum_iterations - 2) ) {
                     System.out.println("OUTPUT LAYER GRADIENT");
                     System.out.println(gradient[gradient.length-1]);
                     System.out.println("OUTPUT LAYER WEIGHTS");
                     System.out.println(this.layers[layers.length-1].getWeights());
-            }*/
+            }
             
             // Output progress to console and check for convergence
             if(iterations % (maximum_iterations/100) == 0) {
