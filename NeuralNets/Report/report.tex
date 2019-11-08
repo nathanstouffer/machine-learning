@@ -121,7 +121,6 @@ Each algorithm's performance is evaluated using accuracy, mean square error (MSE
 For classification, the MSE metric implemented measures the squared error between the predicted and actual class distributions. This is similar in concept to a Brier score or even a Chi-squared metric but different in computation.  Accuracy indicates how well the algorithm is classifying examples on an individual basis.
 
 ME and MSE will be used to evaluate the regression problems. MSE takes the distance between real and predicted values and squares it. ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over- or under-estimate the values in the test set.
-\subsection{Data Sets}
 \subsection{Tuning}
 %TODO: FIX THIS
 \subsubsection{RBF}
@@ -140,8 +139,7 @@ Learning rates greater than 0.01 are not included for the regression data sets. 
 
 
 \subsubsection{MLP}
-Tuning began with learning rate, $\eta$, which is the step size at each iteration in a neural network. The following graphs plot the MSE and accuracy for classification and MSE and ME for regression against a spread of learning rates ranging from $1*10^{-4}$ to $5$ with a starting value of $.1$. The graphs also show performance on different numbers of hidden layers ranging from 0 to 2. \\
-
+Tuning began with learning rate, $\eta$, which is the step size at each iteration in a neural network. The following graphs plot the MSE and accuracy for classification and MSE and ME for regression. The graphs also show performance on different numbers of hidden layers ranging from 0 to 2. Number of hidden nodes was left at 2 times the number of attributes for the tuning of all hyper parameters.
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_CLASS.JPG}
@@ -150,10 +148,14 @@ Tuning began with learning rate, $\eta$, which is the step size at each iteratio
 	\centering
 	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
 \end{figure}
+Beginning with the classification data sets, the initial value was set to .1. The other values tested were: .0001, .001, .01, .2, .3, .4, .5, 1, 2 and 5. Learning rates below .1 preformed the worst and rates above .1 did not see any added performance except on abalone where .2 drastically reduced the MSE which is because it was run with the same number of iterations as the other two data sets but has many more points so it requires a higher learning rate for the same performance.
+On the regression data sets, the initial value and other tested values were the same as classification. Regression preformed best with a learning rate of .1 on all of the data sets. Smaller learning rates preformed significantly worse and larger learning rates have inconsistent results. \\
+Another parameter must also be tuned: momentum, the rate at which a network will reach convergence. The value starts with .5 and is tuned down to .25 and 0 from there. \\
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_MOMENTUM.JPG}
 \end{figure}
+On the abalone data set, MSE increased significantly when momentum was increased from .25 to .5 but accuracy had no change. The other two regression (forest fires, machine) data sets had negligible differences in the MSE and accuracy when varying momentum. The regression data sets preformed best with a momentum of .25. A larger momentum significantly increased ME on the wine quality data set while a smaller momentum significantly increased the MSE on the forest fires data set. Aside from these results, all other results were negligible from varying momentum.
 \section{Results}
 \begin{figure}[h]
 	\centering
