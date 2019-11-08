@@ -105,18 +105,19 @@ public class Client {
         // Cluster data
         System.out.println("CLUSTERING DATA SETS");
         Clusterer[] clusters = new Clusterer[data.length];
-        clusters[0] = new Clusterer(new EuclideanSquared(data[1].getSimMatrices()));
-        clusters[0].cluster(data[1].getSubsets(), k);
-        // output information
-        System.out.println(String.format("num clusters for %s: %d", datafiles[1],
-                clusters[0].getReps()[2].getNumExamples()));
-        clusters[1] = new Clusterer(new EuclideanSquared(data[4].getSimMatrices()));
-        clusters[1].cluster(data[4].getSubsets(), k);
+        clusters[0] = new Clusterer(new EuclideanSquared(data[4].getSimMatrices()));
+        clusters[0].cluster(data[4].getSubsets(), k);
         // output information
         System.out.println(String.format("num clusters for %s: %d", datafiles[4],
+                clusters[0].getReps()[2].getNumExamples()));
+        clusters[1] = new Clusterer(new EuclideanSquared(data[1].getSimMatrices()));
+        clusters[1].cluster(data[1].getSubsets(), k);
+        // output information
+        System.out.println(String.format("num clusters for %s: %d", datafiles[1],
                 clusters[1].getReps()[2].getNumExamples()));
+        
         System.out.println("RBF 1");
-        int dataset = 1;
+        int dataset = 4;
         runRBF(output_file, datafiles[dataset], data[dataset],
                         k,
                         clusters[0].getReps(), clusters[0].getVars(),
@@ -124,13 +125,16 @@ public class Client {
                         conv_thresh, rbf_max_iter,
                         folds);
         System.out.println("RBF 2");
-        dataset = 4;
+        dataset = 1;
         runRBF(output_file, datafiles[dataset], data[dataset],
                         k,
                         clusters[1].getReps(), clusters[1].getVars(),
                         rbf_learning_rates[dataset], final_batch_size,
                         conv_thresh, rbf_max_iter,
                         folds);
+        
+        
+        
     }
     /**
      * method to run the final configuration of a MLP network
