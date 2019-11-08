@@ -25,20 +25,22 @@ yeet
 
 \section{Problem Statement}
 
+
+
 \subsection*{Hypothesis}
 RBF is expected to preform better than MLP because it handles categorical variables where MLP does not take them into account. MLP and RBF on the raw data will out preform the clustering methods because they have more data to train on. This is especially important for the MLP with more layers because more layers require more data to adequately train.
 \section{Algorithms}
 \subsection{RBF Networks}
-	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer consist of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
+	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
 	
-	A popular RBF is Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
+	A popular RBF is the Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
 	$$G(\vec{x}) = exp({\frac{-r^2}{2\sigma^2}})$$
 	where $r$ is the distance between $\vec x$ and some center $\vec c$, and $\sigma^2$ is a parameter treated as variance (CITE WUUUU RBF). The RBF networks discussed in this paper will use a Gaussian activation function with distance $r$ evaluated using Euclidean distance.
 	%TODO CITE THIS ANDY ^^^^^
 	
 	A Gaussian RBF commonly utilizes clustering to find suitable centers. Edited Nearest Neighbor, Condensed Nearest Neighbor, KMeans, and Partitioning Around the Medoids clustering methods were used to determine RBF centers. Variance $\sigma^2$ of each center $\vec c$ returned by the clustering methods may be computed in a variety of methods, including calculating the variance among the $k$ nearest neighbors of each $\vec c$. 
 	
-	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3). 
+	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $\sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3). 
 	
 
 \subsection{MLP Networks}
@@ -91,22 +93,6 @@ The final step in GD is to repeat batching and propagating the changes backwards
 Another option to with GD is to add a momentum term. For a given iteration 
 % TODO finish discussing momentum
 
-\subsection{Distance Metrics}
-
-A common and effective distance metric is Euclidean distance. Euclidean distance $D$ between two examples $x_1$ and $x_2$ is computed as:
-$$D = \sqrt{\sum_{i=0}^{d}(a_1^i - a_2^i)^2}$$
-where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th attribute of $x_1$, and $a_2^i$ is the $i$-th attribute of $x_2$.
-
-A Euclidean distance metric assumes that all data in a dataset is continuous. Value Difference Metric (VDM) may be used to when attributes are categorical. Note that the VDM relies on classification to compute a distance, so continuous regression values must be discretized by some method. %TODO maybe take out last sentence here
-
-To compute a distance between two categorical values $x_1, x_2$ within one attribute $a$ using the VDM, find the following for each value:
-$$ v_n = \sum _{i = 1}^{k} | \dfrac{N_{1i}}{N_1} - \dfrac{N_{2i}}{N_2} | $$
-where $N_{1i}, N_{2i}$ are the number of examples in $a$ that are of the $i^{th}$ class and have values $x_1, x_2$ respectively, and $N_1, N_2$ are the number of examples in $a$ that are of the $i^{th}$ class.
-
-Then compute the difference
-$v_2 - v_1$.
-This difference is considered to be the distance $v$ between the two categorical values $x_1$ and $x_2$ \citep{vdm}. The squared difference can now be included in the summation when computing Euclidean distance. %TODO FIX CITATION HERE
-
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
@@ -115,6 +101,7 @@ for ten-fold cross validation. All categorical variables are converted to intege
 preprocessor also generates a similarity matrix for each categorical variable that is used for
 determining distances between categorical variables. All numerical variables are normalized
 between 0 and 1. The data sets did not contain any missing variables.
+
 \subsection{Evaluation Metrics}
 Each algorithm's performance is evaluated using accuracy, mean square error (MSE), and mean error (ME).
 
