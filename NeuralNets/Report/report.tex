@@ -27,17 +27,17 @@ Multilayer Perceptron and Radial Basis Function neural networks are supervised t
 
 \section{Problem Statement}
 
-As a class of learners, Neural Networks gained traction early on in the Machine Learning community. 
+As a class of learners, Neural Networks gained traction early on in the Machine Learning community.
 However, research funding was cut short when no one discovered a method for Neural Networks to move out of the realm of linear problems. This all changed when the Backpropagation Rule was published.
 Since then, Neural Networks have become a pillar of the community and are used in a wide variety of applications from image recognition to sales forecasting.
 In general, these networks follow a similar format. They are composed of nodes that take in inputs with a corresponding weight and send an output to another node in the network \citep{svozil1997ffnn}.
 
-Of particular interest are Multilayer Perceptron (MLP) and Radial Basis Function (RBF) networks, common networks used for universal function approximation. 
+Of particular interest are Multilayer Perceptron (MLP) and Radial Basis Function (RBF) networks, common networks used for universal function approximation.
 Each network type will be constructed and tuned to handle the datasets, and their respective performances will be evaluated.
 
-Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult. 
-The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 subjects of outdoor photographs with sets of attributes. 
-The rest of the datasets are regression. 
+Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult.
+The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 subjects of outdoor photographs with sets of attributes.
+The rest of the datasets are regression.
 The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
 The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
 
@@ -138,16 +138,19 @@ To evaluate regression datasets, mean error (ME) and MSE will be used. MSE takes
 
 \subsection{Tuning}
 \subsubsection{RBF}
-Tuning an RBF network relies on finding the optimal centers, variances, and learning rate for a given problem. The centers were varied using the variety of clustering methods mentioned in Section 2.1. Variances were found by the variance of the $k$ nearest neighbors of each center. The value of $k$ was varied during tests but ultimately set to 25. Tuning found that varying $k$ in this region did not significantly affect the performance of the RBF network as opposed to the clustering method or learning rate. Learning rate was tuned over a range of $1*10^{-4}$ to $5$. The results of the tuning process are shown in Figure 1. 
+Tuning a RBF network relies on finding the optimal centers, variances, and learning rate for a given problem. The centers were varied using the variety of clustering methods mentioned in Section 2.1. Variances were found by the variance of the $k$ nearest neighbors of each center. The value of $k$ was varied during tests but ultimately set to 25. Tuning found that varying $k$ in this region did not significantly affect the performance of the RBF network as opposed to the clustering method or learning rate. Learning rate was tuned over a range of $1*10^{-4}$ to $5$. The results of the tuning process are shown in Figure 1.
 
+Learning rates greater than 0.01 are not included for the regression data sets. Saturation in output layer weights caused complications in the linear output's calculations. Thus, it was determined that low learning rates were necessary to prevent network saturation in these cases.
+
+As seen, the best clustering method used to create the RBF network varied slightly for each dataset. The classification networks performed well over a wide range of learning rates, dropping in performance only as the learning rate became too slow. The regression networks appeared to favor a midband of learning rates. The network did not learn enough at rates lower than $1*10^{-4}$ and experienced weight saturation at rates higher than $0.01$.
 \begin{figure}[h]
 	\centering
-	\includegraphics[height=4in]{FINAL_FIGS/RBF_LR_TUNING_CLASS.JPG}
+	\includegraphics[height=3.25in]{FINAL_FIGS/RBF_LR_TUNING_CLASS.JPG}
 	\caption{Results of tuning the RBF network on the classification sets. Color indicates dataset and line style indicates the clustering method used to find the centers.}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\includegraphics[height=4in]{FINAL_FIGS/RBF_LR_TUNING_REG.JPG}
+	\includegraphics[height=3.25in]{FINAL_FIGS/RBF_LR_TUNING_REG.JPG}
 	\caption{Results of tuning the RBF network on the regression sets. Color indicates dataset and line style indicates the clustering method used to find the centers.}
 \end{figure}
 
@@ -159,13 +162,13 @@ As seen, the best clustering method used to create the RBF network varied slight
 Tuning began with learning rate, $\eta$, which is the step size at each iteration in GD. The following graphs plot the MSE and accuracy for classification as well as MSE and ME for regression. The graphs also show performance on different numbers of hidden layers ranging from 0 to 2. Number of hidden nodes was left at 2 times the number of attributes for the tuning of all other parameters.
 \begin{figure}[h]
 	\centering
-	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_CLASS.JPG}
-	\caption{Output when Tuning Learning Rate on the MLP network for Classification. Line color indicates dataset and line style indicates the number of hidden nodes}
+	\includegraphics[height=3.4in]{FINAL_FIGS/MLP_LR_TUNING_CLASS.JPG}
+	\caption{Output when Tuning Learning Rate on the MLP network for Classification. Line color indicates dataset and line style indicates the number of hidden nodes.}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
-	\caption{Output when Tuning Learning Rate on the MLP network for Regression. Line color indicates dataset and line style indicates the number of hidden nodes}
+	\includegraphics[height=3in]{FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
+	\caption{Output when Tuning Learning Rate on the MLP network for Regression. Line color indicates dataset and line style indicates the number of hidden nodes.}
 \end{figure}
 Beginning with the classification data sets, the initial value was set to 0.1. The other values tested were: 0.0001, 0.001, 0.01, 0.2, 0.3, 0.4, 0.5, 1, 2 and 5. Learning rates below 0.1 performed the worst and rates above 0.1 did not see any added performance except on abalone where 0.2 drastically reduced the MSE. This is most likely because the abalone dataset contains significantly more points than the other data set, so, using the same number of iterations, it's learning rate must be larger to find the local minimum.
 On the regression data sets, the same learning rates were tested. Regression performed best with a learning rate of 0.1 on all of the data sets. Smaller learning rates performed significantly worse and larger learning rates have inconsistent results. \\
@@ -173,9 +176,9 @@ Another parameter must also be tuned: the momentum multiplier $\alpha$. This val
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_MOMENTUM.JPG}
-	\caption{Output when Tuning Momentum on the MLP network. Line color indicates dataset}
+	\caption{Output when Tuning Momentum on the MLP network. Line color indicates dataset.}
 \end{figure}
-On the abalone data set, MSE increased significantly when momentum was increased from .25 to .5 but accuracy had no change. The other two regression data sets (forest fires and machine) had negligible differences in the MSE and accuracy when varying momentum. The regression data sets performed best with a momentum of .25. A larger momentum significantly increased ME on the wine quality data set while a smaller momentum significantly increased the MSE on the forest fires data set.
+On the abalone data set, MSE increased significantly when momentum was increased from 0.25 to 0.5 but accuracy had no change. The other two regression data sets (forest fires and machine) had negligible differences in the MSE and accuracy when varying momentum. The regression data sets performed best with a momentum of 0.25. A larger momentum significantly increased ME on the wine quality data set while a smaller momentum significantly increased the MSE on the forest fires data set.
 \section{Results}
 
 	The optimal tuning parameters corresponding to each network and dataset were then run for final comparisons. In general, the MLP and RBF networks performed similarly. The MLP network was slightly better at classification whereas the RBF network was slightly better at regression. The overall performance of these networks reinforces their effectiveness as universal approximators.
@@ -183,21 +186,23 @@ On the abalone data set, MSE increased significantly when momentum was increased
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_FINAL.JPG}
-	\caption{Final Results of the MLP Network. Color indicates number of layers}
+	\caption{Final Results of the MLP Network. Color indicates number of layers.}
 \end{figure}
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/RBF_FINAL.JPG}
-	\caption{Final Results of the RBF Network. Color indicates number of layers}
+	\caption{Final Results of the RBF Network. Color indicates number of layers.}
 \end{figure}
 
 	The hypotheses that the RBF network would outperform the MLP network and that the 2 layer MLP network would struggle were not reinforced by the results. Possibly, both networks were equally suited to handle these datasets. Normally, as dimensionality increases, MLP networks require more nodes in their hidden layers and more data to successfully perform gradient descent during training. Gaussian RBF networks are even more susceptible to this trend. They are localized, meaning that the network performs best when the input is near the predefined centers. As the number of dimensions increase, the number of RBF centers needed increase exponentially \citep{rbf}. Because the datasets used had relatively few features, the ``curse of dimensionality`` had yet to take effect on the MLP and RBF networks.
-	
+
 	The RBF network had similar results to a K-Nearest Neighbor model, likely because each Gaussian RBF takes distance from a center into account. Additionally, each center was computed from a K-Nearest Neighbor variant.
 
 \section{Summary}
 
-	Feedforward neural networks are powerful models with great versatility. Both MLP and RBF networks are capable of universal approximation. RBF networks train quickly and require less hidden nodes when when representative clusters may be extracted from the underlying distribution easily, whereas MLP networks excel without the need for clustering. These networks are not without flaws. Both networks require sufficient data and computational cost to train. Each network has several vital parameters that must be tuned, increasing the cost of training such models. Finding optimal parameters may be a challenge as dimensionality increases and the network grows in complexity. 
+	Feed forward neural networks are powerful models with great versatility. Both MLP and RBF networks are capable of universal approximation. RBF networks train quickly and require less hidden nodes when when representative clusters may be extracted from the underlying distribution easily, whereas MLP networks excel without the need for clustering. These networks are not without flaws. Both networks require sufficient data and computational cost to train. Each network has several vital parameters that must be tuned, increasing the cost of training such models. Finding optimal parameters may be a challenge as dimensionality increases and the network grows in complexity.
+
+\newpage
 
 \bibliography{biblio}
 
