@@ -37,27 +37,26 @@ The RBF networks are capable of handling categorical variables (in their distanc
 
 \section{Algorithms}
 
+\subsection{MLP Networks}
+The Multilayer Perceptron (MLP) is a feed forward neural network that can be used for both classification and regression.
+At its core, the MLP is composed of an input layer, hidden layers, and an output layer. Each hidden layer contains a tunable number of hidden nodes and each node has an activation function. If the nodes in the hidden layer use a non-linear activation function, a MLP becomes a universal function approximator \citep{svozil1997ffnn}.
+A classification network uses an output layer with one sigmoidal neuron corresponding to each class and the prediction is chosen to be the class with the largest output value. A regression network has a single neuron in the output layer that uses a linear sum as its activation function. The output of this node is always chosen as the prediction.
+A MLP is trained via Stochastic Gradient Descent (see section 2.3).
+
+To use a trained MLP, begin with the input layer where each feature of a query example corresponds to a node. Note that categorical data is encoded into a set of $k$ binary features where $k$ is the number of attribute levels.
+The nodes are then fed forward to the first hidden layer, where the chosen activation function is applied to a linear sum. Feeding forward continues until the output layer is reached. Here, the appropriate value is selected and returned as the prediction.
+
 \subsection{RBF Networks}
-	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
+	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs makes the network a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
 
 	A popular RBF is the Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
 	$$G(\vec{x}) = exp({\frac{-r^2}{2\sigma^2}})$$
 	where $r$ is the distance between $\vec x$ and some center $\vec c$, and $\sigma^2$ is a parameter treated as variance (CITE WUUUU RBF). The RBF networks discussed in this paper will use a Gaussian activation function with distance $r$ evaluated using Euclidean distance.
 	%TODO CITE THIS ANDY ^^^^^
 
-	A Gaussian RBF commonly utilizes clustering to find suitable centers. Edited Nearest Neighbor, Condensed Nearest Neighbor, KMeans, and Partitioning Around the Medoids clustering methods were used to determine RBF centers. Variance $\sigma^2$ of each center $\vec c$ returned by the clustering methods may be computed in a variety of methods, including calculating the variance among the $k$ nearest neighbors of each $\vec c$.
+	A Gaussian RBF commonly utilizes clustering to find suitable centers. Edited Nearest Neighbor or Condensed Nearest Neighbor, KMeans, and Partitioning Around the Medoids clustering methods were used to determine RBF centers. Variance $\sigma^2$ of each center $\vec c$ returned by the clustering methods may be computed in a variety of methods, including calculating the variance among the $k$ nearest neighbors of each $\vec c$.
 
-	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $\sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3).
-
-
-\subsection{MLP Networks}
-The Multilayer Perceptron (MLP) is a feed forward neural network used for classification and regression.
-
-At its core, the MLP is composed of an input layer, hidden layers, and an output layer. Each hidden layer contains a tunable number of hidden nodes and an activation function. If the nodes in the hidden layer use a non-linear activation function, MLP becomes a universal function approximator \citep{svozil1997ffnn}.
-A MLP is trained using Stochastic Gradient Descent.
-
-To use a trained MLP, begin by using a query example as the input layer where the value of each feature corresponds to a node. Note that categorical data is split into $k$ nodes where $k$ is the number of levels of the attribute with a binary indicator if the example has the level. 
-The nodes are then fed forward to the first hidden layer, where a linear sum and then the chosen activation function is applied. Feeding forward continues until the output layer is reached. Here, the appropriate value is selected and returned as the prediction.
+	A RBF network's output layer follows the same format as a MLP. Once a RBF network has been constructed with the appropriate $\vec c$, $\sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3).
 
 \subsection{Gradient Descent}
 Recall that the performance of a Neural Network can be evaluated with an error function.
@@ -152,10 +151,12 @@ Tuning began with learning rate, $\eta$, which is the step size at each iteratio
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_CLASS.JPG}
+	\caption{Output when Tuning Learning Rate on the MLP network for Classification. Line color indicates dataset and line style indicates the number of hidden nodes}
 \end{figure}
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
+	\caption{Output when Tuning Learning Rate on the MLP network for Regression. Line color indicates dataset and line style indicates the number of hidden nodes}
 \end{figure}
 Beginning with the classification data sets, the initial value was set to .1. The other values tested were: .0001, .001, .01, .2, .3, .4, .5, 1, 2 and 5. Learning rates below .1 performed the worst and rates above .1 did not see any added performance except on abalone where .2 drastically reduced the MSE which is because it was run with the same number of iterations as the other two data sets but has many more points so it requires a higher learning rate for the same performance.
 On the regression data sets, the initial value and other tested values were the same as classification. Regression performed best with a learning rate of .1 on all of the data sets. Smaller learning rates performed significantly worse and larger learning rates have inconsistent results. \\
@@ -163,6 +164,7 @@ Another parameter must also be tuned: momentum, the rate at which a network will
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_MOMENTUM.JPG}
+	\caption{Output when Tuning Momentum on the MLP network. Line color indicates dataset}
 \end{figure}
 On the abalone data set, MSE increased significantly when momentum was increased from .25 to .5 but accuracy had no change. The other two regression (forest fires, machine) data sets had negligible differences in the MSE and accuracy when varying momentum. The regression data sets performed best with a momentum of .25. A larger momentum significantly increased ME on the wine quality data set while a smaller momentum significantly increased the MSE on the forest fires data set. Aside from these results, all other results were negligible from varying momentum.
 \section{Results}
@@ -172,10 +174,12 @@ On the abalone data set, MSE increased significantly when momentum was increased
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_FINAL.JPG}
+	\caption{Final Results of the MLP Network. Color indicates number of layers}
 \end{figure}
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/RBF_FINAL.JPG}
+	\caption{Final Results of the RBF Network. Color indicates number of layers}
 \end{figure}
 
 	The hypotheses that the RBF network would outperform the MLP network and that the 2 layer MLP network would struggle were not reinforced by the results. Normally, as dimensionality increases, MLP networks require more nodes in their hidden layers and more data to successfully perform gradient descent during training. RBF networks are more immune to this trend, as the number of hidden nodes needed only increases as the number of centers required to represent the distribution of the underlying data increases---an issue separated from dimensionality. This is likely because the datasets used had relatively few features, so the ``curse of dimensionality`` had yet to take effect on the MLP networks.
