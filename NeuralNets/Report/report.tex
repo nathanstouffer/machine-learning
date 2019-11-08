@@ -26,20 +26,32 @@ yeet
 \section{Problem Statement}
 
 
-Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult. The car dataset contains attributes corresponding to 4 possible conditions of a car.The segmentation dataset details 6 subjects of outdoor photographs with sets of attributes. The rest of the datasets are regression. The forest fires set predicts the area burned by a forest fire. Most of the values are 0 with a few large values which complicate the regression. The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. Wine quality predicts the score of a wine. Several of the attributes are correlated, making regression more difficult.
+As a class of learners, Neural Networks gained traction early on in the Machine Learning community. 
+However, research funding was cut short when no one discovered a method for Neural Networks to move out of the realm of linear problems. This all changed when the Backpropagation Rule was published.
+Since then, Neural Networks have become a pillar of the community and are used in a wide variety of applications from image recognition to sales forecasting.
+In general, these networks follow a similar format. They are composed of nodes that take in inputs with a corresponding weight and send an output to another node in the network \citep{svozil1997ffnn}.
 
-Of particular interest are Multilayer Perceptron and Radial Basis Function networks which are common multilayer feedforward networks used for universal approximation. Each network type will be constructed and tuned to handle the datasets, and their respective performances will be evaluated.
+Of particular interest are Multilayer Perceptron (MLP) and Radial Basis Function (RBF) networks, common networks used for universal function approximation. 
+Each network type will be constructed and tuned to handle the datasets, and their respective performances will be evaluated.
 
+Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult. 
+The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 subjects of outdoor photographs with sets of attributes. 
+The rest of the datasets are regression. 
+The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
+The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
 
-\subsection*{Hypothesis}
+\subsection{Hypothesis}
 
-The RBF networks are capable of handling categorical variables (in their distance metrics) and therefore are expected to outperform the MLP network. Additionally, RBF networks are initially biased closer to a well performing model due to the functionality of the RBFs---a significant advantage over MLPs when the datasets are small. The MLP network is expected to perform well, with 2 layer MLPs generally underperforming comparatively, especially in the small datasets.
+The RBF network is better suited to handle categorical data than a MLP network. This is because a RBF uses a distance metric to take into account how similar a query example is to the center of a cluster.
+Therefore, the RBF is expected to outperform the MLP network on categorical datasets.
+However, the MLP network is expected to perform well, with 2 layer MLPs generally underperforming comparatively, especially in the small datasets. This is because a 2 layer network requires more training examples than a network with fewer layers to produce good results.
 
 \section{Algorithms}
 
 \subsection{MLP Networks}
-The Multilayer Perceptron (MLP) is a feed forward neural network that can be used for both classification and regression.
+The Multilayer Perceptron is a feed forward neural network that can be used for both classification and regression.
 At its core, the MLP is composed of an input layer, hidden layers, and an output layer. Each hidden layer contains a tunable number of hidden nodes and each node has an activation function. If the nodes in the hidden layer use a non-linear activation function, a MLP becomes a universal function approximator \citep{svozil1997ffnn}.
+
 A classification network uses an output layer with one sigmoidal neuron corresponding to each class and the prediction is chosen to be the class with the largest output value. A regression network has a single neuron in the output layer that uses a linear sum as its activation function. The output of this node is always chosen as the prediction.
 A MLP is trained via Stochastic Gradient Descent (see section 2.3).
 
