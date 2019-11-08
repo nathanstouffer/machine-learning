@@ -24,7 +24,11 @@ yeet
 \end{abstract}
 
 \section{Problem Statement}
-Starting with the classification data sets: the abalone data set class is the  age of an abalone and a number of corresponding attributes. It is difficult because it has 28 classes. The car data set class is the condition of a car based on corresponding attributes. This data set only has 4 classes and is a much easier data set than abalone. The segmentation data set class is the subject of an outdoor photograph. It is a smaller data set but only has 6 classes. The rest of the data sets are regression. The forest fires is predicting the area burned by a forest fire. Most of the values are 0 with a few huge values which makes it very difficult regression task. The machine data set is predicting the performance of a CPU, it is an easy data set because it has an even distribution across the regression values. Wine quality is predicting the score of a wine. It is a harder data set because several of the attributes are correlated.
+
+
+Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult. The car dataset contains attributes corresponding to 4 possible conditions of a car.The segmentation dataset details 6 subjects of outdoor photographs with sets of attributes. The rest of the datasets are regression. The forest fires set predicts the area burned by a forest fire. Most of the values are 0 with a few large values which complicate the regression. The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. Wine quality predicts the score of a wine. Several of the attributes are correlated, making regression more difficult.
+
+Of particular interest are Multilayer Perceptron and Radial Basis Function networks which are common multilayer feedforward networks used for universal approximation. Each network type will be constructed and tuned to handle the datasets, and their respective performances will be evaluated.
 
 
 \subsection*{Hypothesis}
@@ -124,9 +128,8 @@ For classification, the MSE metric implemented measures the squared error betwee
 ME and MSE will be used to evaluate the regression problems. MSE takes the distance between real and predicted values and squares it. ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over- or under-estimate the values in the test set. MSE and ME for regression sets are represented by a Z-Score (standard deviations from the mean) for comparability.
 \subsection{Data Sets}
 \subsection{Tuning}
-%TODO: FIX THIS
 \subsubsection{RBF}
-Tuning an RBF network relies on finding the optimal centers, variances, and learning rate for a given problem. The centers were varied using the variety of clustering methods mentioned in section 2.1. Variances were found by the variance of the $k$ nearest neighbors of each center. The value of $k$ was varied during tests but ultimately set to 25. Tuning found that varying $k$ in this region did not significantly affect the performance of the RBF network as opposed to the clustering method or learning rate. Learning rate was tuned over a range of $1*10^{-4}$ to $5$. The results of the tuning process are shown in Figure 1. %TODO ADD THE FIGURE REFERENCE HERE
+Tuning an RBF network relies on finding the optimal centers, variances, and learning rate for a given problem. The centers were varied using the variety of clustering methods mentioned in section 2.1. Variances were found by the variance of the $k$ nearest neighbors of each center. The value of $k$ was varied during tests but ultimately set to 25. Tuning found that varying $k$ in this region did not significantly affect the performance of the RBF network as opposed to the clustering method or learning rate. Learning rate was tuned over a range of $1*10^{-4}$ to $5$. The results of the tuning process are shown in Figure 1. 
 
 \begin{figure}[h]
 	\centering
@@ -154,17 +157,17 @@ Tuning began with learning rate, $\eta$, which is the step size at each iteratio
 	\centering
 	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
 \end{figure}
-Beginning with the classification data sets, the initial value was set to .1. The other values tested were: .0001, .001, .01, .2, .3, .4, .5, 1, 2 and 5. Learning rates below .1 preformed the worst and rates above .1 did not see any added performance except on abalone where .2 drastically reduced the MSE which is because it was run with the same number of iterations as the other two data sets but has many more points so it requires a higher learning rate for the same performance.
-On the regression data sets, the initial value and other tested values were the same as classification. Regression preformed best with a learning rate of .1 on all of the data sets. Smaller learning rates preformed significantly worse and larger learning rates have inconsistent results. \\
+Beginning with the classification data sets, the initial value was set to .1. The other values tested were: .0001, .001, .01, .2, .3, .4, .5, 1, 2 and 5. Learning rates below .1 performed the worst and rates above .1 did not see any added performance except on abalone where .2 drastically reduced the MSE which is because it was run with the same number of iterations as the other two data sets but has many more points so it requires a higher learning rate for the same performance.
+On the regression data sets, the initial value and other tested values were the same as classification. Regression performed best with a learning rate of .1 on all of the data sets. Smaller learning rates performed significantly worse and larger learning rates have inconsistent results. \\
 Another parameter must also be tuned: momentum, the rate at which a network will reach convergence. The value starts with .5 and is tuned down to .25 and 0 from there. \\
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_MOMENTUM.JPG}
 \end{figure}
-On the abalone data set, MSE increased significantly when momentum was increased from .25 to .5 but accuracy had no change. The other two regression (forest fires, machine) data sets had negligible differences in the MSE and accuracy when varying momentum. The regression data sets preformed best with a momentum of .25. A larger momentum significantly increased ME on the wine quality data set while a smaller momentum significantly increased the MSE on the forest fires data set. Aside from these results, all other results were negligible from varying momentum.
+On the abalone data set, MSE increased significantly when momentum was increased from .25 to .5 but accuracy had no change. The other two regression (forest fires, machine) data sets had negligible differences in the MSE and accuracy when varying momentum. The regression data sets performed best with a momentum of .25. A larger momentum significantly increased ME on the wine quality data set while a smaller momentum significantly increased the MSE on the forest fires data set. Aside from these results, all other results were negligible from varying momentum.
 \section{Results}
 
-	The optimal tuning parameters corresponding to each network and dataset were then run for final comparisons. In general, the MLP and RBF networks performed very similarly. The MLP network was slightly better at classification whereas the RBF network was slightly better at regression. The overall performance of these networks reinforces their effectiveness as universal approximators.
+	The optimal tuning parameters corresponding to each network and dataset were then run for final comparisons. In general, the MLP and RBF networks performed similarly. The MLP network was slightly better at classification whereas the RBF network was slightly better at regression. The overall performance of these networks reinforces their effectiveness as universal approximators.
 
 \begin{figure}[h]
 	\centering
@@ -174,6 +177,8 @@ On the abalone data set, MSE increased significantly when momentum was increased
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/RBF_FINAL.JPG}
 \end{figure}
+
+	The hypotheses that the RBF network would outperform the MLP network and that the 2 layer MLP network would struggle were not reinforced by the results. Normally, as dimensionality increases, MLP networks require more nodes in their hidden layers and more data to successfully perform gradient descent during training. RBF networks are more immune to this trend, as the number of hidden nodes needed only increases as the number of centers required to represent the distribution of the underlying data increases---an issue separated from dimensionality. This is likely because the datasets used had relatively few features, so the ``curse of dimensionality`` had yet to take effect on the MLP networks.
 
 %TODO NOTE: DEEP NETWORKS ARE MORE LIKELY TO START FURTHER AWAY FROM THE MINIMA IT HOPES TO FIND
 %TODO NOTE: DEEP NETWORKS REQUIRE MORE DATA TO TRAIN, ARE MORE SUSCEPTIBLE TO NOISE, CONVEX SURFACE ISNT AS SMOOTH
