@@ -48,8 +48,8 @@ The Multilayer Perceptron (MLP) is a feed forward neural network used for classi
 
 At its core, the MLP is composed of an input layer, hidden layers, and an output layer. Each hidden layer contains a tunable number of hidden nodes and an activation function. If the nodes in the hidden layer use a non-linear activation function, MLP becomes a universal function approximator \citep{svozil1997ffnn}.
 An MLP is trained using Stochastic Gradient Descent.
-To use a trained MLP, begin by using a query example as the input layer. 
-% TODO discuss the prediction process
+To use a trained MLP, begin by using a query example as the input layer where the value of each feature corresponds to a node. Note that categorical data is split into $k$ nodes where $k$ is the number of levels of the attribute with a binary indicator if the example has the level. 
+The nodes are then fed forward to the first hidden layer, where a linear sum and then the chosen activation function is applied. Feeding forward continues until the output layer is reached. Here, the appropriate value is selected and returned as the prediction.
 
 \subsection{Gradient Descent}
 Recall that the performance of a Neural Network can be evaluated with an error function.
