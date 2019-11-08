@@ -84,8 +84,8 @@ Now the weights going to the output layer have been updated and the network has 
 $\Delta w_{ji} = - \eta * \delta _j^h * x_{ji}$ using $\delta _j^h$ 
 from above.
 
-A true Gradient Descent method would average $\dfrac{\partial Err}{\partial w_{ji}}$ over the entire training set. However, using Stochastic Gradient Descent (SGD). SGD selects a batch of random examples from the training set and averages $\dfrac{\partial Err}{\partial w_{ji}}$ over that batch. This method, while less stable, runs much faster than true GD.
-%TODO FIX SGD BEGINNING -<3ANDY
+A true Gradient Descent method would average $\dfrac{\partial Err}{\partial w_{ji}}$ over the entire training set. Stochastic Gradient Descent (SGD) selects a batch of random examples from the training set and averages $\dfrac{\partial Err}{\partial w_{ji}}$ over that batch. This method, while less stable, runs much faster than true GD.
+
 The final step in GD is to repeat batching and propagating the changes backwards until the weights in the network converge. Once the weights have converged, a local minimum has been found and the network is ready to use.
 
 An option when computing GD is to include a momentum term. For a given iteration in GD, denoted 
@@ -151,6 +151,6 @@ Starting with the feed forward network, the most important attribute to tune wil
 \section{Summary}
 
 
-\bibliography{report}
+\bibliography{biblio}
 
 \end{document}
