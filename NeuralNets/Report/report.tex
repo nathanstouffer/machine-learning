@@ -60,7 +60,7 @@ To use a trained MLP, begin with the input layer where each feature of a query e
 The nodes are then fed forward to the first hidden layer, where the chosen activation function is applied to a linear sum. Feeding forward continues until the output layer is reached. Here, the appropriate value is selected and returned as the prediction.
 
 \subsection{RBF Networks}
-	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs makes the network a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ \citep{rbf}.
+	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs makes the network a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ \citep{rbf}.
 
 	A popular RBF is the Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
 	$$G(\vec{x}) = exp({\frac{-r^2}{2\sigma^2}})$$
@@ -77,7 +77,7 @@ Most commonly, this error function is chosen to be the Mean Squared Error of eac
 A given network N performs best when it's error function Err is minimized.
 At first, this seems like a simple minimization problem: take the derivative of Err and find the weights that produces the smallest output in Err.
 While that would be a good solution for a problem with small dimensions, the dimension of Err is same as the number of weights in the network, which can be a massive number.
-This means that the classic optimization method used in Calculus will be too computationally expensive to find the global minimum of Err. Thus, another technique must be used.
+This means that naive optimization methods will be too computationally expensive to find the global minimum of Err. Thus, another technique must be used.
 The technique used for training Neural Networks is Gradient Descent (GD).
 
 Gradient Descent is an iterative process used to find a local minimum of a function. Note that only a local minimum is found, not a global minimum.
