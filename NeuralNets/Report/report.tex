@@ -77,8 +77,13 @@ A true Gradient Descent method would average $\dfrac{\partial Err}{\partial w_{j
 
 The final step in GD is to repeat batching and propagating the changes backwards until the weights in the network converge. Once the weights have converged, a local minimum has been found and the network is ready to use.
 
-Another option to with GD is to add a momentum term. For a given iteration 
-% TODO finish discussing momentum
+An option when computing GD is to include a momentum term. For a given iteration in GD, denoted 
+$\dfrac{\partial Err}{\partial w_{ji}}^t$, momentum is $\alpha * \dfrac{\partial Err}{\partial w_{ji}}^{t-1}$ where $\alpha \in \mathbb{R}$, more specifically, $\alpha \in [0,0.5]$.
+% TODO insert citation about momentum bounds
+This gives the new update rule: 
+$$\Delta w_{ji} = - \eta \dfrac{\partial Err}{\partial w_{ji}} + \alpha * \dfrac{\partial Err}{\partial w_{ji}}^{t-1}$$
+A momentum term is added for two reasons. First, momentum typically causes a network to train faster because each $\Delta w_{ji}$ is a larger value.
+The second reason is an attempt to find the best local minimum in a region. The idea is that by automatically moving in the direction of the previous iteration, GD may pass by a local minimum that does not offer as good of performance as another local minimum. However, as always, there is no free lunch and GD may well pass by a local minimum that performs better than the one it ends up finding.
 
 \subsection{Distance Metrics}
 
