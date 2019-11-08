@@ -25,27 +25,32 @@ yeet
 
 \section{Problem Statement}
 
+	
+
 \subsection*{Hypothesis}
 RBF is expected to preform better than MLP because it handles categorical variables where MLP does not take them into account. MLP and RBF on the raw data will out preform the clustering methods because they have more data to train on. This is especially important for the MLP with more layers because more layers require more data to adequately train.
 \section{Algorithms}
 \subsection{RBF Networks}
-	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer consist of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
+	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
 	
-	A popular RBF is Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
+	A popular RBF is the Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
 	$$G(\vec{x}) = exp({\frac{-r^2}{2\sigma^2}})$$
 	where $r$ is the distance between $\vec x$ and some center $\vec c$, and $\sigma^2$ is a parameter treated as variance (CITE WUUUU RBF). The RBF networks discussed in this paper will use a Gaussian activation function with distance $r$ evaluated using Euclidean distance.
 	%TODO CITE THIS ANDY ^^^^^
 	
 	A Gaussian RBF commonly utilizes clustering to find suitable centers. Edited Nearest Neighbor, Condensed Nearest Neighbor, KMeans, and Partitioning Around the Medoids clustering methods were used to determine RBF centers. Variance $\sigma^2$ of each center $\vec c$ returned by the clustering methods may be computed in a variety of methods, including calculating the variance among the $k$ nearest neighbors of each $\vec c$. 
 	
-	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3). 
+	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $\sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3). 
 	
 
 \subsection{MLP Networks}
-The Multilayer Perceptron (MLP) is a type of feed forward neural network used for classification and regression. \\
-\indent At its core, the MLP is made up of an input layer, arbitrary number of hidden layers and an output layer. Each hidden layer can contain an arbitrary number of hidden nodes which is a tuneable parameter, see section 3.2.  When using a sigmoidal activation function an MLP is a universal approximator. The algorithm functions by passing in an example to the input layer and activating nodes in the hidden layers towards the output layer and finally reaching the output layer producing either a class or a regression value. The algorithm is trained using stochastic gradient decent and starts by passing data to the network one example at a time. The data is first run through the network from input layer to output layer. The output is then compared to the expected value and an error is calculated from the difference. This data is then back propagated through the network and the contributing weights are adjusted accordingly. 
-%TODO: ADD MATH SHIT	
-%TODO: ADD MORE
+The Multilayer Perceptron (MLP) is a feed forward neural network used for classification and regression.
+
+At its core, the MLP is composed of an input layer, hidden layers, and an output layer. Each hidden layer contains a tunable number of hidden nodes and an activation function. If the nodes in the hidden layer use a non-linear activation function, MLP becomes a universal function approximator \citep{svozil1997ffnn}.
+An MLP is trained using Stochastic Gradient Descent.
+To use a trained MLP, begin by using a query example as the input layer. 
+% TODO discuss the prediction process
+
 \subsection{Gradient Descent}
 Recall that the performance of a Neural Network can be evaluated with an error function.
 Most commonly, this error function is chosen to be the Mean Squared Error of each of the output nodes (applied appropriately to classification vs regression problems).
@@ -82,30 +87,21 @@ This sets up the Backpropagation Rule. This rule begins by computing each $\delt
 $\Delta w_{ji} = - \eta * \delta _j^o * x_{ji}$.
 Now the weights going to the output layer have been updated and the network has the necessary values of $\delta _j$ to begin a recursive call (from the last to the first hidden layer) that updates weights by the following rule
 $\Delta w_{ji} = - \eta * \delta _j^h * x_{ji}$ using $\delta _j^h$ 
-from above.
+from above \citep{rumelhart1988learning}.
 
-A true Gradient Descent method would average $\dfrac{\partial Err}{\partial w_{ji}}$ over the entire training set. However, using Stochastic Gradient Descent (SGD). SGD selects a batch of random examples from the training set and averages $\dfrac{\partial Err}{\partial w_{ji}}$ over that batch. This method, while less stable, runs much faster than true GD.
-%TODO FIX SGD BEGINNING -<3ANDY
+A true Gradient Descent method would average $\dfrac{\partial Err}{\partial w_{ji}}$ over the entire training set. Stochastic Gradient Descent (SGD) selects a batch of random examples from the training set and averages $\dfrac{\partial Err}{\partial w_{ji}}$ over that batch. This method, while less stable, runs much faster than true GD \citep{svozil1997ffnn}.
+
 The final step in GD is to repeat batching and propagating the changes backwards until the weights in the network converge. Once the weights have converged, a local minimum has been found and the network is ready to use.
 
-Another option to with GD is to add a momentum term. For a given iteration 
-% TODO finish discussing momentum
+An option when computing GD is to include a momentum term. For a given iteration in GD, denoted 
+$\dfrac{\partial Err}{\partial w_{ji}}^t$, momentum is $\alpha * \dfrac{\partial Err}{\partial w_{ji}}^{t-1}$ where $\alpha \in \mathbb{R}$, more specifically, $\alpha \in [0,0.5]$.
+This gives the new update rule: 
+$$\Delta w_{ji} = - \eta \dfrac{\partial Err}{\partial w_{ji}} + \alpha * \dfrac{\partial Err}{\partial w_{ji}}^{t-1}$$
 
-\subsection{Distance Metrics}
-
-A common and effective distance metric is Euclidean distance. Euclidean distance $D$ between two examples $x_1$ and $x_2$ is computed as:
-$$D = \sqrt{\sum_{i=0}^{d}(a_1^i - a_2^i)^2}$$
-where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th attribute of $x_1$, and $a_2^i$ is the $i$-th attribute of $x_2$.
-
-A Euclidean distance metric assumes that all data in a dataset is continuous. Value Difference Metric (VDM) may be used to when attributes are categorical. Note that the VDM relies on classification to compute a distance, so continuous regression values must be discretized by some method. %TODO maybe take out last sentence here
-
-To compute a distance between two categorical values $x_1, x_2$ within one attribute $a$ using the VDM, find the following for each value:
-$$ v_n = \sum _{i = 1}^{k} | \dfrac{N_{1i}}{N_1} - \dfrac{N_{2i}}{N_2} | $$
-where $N_{1i}, N_{2i}$ are the number of examples in $a$ that are of the $i^{th}$ class and have values $x_1, x_2$ respectively, and $N_1, N_2$ are the number of examples in $a$ that are of the $i^{th}$ class.
-
-Then compute the difference
-$v_2 - v_1$.
-This difference is considered to be the distance $v$ between the two categorical values $x_1$ and $x_2$ \citep{vdm}. The squared difference can now be included in the summation when computing Euclidean distance. %TODO FIX CITATION HERE
+A momentum term is added for two reasons. First, momentum typically causes a network to train faster because each $\Delta w_{ji}$ is a larger value \citep{rumelhart1988learning}.
+The second reason is an attempt to find the best local minimum in a region. 
+By moving in the direction of the previous iteration, GD may pass by a local minimum that does not offer as good of performance as another local minimum. 
+However, as always, there is no free lunch and GD may well pass by a local minimum that performs better than the one it ends up finding.
 
 \section{Experiment}
 
@@ -115,27 +111,33 @@ for ten-fold cross validation. All categorical variables are converted to intege
 preprocessor also generates a similarity matrix for each categorical variable that is used for
 determining distances between categorical variables. All numerical variables are normalized
 between 0 and 1. The data sets did not contain any missing variables.
+
 \subsection{Evaluation Metrics}
 Each algorithm's performance is evaluated using accuracy, mean square error (MSE), and mean error (ME).
 
-For classification, the MSE metric implemented measures the squared error between the predicted and actual class distributions. This is similar in concept to a Brier score or even a Chi-squared metric but different in computation.  Accuracy indicates how well the algorithm is classifying examples on an individual basis.
+For classification, the MSE metric implemented measures the squared error between the predicted and actual class distributions. This is similar in concept to a Brier score but different in computation.  Accuracy indicates how well the algorithm is classifying examples on an individual basis.
 
-ME and MSE will be used to evaluate the regression problems. MSE takes the distance between real and predicted values and squares it. ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over- or under-estimate the values in the test set.
+ME and MSE will be used to evaluate the regression problems. MSE takes the distance between real and predicted values and squares it. ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over- or under-estimate the values in the test set. MSE and ME for regression sets are represented by a Z-Score (standard deviations from the mean) for comparability.
+\subsection{Data Sets}
 \subsection{Tuning}
 %TODO: FIX THIS
 \subsubsection{RBF}
-Tuning an RBF network relies on finding the optimal centers, variances, and learning rate for a given problem. The centers were varied using the variety of clustering methods mentioned in section 2.1. Variances were found by the variance of the $k$ nearest neighbors of each center. The value of $k$ was varied during tests but ultimately set to 25. Tuning found that varying $k$ in this region did not significantly affect the performance of the RBF network as opposed to the clustering method or learning rate. Learning rate was tuned over a range of $1*10^{-4}$ to $5$. The results of the tuning process are shown in YEEEEET. %TODO ADD THE FIGURE REFERENCE HERE
+Tuning an RBF network relies on finding the optimal centers, variances, and learning rate for a given problem. The centers were varied using the variety of clustering methods mentioned in section 2.1. Variances were found by the variance of the $k$ nearest neighbors of each center. The value of $k$ was varied during tests but ultimately set to 25. Tuning found that varying $k$ in this region did not significantly affect the performance of the RBF network as opposed to the clustering method or learning rate. Learning rate was tuned over a range of $1*10^{-4}$ to $5$. The results of the tuning process are shown in Figure 1. %TODO ADD THE FIGURE REFERENCE HERE
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=4in]{FINAL_FIGS/RBF_LR_TUNING_CLASS.JPG}
+	\caption{Results of tuning the RBF network on the classification sets. Color indicates dataset and line style indicates the clustering method used to find the centers.}
 \end{figure}
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=4in]{FINAL_FIGS/RBF_LR_TUNING_REG.JPG}
+	\caption{Results of tuning the RBF network on the regression sets. Color indicates dataset and line style indicates the clustering method used to find the centers.}
 \end{figure}
 
 Learning rates greater than 0.01 are not included for the regression data sets. Saturation in output layer weights caused complications in the linear output's calculations. Thus, it was determined that low learning rates were necessary to prevent network saturation in these cases.
+
+As seen, the best clustering method used to create the RBF network varied slightly for each dataset. The classification networks performed well over a wide range of learning rates, dropping in performance only as the learning rate became too slow. The regression networks appeared to favor a midband of learning rates. The network did not learn enough at rates lower than $1*10^{-4}$ and experienced weight saturation at rates higher than $0.01$.
 
 
 \subsubsection{MLP}
@@ -168,6 +170,6 @@ On the abalone data set, MSE increased significantly when momentum was increased
 \section{Summary}
 
 
-\bibliography{report}
+\bibliography{biblio}
 
 \end{document}
