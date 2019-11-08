@@ -1,8 +1,10 @@
-\documentclass[twoside,11pt]{article}
+%\documentclass[twoside,11pt]{article}
+\documentclass[twoside,10pt]{article}
 
 \usepackage{jmlr2e}
 \usepackage{spverbatim}
 \usepackage{amsmath}
+\usepackage{caption}
 
 \newcommand{\ith}{$i^{th}$ }
 \newcommand{\jth}{$j^{th}$ }
@@ -20,7 +22,7 @@
 \maketitle
 
 \begin{abstract}
-yeet
+Multilayer Perceptron and Radial Basis Function neural networks are supervised training methods used for classification or regression. While applicable in many machine learning problems, these networks require extensive tuning of parameters to perform optimally. When tuned appropriately, the both networks are capable of equally high performance. As dimensionality of the data increases, the multilayer perceptron network is suspected to outperform the Gaussian radial basis function network in practice as the data becomes harder to cluster into a smaller number of centers.
 \end{abstract}
 
 \section{Problem Statement}
@@ -43,7 +45,7 @@ The machine dataset predicts the performance of a CPU which has an even distribu
 
 The RBF network is better suited to handle categorical data than a MLP network. This is because a RBF uses a distance metric to take into account how similar a query example is to the center of a cluster.
 Therefore, the RBF is expected to outperform the MLP network on categorical datasets.
-However, the MLP network is expected to perform well, with 2 layer MLPs generally underperforming comparatively, especially in the small datasets. This is because a 2 layer network requires more training examples than a network with fewer layers to produce good results.
+However, the MLP network is expected to perform well, with 2 layer MLPs generally underperforming comparatively, especially in the small datasets. This is because a 2 layer network requires more training examples than a network with fewer layers to produce equivalent results.
 
 \section{Algorithms}
 
@@ -63,7 +65,6 @@ The nodes are then fed forward to the first hidden layer, where the chosen activ
 	A popular RBF is the Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
 	$$G(\vec{x}) = exp({\frac{-r^2}{2\sigma^2}})$$
 	where $r$ is the distance between $\vec x$ and some center $\vec c$, and $\sigma^2$ is a parameter treated as variance \citep{rbfintro}. The RBF networks discussed in this paper will use a Gaussian activation function with distance $r$ evaluated using Euclidean distance.
-	%TODO CITE THIS ANDY ^^^^^
 
 	A Gaussian RBF commonly utilizes clustering to find suitable centers. Edited Nearest Neighbor or Condensed Nearest Neighbor, KMeans, and Partitioning Around the Medoids clustering methods were used to determine RBF centers. Variance $\sigma^2$ of each center $\vec c$ returned by the clustering methods may be computed in a variety of methods, including calculating the variance among the $k$ nearest neighbors of each $\vec c$.
 
@@ -193,13 +194,13 @@ On the abalone data set, MSE increased significantly when momentum was increased
 	\caption{Final Results of the RBF Network. Color indicates number of layers}
 \end{figure}
 
-	The hypotheses that the RBF network would outperform the MLP network and that the 2 layer MLP network would struggle were not reinforced by the results. Normally, as dimensionality increases, MLP networks require more nodes in their hidden layers and more data to successfully perform gradient descent during training. RBF networks are more immune to this trend, as the number of hidden nodes needed only increases as the number of centers required to represent the distribution of the underlying data increases---an issue separated from dimensionality. This is likely because the datasets used had relatively few features, so the ``curse of dimensionality`` had yet to take effect on the MLP networks.
+	The hypotheses that the RBF network would outperform the MLP network and that the 2 layer MLP network would struggle were not reinforced by the results. Both networks were possibly equally suited to handle these datasets. Normally, as dimensionality increases, MLP networks require more nodes in their hidden layers and more data to successfully perform gradient descent during training. Gaussian RBF networks are even more susceptible to this trend. They are localized, meaning that the network performs best when the input is near the predefined centers. As the number of dimensions increase, the number of RBF centers needed increase exponentially \citep{rbf}. Because the datasets used had relatively few features, the ``curse of dimensionality`` had yet to take effect on the MLP and RBF networks.
 	
 	The RBF network had similar results to a K-Nearest Neighbor model, likely because each Gaussian RBF takes distance from a center into account. Additionally, each center was computed from a K-Nearest Neighbor variant.
 
 \section{Summary}
 
-	Feedforward neural networks are capable of STASHFB. Both MLP and RBF networks are capable of universal approximation. RBF networks train quickly and require less hidden nodes when when representative clusters may be extracted from the underlying distribution easily, whereas MLP networks excel without the need for clustering. These networks are not without flaws, however. Both networks require sufficient data and computational cost to train. Each network has several vital parameters that must be tuned, increasing the cost of training such models. Finding optimal parameters may be a challenge as dimensionality increases and the network grows in complexity. 
+	Feedforward neural networks are powerful models with great versatility. Both MLP and RBF networks are capable of universal approximation. RBF networks train quickly and require less hidden nodes when when representative clusters may be extracted from the underlying distribution easily, whereas MLP networks excel without the need for clustering. These networks are not without flaws. Both networks require sufficient data and computational cost to train. Each network has several vital parameters that must be tuned, increasing the cost of training such models. Finding optimal parameters may be a challenge as dimensionality increases and the network grows in complexity. 
 
 \bibliography{biblio}
 
