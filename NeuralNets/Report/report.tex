@@ -121,7 +121,7 @@ The variance of the clusters in the RBF networks is the last attribute that will
 Tuning began with learning rate($\eta$), which is the step size at each iteration in a neural network. The following graphs plot the MSE and accuracy for classification and MSE and ME for regression against a spread of learning rates ranging from $1*10^{-4}$ to $5$ with a starting value of $.1$. The graphs also show performance on different numbers of hidden layers ranging from 0 to 2. \\
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=6in]{LearningRateTuning2MultiplierGraphs.JPG}
+	\includegraphics[width=6in]{../FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
 \end{figure}
 
 Starting with the feed forward network, the most important attribute to tune will be the number of nodes in each hidden layer. The optimum number of nodes in a hidden layer is somewhere between the number of nodes in the input and output layers (Heaton 2008). Tuning will start with the mean of the number of nodes in the input and output layers for classification problems and half the number of nodes in the input layer for regression. The momentum will also be tuned. Tuning of momentum will start at .5 as it is a common value to start tuning with (Goodfellow 2016). From the starting value we will tune downwards to find a more optimal local minimum. Lastly the learning rate will be tuned. Since the input data is normalized between 0 and 1, learning rates should be between 106 and 1 and the starting value will be .1 because it is a standard starting value (Bengio 2012). We will tune in both directions from this starting value to find an optimal resolution and speed. This will be the same for both the feed forward network and the RBF network.
