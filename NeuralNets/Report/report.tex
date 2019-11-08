@@ -25,20 +25,22 @@ yeet
 
 \section{Problem Statement}
 
+
+
 \subsection*{Hypothesis}
 RBF is expected to preform better than MLP because it handles categorical variables where MLP does not take them into account. MLP and RBF on the raw data will out preform the clustering methods because they have more data to train on. This is especially important for the MLP with more layers because more layers require more data to adequately train.
 \section{Algorithms}
 \subsection{RBF Networks}
-	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer consist of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
+	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
 	
-	A popular RBF is Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
+	A popular RBF is the Gaussian, whose activation function $G$ given a data point $\vec{x}$ follows the form
 	$$G(\vec{x}) = exp({\frac{-r^2}{2\sigma^2}})$$
 	where $r$ is the distance between $\vec x$ and some center $\vec c$, and $\sigma^2$ is a parameter treated as variance (CITE WUUUU RBF). The RBF networks discussed in this paper will use a Gaussian activation function with distance $r$ evaluated using Euclidean distance.
 	%TODO CITE THIS ANDY ^^^^^
 	
 	A Gaussian RBF commonly utilizes clustering to find suitable centers. Edited Nearest Neighbor, Condensed Nearest Neighbor, KMeans, and Partitioning Around the Medoids clustering methods were used to determine RBF centers. Variance $\sigma^2$ of each center $\vec c$ returned by the clustering methods may be computed in a variety of methods, including calculating the variance among the $k$ nearest neighbors of each $\vec c$. 
 	
-	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3). 
+	A classification network uses an output layer with a sigmoidal neuron corresponding to each class. Predictions are evaluated as output class node with the largest value. A regression network uses a linear neuron on the output layer.for each real value to predict. Once a RBF network has been constructed using appropriate $\vec c$, $\sigma^2$, and output nodes, the output layer is trained using gradient descent (see section 2.3). 
 	
 
 \subsection{MLP Networks}
@@ -96,22 +98,6 @@ $$\Delta w_{ji} = - \eta \dfrac{\partial Err}{\partial w_{ji}} + \alpha * \dfrac
 A momentum term is added for two reasons. First, momentum typically causes a network to train faster because each $\Delta w_{ji}$ is a larger value.
 The second reason is an attempt to find the best local minimum in a region. The idea is that by automatically moving in the direction of the previous iteration, GD may pass by a local minimum that does not offer as good of performance as another local minimum. However, as always, there is no free lunch and GD may well pass by a local minimum that performs better than the one it ends up finding.
 
-\subsection{Distance Metrics}
-
-A common and effective distance metric is Euclidean distance. Euclidean distance $D$ between two examples $x_1$ and $x_2$ is computed as:
-$$D = \sqrt{\sum_{i=0}^{d}(a_1^i - a_2^i)^2}$$
-where $d$ is the number of attributes the examples have, $a_1^i$ is the $i$-th attribute of $x_1$, and $a_2^i$ is the $i$-th attribute of $x_2$.
-
-A Euclidean distance metric assumes that all data in a dataset is continuous. Value Difference Metric (VDM) may be used to when attributes are categorical. Note that the VDM relies on classification to compute a distance, so continuous regression values must be discretized by some method. %TODO maybe take out last sentence here
-
-To compute a distance between two categorical values $x_1, x_2$ within one attribute $a$ using the VDM, find the following for each value:
-$$ v_n = \sum _{i = 1}^{k} | \dfrac{N_{1i}}{N_1} - \dfrac{N_{2i}}{N_2} | $$
-where $N_{1i}, N_{2i}$ are the number of examples in $a$ that are of the $i^{th}$ class and have values $x_1, x_2$ respectively, and $N_1, N_2$ are the number of examples in $a$ that are of the $i^{th}$ class.
-
-Then compute the difference
-$v_2 - v_1$.
-This difference is considered to be the distance $v$ between the two categorical values $x_1$ and $x_2$ \citep{vdm}. The squared difference can now be included in the summation when computing Euclidean distance. %TODO FIX CITATION HERE
-
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
@@ -120,6 +106,7 @@ for ten-fold cross validation. All categorical variables are converted to intege
 preprocessor also generates a similarity matrix for each categorical variable that is used for
 determining distances between categorical variables. All numerical variables are normalized
 between 0 and 1. The data sets did not contain any missing variables.
+
 \subsection{Evaluation Metrics}
 Each algorithm's performance is evaluated using accuracy, mean square error (MSE), and mean error (ME).
 
@@ -132,22 +119,42 @@ ME and MSE will be used to evaluate the regression problems. MSE takes the dista
 \subsubsection{RBF}
 Tuning an RBF network relies on finding the optimal centers, variances, and learning rate for a given problem. The centers were varied using the variety of clustering methods mentioned in section 2.1. Variances were found by the variance of the $k$ nearest neighbors of each center. The value of $k$ was varied during tests but ultimately set to 25. Tuning found that varying $k$ in this region did not significantly affect the performance of the RBF network as opposed to the clustering method or learning rate. Learning rate was tuned over a range of $1*10^{-4}$ to $5$. The results of the tuning process are shown in YEEEEET. %TODO ADD THE FIGURE REFERENCE HERE
 
-%TODO ADD TUNING PIC HERE
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=4in]{FINAL_FIGS/RBF_LR_TUNING_CLASS.JPG}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=4in]{FINAL_FIGS/RBF_LR_TUNING_REG.JPG}
+\end{figure}
 
 Learning rates greater than 0.01 are not included for the regression data sets. Saturation in output layer weights caused complications in the linear output's calculations. Thus, it was determined that low learning rates were necessary to prevent network saturation in these cases.
 
 
 \subsubsection{MLP}
 Tuning began with learning rate, $\eta$, which is the step size at each iteration in a neural network. The following graphs plot the MSE and accuracy for classification and MSE and ME for regression against a spread of learning rates ranging from $1*10^{-4}$ to $5$ with a starting value of $.1$. The graphs also show performance on different numbers of hidden layers ranging from 0 to 2. \\
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=6in]{../FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
+	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_CLASS.JPG}
 \end{figure}
-
-Starting with the feed forward network, the most important attribute to tune will be the number of nodes in each hidden layer. The optimum number of nodes in a hidden layer is somewhere between the number of nodes in the input and output layers (Heaton 2008). Tuning will start with the mean of the number of nodes in the input and output layers for classification problems and half the number of nodes in the input layer for regression. The momentum will also be tuned. Tuning of momentum will start at .5 as it is a common value to start tuning with (Goodfellow 2016). From the starting value we will tune downwards to find a more optimal local minimum. Lastly the learning rate will be tuned. Since the input data is normalized between 0 and 1, learning rates should be between 106 and 1 and the starting value will be .1 because it is a standard starting value (Bengio 2012). We will tune in both directions from this starting value to find an optimal resolution and speed. This will be the same for both the feed forward network and the RBF network.
-
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=4in]{FINAL_FIGS/MLP_LR_TUNING_REG.JPG}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=3in]{FINAL_FIGS/MLP_MOMENTUM.JPG}
+\end{figure}
 \section{Results}
-
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=3in]{FINAL_FIGS/MLP_FINAL.JPG}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=3in]{FINAL_FIGS/RBF_FINAL.JPG}
+\end{figure}
 \section{Summary}
 
 
