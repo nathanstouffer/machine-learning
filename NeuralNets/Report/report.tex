@@ -28,8 +28,11 @@ yeet
 	
 
 \subsection*{Hypothesis}
-RBF is expected to preform better than MLP because it handles categorical variables where MLP does not take them into account. MLP and RBF on the raw data will out preform the clustering methods because they have more data to train on. This is especially important for the MLP with more layers because more layers require more data to adequately train.
+
+The RBF networks are capable of handling categorical variables (in their distance metrics) and therefore are expected to outperform the MLP network. Additionally, RBF networks are initially biased closer to a well performing model due to the functionality of the RBFs---a significant advantage over MLPs when the datasets are small. The MLP network is expected to perform well, with 2 layer MLPs generally underperforming comparatively, especially in the small datasets.
+
 \section{Algorithms}
+
 \subsection{RBF Networks}
 	Radial basis function networks are three layer feed forward networks consisting of an input layer, a single hidden layer, and an output layer. The activation functions in the hidden layer are of radial basis functions (RBFs)---functions whose output is determined by a $distance$ from some $center$. The non-linear nature of RBFs allow the RBF network to function as a universal approximator, approaching an arbitrary level of performance given enough centers and appropriate standard deviations $\sigma$ (CITE WU RBF.pDF). %TODO CITE THIS
 	
@@ -155,7 +158,12 @@ Tuning began with learning rate, $\eta$, which is the step size at each iteratio
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_MOMENTUM.JPG}
 \end{figure}
+
+
 \section{Results}
+
+	The optimal tuning parameters corresponding to each network and dataset were then run for final comparisons. In general, the MLP and RBF networks performed very similarly. The MLP network was slightly better at classification whereas the RBF network was slightly better at regression. The overall performance of these networks reinforces their effectiveness as universal approximators.
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/MLP_FINAL.JPG}
@@ -164,6 +172,16 @@ Tuning began with learning rate, $\eta$, which is the step size at each iteratio
 	\centering
 	\includegraphics[height=3in]{FINAL_FIGS/RBF_FINAL.JPG}
 \end{figure}
+
+%TODO NOTE: DEEP NETWORKS ARE MORE LIKELY TO START FURTHER AWAY FROM THE MINIMA IT HOPES TO FIND
+%TODO NOTE: DEEP NETWORKS REQUIRE MORE DATA TO TRAIN, ARE MORE SUSCEPTIBLE TO NOISE, CONVEX SURFACE ISNT AS SMOOTH
+
+%TODO RBF TRAINS QUICKER AND WITH LESS DATA --- LESS LAYERS THAN A DEEP NETWORK
+%TODO MLP Networks will require many more nodes as the feature set increases in dimensionality, but RBF will not, as it 
+
+
+
+
 \section{Summary}
 
 
