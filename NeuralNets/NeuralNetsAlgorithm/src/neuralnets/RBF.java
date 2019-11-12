@@ -4,11 +4,11 @@ import datastorage.Example;
 import datastorage.Set;
 import java.util.ArrayList;
 import measuredistance.IDistMetric;
-import networklayer.Layer;
-import networklayer.Linear;
-import networklayer.Logistic;
-import networklayer.Matrix;
-import networklayer.Vector;
+import neuralnets.layer.Layer;
+import neuralnets.layer.Linear;
+import neuralnets.layer.Logistic;
+import neuralnets.layer.Matrix;
+import neuralnets.layer.Vector;
 
 /**
  *

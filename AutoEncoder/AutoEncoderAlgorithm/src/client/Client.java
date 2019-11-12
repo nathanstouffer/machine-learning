@@ -3,15 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package networklayer;
+package client;
 
 /**
  *
  * @author natha
  */
-public interface IActFunct {
-    
-    public Vector computeAct(Vector vec);
-    public Vector getDeriv();
+public class Client {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+    }
     
 }

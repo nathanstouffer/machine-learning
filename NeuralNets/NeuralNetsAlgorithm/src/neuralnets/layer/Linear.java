@@ -3,25 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package networklayer;
+package neuralnets.layer;
 
 /**
  *
  * @author natha
  */
-public class Logistic implements IActFunct {
+public class Linear implements IActFunct {
     
     // Vector to store the derivative of each value
     // in the Vector
     private Vector deriv;
     
-    // empty constructor
-    public Logistic() { this.deriv = null; }
-
+    public Linear() { this.deriv = null; }
+    
     /**
      * method to compute the activation of each value in
      * an output Vector. The activation function used is
-     * the logistic function
+     * a linear sum
+     * 
+     * this method acts directly on the Vector sent in
+     * as an argument, so there is no need to return a
+     * new Vector
      * 
      * activation should be computed on the output of an
      * entire layer
@@ -32,29 +35,25 @@ public class Logistic implements IActFunct {
     @Override
     public Vector computeAct(Vector vec) {
         Vector activ = new Vector(vec.getLength());
-        // compute sigmoid of each value in vec
         for (int i = 0; i < activ.getLength(); i++) {
-            // get original value
-            double orig = vec.get(i);
-            // compute logistic function
-            activ.set(i, this.logisticFunct(orig));
+            // the dot product already computes a linear sum
+            // therefore no activation computation is required
+            activ.set(i, vec.get(i));
         }
         
         // instantiate and populate deriv
-        this.deriv = new Vector(activ.getLength());
+        this.deriv = new Vector(vec.getLength());
         for (int i = 0; i < this.deriv.getLength(); i++) {
-            // original val
-            double val = activ.get(i);        // logistic function has already been applied
-            // compute derivative
-            val = val * (1 - val);
-            // store in deriv
-            this.deriv.set(i, val);
+            // since the activation is a linear sum, the derivative
+            // at each value is just 1.0
+            this.deriv.set(i, 1.0);
         }
         
-        // return activation 
+        // return activation Vector
+//        System.out.println("ACTIVATION VECTOR " + activ);
         return activ;
     }
-
+    
     /**
      * method to return the derivative Vector
      * the values in this vector are computed from the
@@ -68,16 +67,6 @@ public class Logistic implements IActFunct {
         if (this.deriv == null) { System.err.println("Derivative has not been computed."); return null; }
         // otherwise, return deriv
         else { return this.deriv; }
-    }
-    
-    /**
-     * method to compute the logistic function of a value
-     * @param orig
-     * @return 
-     */
-    private double logisticFunct(double orig) {
-        double exp = Math.exp(-1 * orig);
-        return 1 / (1 + exp);
     }
     
 }
