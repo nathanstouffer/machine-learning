@@ -56,6 +56,18 @@ public class MLP implements INeuralNet {
     private final double momentum;
     
     /**
+     * we do not want sparsity in a standard MLP network so this is set to 0.0
+     */
+    private final double SPARSITY_PENALTY = 0.0;
+    
+    /**
+     * variable to store the largest value in a set. This applies only to regression
+     * data sets and is used as an attempt to increase performance so all
+     * output are normalized for regression data sets
+     */
+    private double largest_val;
+    
+    /**
      * storing the similarity matrix for categorical variables
      */
     private final SimilarityMatrix[] sim;
@@ -68,28 +80,70 @@ public class MLP implements INeuralNet {
     private final int num_hidden_layer;
     private final int[] num_hidden_nodes;
 
+    /**
+     * constructor to create an empty MLP with specified number of layers
+     * @param _num_hidden_layers
+     * @param _num_hidden_nodes
+     * @param _learning_rate
+     * @param _batch_size
+     * @param _momentum
+     * @param _convergence_threshold
+     * @param _maximum_iterations
+     * @param _sim 
+     */
     public MLP(int _num_hidden_layers, int[] _num_hidden_nodes, double _learning_rate, 
             double _batch_size, double _momentum, double _convergence_threshold, 
             int _maximum_iterations, SimilarityMatrix[] _sim) {
-        num_hidden_layer = _num_hidden_layers;
-        num_hidden_nodes = new int[num_hidden_layer];
+        this.num_hidden_layer = _num_hidden_layers;
+        this.num_hidden_nodes = new int[num_hidden_layer];
         for (int i = 0; i < num_hidden_nodes.length; i++) { num_hidden_nodes[i] = _num_hidden_nodes[i]; }
+        this.learning_rate = _learning_rate;
+        this.batch_size = _batch_size;
+        this.momentum = _momentum;
+        this.layers = new Layer[num_hidden_layer + 1];
+        this.convergence_threshold = _convergence_threshold;
+        this.maximum_iterations = _maximum_iterations;
+        this.sim = _sim;
+        this.largest_val = 0.0;
+    }
+    
+    /**
+     * constructor to create an empty network (no layers) that can be populated
+     * by the add layer method
+     * @param _learning_rate
+     * @param _batch_size
+     * @param _momentum
+     * @param _convergence_threshold
+     * @param _maximum_iterations
+     * @param _sim 
+     */
+    public MLP(double _learning_rate, double _batch_size, double _momentum,
+            double _convergence_threshold, int _maximum_iterations,
+            SimilarityMatrix[] _sim) {
+        num_hidden_layer = 0;
+        num_hidden_nodes = new int[0];
+        layers = new Layer[0];
+        
         learning_rate = _learning_rate;
         batch_size = _batch_size;
         momentum = _momentum;
-        layers = new Layer[num_hidden_layer + 1];
         convergence_threshold = _convergence_threshold;
         maximum_iterations = _maximum_iterations;
         sim = _sim;
-    }
+    } 
 
     @Override
     public void train(Set training_set) { 
+        // normalize output values if data set is regression
+        if (training_set.getNumClasses() == -1) { 
+            training_set = this.normalizeOutput(training_set); 
+        }
+        
         // compute input dimensions
         int input_dim = this.computeInputDim(training_set.getExample(0));
         this.initializeLayers(training_set.getNumClasses(), input_dim);
 
-        // Create a backpropagator that will just train the output layer.
+        // construct a backpropagator to train the network
         Backpropagator backprop = new Backpropagator(this);
 
         boolean converged = false;
@@ -111,7 +165,7 @@ public class MLP implements INeuralNet {
                 // multiply by momentum rate
                 for (int k = 0; k < prev_gradient.length; k++) { prev_gradient[k].timesEquals(momentum); }
                 // apply momentum
-                for (int k = 0; k < gradient.length; k++) { this.layers[k].plusEquals(prev_gradient[k]); }
+                for (int k = 0; k < layers.length; k++) { this.layers[k].plusEquals(prev_gradient[k]); }
             }
             // update prev_gradient
             prev_gradient = gradient;
@@ -125,7 +179,7 @@ public class MLP implements INeuralNet {
             
             // Output progress to console and check for convergence
             if(iterations % (maximum_iterations/100) == 0) {
-                //System.out.print("-> Training MLP network iteration: " + iterations);
+                System.out.println("-> Training MLP network iteration: " + iterations);
                 converged = hasConverged(gradient, true); // Verbose to print status
             } else {
                 converged = hasConverged(gradient, false);
@@ -164,7 +218,7 @@ public class MLP implements INeuralNet {
         // classification or regression.
         if (outputs.getLength() == 1) {
             // The set is regression, so return the one output as the predicted real value.
-            return outputs.get(0);
+            return this.largest_val * outputs.get(0);
         } else {
             // The set is classification, so return the class of the output node
             // that has the highest activation value.
@@ -263,6 +317,17 @@ public class MLP implements INeuralNet {
      * @return 
      */
     public Layer getLayer(int index) { return this.layers[index]; }
+    
+    /**
+     * method to add a layer to the end of a network
+     * @param to_add 
+     */
+    protected void addLayer(Layer to_add) {
+        Layer[] updated = new Layer[this.layers.length+1];
+        for (int i = 0; i < this.layers.length; i++) { updated[i] = this.layers[i]; }
+        updated[updated.length-1] = to_add;
+        this.layers = updated;
+    }
 
     /**
      * method to initialize layers with correct dimensions and populate weights
@@ -293,7 +358,7 @@ public class MLP implements INeuralNet {
                 layers[layers.length - 1] = new Layer(new Logistic(), num_classes, layers[layers.length - 2].getNumNodes() + 1);
             }
         }
-        // Randomly initialize the output layer weights
+        // Randomly initialize weights
         for (int i = 0; i < layers.length; i++) {
             layers[i].randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
         }
@@ -325,5 +390,27 @@ public class MLP implements INeuralNet {
         }
         return input_dim;
     }
+    
+    /**
+     * this method should only be run on regression data sets
+     * 
+     * it will divide each output value by the largest output value in the set
+     * @param data 
+     */
+    private Set normalizeOutput(Set data) {
+        Set normalized = new Set(data.getNumAttributes(), data.getNumClasses(), data.getClassNames());
+        this.largest_val = data.getLargestValue();
+        // iterate through examples
+        for (int i = 0; i < data.getNumExamples(); i++) {
+            Example ex = data.getExample(i);
+            double norm_val = ex.getValue() / this.largest_val;
+            normalized.addExample(new Example(norm_val, ex.getAttributes()));
+        }
+        return normalized;
+    }
+    
+    public SimilarityMatrix[] getSimMtx() { return this.sim; }
+    public int getNumLayers() { return this.layers.length; }
+    public double getSparsityPenalty() { return this.SPARSITY_PENALTY; }
     
 }

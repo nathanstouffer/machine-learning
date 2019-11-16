@@ -80,4 +80,6 @@ public class Logistic implements IActFunct {
         return 1 / (1 + exp);
     }
     
+    public String toString() { return "logistic"; }
+    
 }

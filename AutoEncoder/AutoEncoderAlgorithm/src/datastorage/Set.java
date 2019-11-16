@@ -161,6 +161,25 @@ public class Set implements Cloneable {
         return batches;
     }
     
+    /**
+     * method to return the largest value in a set.
+     * -1 is returned for classification since this only applies to
+     * regression
+     * @return 
+     */
+    public double getLargestValue() {
+        // return -1 if dataset is classification
+        if (this.num_classes != -1) { return -1; }
+        // otherwise, compute the largest value
+        double largest = this.examples.get(0).getValue();
+        for (int i = 1; i < this.getNumExamples(); i++) {
+            if (this.examples.get(i).getValue() > largest) { 
+                largest = this.examples.get(i).getValue(); 
+            }
+        }
+        return largest;
+    }
+    
     // getter methods
     public Example getExample(int index){ return this.examples.get(index); }
     public int getNumClasses(){ return this.num_classes; }

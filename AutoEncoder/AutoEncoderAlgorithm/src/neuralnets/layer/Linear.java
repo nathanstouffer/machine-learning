@@ -69,4 +69,6 @@ public class Linear implements IActFunct {
         else { return this.deriv; }
     }
     
+    public String toString() { return "linear"; }
+    
 }

@@ -55,8 +55,6 @@ public class Backpropagator {
         // update gradient for each example
         for (int i = 0; i < batch.getNumExamples(); i++) {
             Example ex = batch.getExample(i);
-            // generate output using current network
-            double actual = ex.getValue();
             
             // store the layer outputs for the current example
             // outputs should be indexed at +1 than normal
@@ -66,19 +64,8 @@ public class Backpropagator {
             
             // index variable for the current layer
             int layer = derivatives.length - 1;
-            
-            // identify correct output
-            Vector target = new Vector(outputs[layer+1].getLength());
-            if (target.getLength() == 1) { target.set(0, actual); }         // if the len(output) is 1, then this is a regression data set
-            else {
-                // we now deal with classification
-                int class_index = (int)actual;
-                // iterate through the target vector
-                for (int j = 0; j < target.getLength(); j++) {
-                    if (j == class_index) { target.set(j, 1.0); }           // set target to 1.0 if at correct class
-                    else { target.set(j, 0.0); }                            // otherwise set to 0.0
-                }
-            }
+            // compute target
+            Vector target = this.computeTarget(ex, outputs[layer+1].getLength());
             
             // get output of current layer
             Vector output = outputs[layer+1];
@@ -100,6 +87,10 @@ public class Backpropagator {
             
             // propagate backwards through remaining layers
             this.backpropagate(layer-1, outputs, derivatives, deltas);
+            
+            // if we are dealing with an autoencoder, make the weights
+            // to the output layer sparse
+            this.sparsify();
         }
         
         // average gradient over the size of the batch
@@ -165,6 +156,65 @@ public class Backpropagator {
             // add to row
             row.plusEquals(update);
         }
+    }
+    
+    /**
+     * method to compute the target of 
+     * @param ex
+     * @return 
+     */
+    private Vector computeTarget(Example ex, int size) {
+        // identify type of network
+        if (this.network.getSparsityPenalty() != 0.0) {
+            // network is an autoencoder
+            return new Vector(ex, this.network.getSimMtx());
+        }
+        else {
+            // we now know that we are dealing with classification or regression
+            double actual = ex.getValue();
+            // identify correct output
+            Vector target = new Vector(size);
+            if (target.getLength() == 1) { target.set(0, actual); }     // if the len(output) is 1, then this is a regression data set
+            else {
+                // we now deal with classification
+                int class_index = (int)actual;
+                // iterate through the target vector
+                for (int j = 0; j < target.getLength(); j++) {
+                    if (j == class_index) { target.set(j, 1.0); }       // set target to 1.0 if at correct class
+                    else { target.set(j, 0.0); }                        // otherwise set to 0.0
+                }
+            }
+            return target;
+        }
+    }
+    
+    /**
+     * private method to apply penalty to the weights
+     * that go to the output layer of an autoencoder
+     */
+    private void sparsify() {
+        // last index of gradient, this corresponds to the network
+        int last = this.gradient.length - 1;
+        // value of sparsity penalty
+        double sparsity_penalty = this.network.getSparsityPenalty();
+        // matrix of the current state of the weights to the output layer
+        Matrix output_weights = this.network.getLayer(last).getWeights();
+        // empty penalty matrix
+        Matrix penalty = new Matrix(output_weights.getNumRows(), output_weights.getNumCol());
+        // populate the penalty matrix
+        for (int i = 0; i < output_weights.getNumRows(); i++) {
+            // the populate is done row by row 
+            Vector weight_row = output_weights.getRow(i);
+            Vector penalty_row = new Vector(weight_row.getLength());
+            for (int j = 0; j < output_weights.getNumCol(); j++) {
+                double weight = weight_row.get(j);
+                if (weight < 0.0) { penalty_row.set(j, -1.0 * sparsity_penalty); }
+                else { penalty_row.set(j, sparsity_penalty); }
+            }
+            penalty.setRow(i, penalty_row);
+        }
+        // add penalty to last layer in gradient
+        this.gradient[last].plusEquals(penalty);
     }
     
 }

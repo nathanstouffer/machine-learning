@@ -22,5 +22,8 @@ public interface INeuralNet {
     public Vector[] genLayerDeriv();
     public Layer getLayer(int index);
     public int[][] getLayerDim();
+    public int getNumLayers();
+    public double getSparsityPenalty();
+    public SimilarityMatrix[] getSimMtx();
     
 }

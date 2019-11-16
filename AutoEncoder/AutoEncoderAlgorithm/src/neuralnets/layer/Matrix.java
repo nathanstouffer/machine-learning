@@ -72,7 +72,7 @@ public class Matrix {
     
     /**
      * method to multiply each value in the Matrix by the multiplier
-     * @param mulitiplier 
+     * @param multiplier
      */
     public void timesEquals(double multiplier) {
         // iterate through Matrix
@@ -128,6 +128,16 @@ public class Matrix {
             // return the product
             return product;
         }
+    }
+    
+    /**
+     * method to set the row of a matrix to the given argument row
+     * @param index
+     * @param row 
+     */
+    public void setRow(int index, Vector row) {
+        if (index >= this.getNumRows()) { System.err.println("index out of bounds for Matrix"); }
+        else { this.mtx[index] = row; }
     }
     
     public int getNumCol() { return this.num_col; }

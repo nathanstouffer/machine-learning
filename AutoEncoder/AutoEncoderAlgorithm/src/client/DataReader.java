@@ -10,8 +10,6 @@ import datastorage.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
-
-// import exceptions
 import java.io.IOException;
 
 /**
@@ -26,7 +24,7 @@ import java.io.IOException;
  */
 public class DataReader {
     
-// variable to store number of subsets
+    // variable to store number of subsets
     private final int NUM_SUBSETS = 10;
     // variable to store file name
     private final String FILE_NAME;    

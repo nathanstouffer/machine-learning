@@ -21,9 +21,29 @@ public class Layer {
     // derivative of each value in the output vector
     private Vector deriv;
 
-    public Layer(IActFunct act_funct, int num_nodes, int num_inputs) {
+    /**
+     * constructor to create a new, empty layer
+     * 
+     * @param act_funct
+     * @param num_outputs
+     * @param num_inputs 
+     */
+    public Layer(IActFunct act_funct, int num_outputs, int num_inputs) {
         this.act_funct = act_funct;
-        this.weights = new Matrix(num_nodes, num_inputs);
+        this.weights = new Matrix(num_outputs, num_inputs);
+        this.deriv = null;
+    }
+    
+    /**
+     * constructor to create a layer from an existing weights matrix
+     * 
+     * This will typically be read in from a file
+     * @param act_funct
+     * @param weights 
+     */
+    public Layer(IActFunct act_funct, Matrix weights) {
+        this.act_funct = act_funct;
+        this.weights = weights;
         this.deriv = null;
     }
 
@@ -71,6 +91,23 @@ public class Layer {
      */
     public void randPopulate(double lower, double upper) { this.weights.randPopulate(lower, upper); }
 
+    public String toString() {
+        String output = this.act_funct.toString() + ",";
+        output += Integer.toString(this.weights.getNumRows()) + ",";
+        output += Integer.toString(this.weights.getNumCol()) + ",\n";
+        
+        // iterate through rows
+        for (int i = 0; i < this.weights.getNumRows(); i++) {
+            Vector row = this.weights.getRow(i);
+            // iterate through the row
+            for (int j = 0; j < this.weights.getNumCol(); i++) {
+                output += Double.toString(row.get(j)) + ",";
+            }
+            output += "\n";
+        }
+        return output;
+    }
+    
     // change these method names
     public int getNumNodes() { return this.weights.getNumRows(); }
     public int getNumInputs() { return this.weights.getNumCol(); }

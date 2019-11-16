@@ -41,6 +41,7 @@ public class Vector {
      * constructor to build a Vector from an Example
      * 
      * @param ex 
+     * @param sim 
      */
     public Vector(Example ex, SimilarityMatrix[] sim){
         // get attributes
@@ -55,38 +56,25 @@ public class Vector {
         // instantiate vals to correct size
         this.vals = new double[size];
         
-        // add each attribute to the vector
-        int s = 0;      // index of similarity matrix
-        int a = 0;      // index of attributes
-        for (int i = 0; i < this.vals.length; i++) { 
-            // check for indexing error
-            if (s < sim.length) {
-                // test if attribute is categorical
-                if (a == sim[s].getAttrIndex()) {
+        int i = 0;      // index for vector
+        int s = 0;      // index for similarity matrix
+        for (int a = 0; a < attr.size(); a++) {
+            // test if we are beyond categorical attributes
+            if (s >= sim.length) { this.set(i, attr.get(a)); i++; }
+            else {
+                // check if current attribute is not categorical
+                if (a != sim[s].getAttrIndex()) { this.set(i, attr.get(a)); i++; }
+                else {
+                    // current attribute is categorical
                     double val = attr.get(a);
-                    a++;
                     // iterate through options
-                    int j = 0;
-                    for (j = 0; j < sim[s].getNumOptions(); j++) {
+                    for (int j = 0; j < sim[s].getNumOptions(); j++) {
                         // test if value of attribute is the current option
-                        if ((int)val == j) { this.set(i + j, 1.0); }
-                        else { this.set(i + j, 0.0); }
+                        if ((int)val == j) { this.set(i, 1.0); }
+                        else { this.set(i, 0.0); }
+                        i++;        // increment i
                     }
-                    // set i to appropriate value
-                    i += j - 1;
-                    // increment s
-                    s++;
                 }
-                // otherwise, just add the value
-                else { 
-                    this.set(i, attr.get(a)); 
-                    a++;
-                }
-            }
-            // otherwise just add the value
-            else { 
-                this.set(i, attr.get(a)); 
-                a++;
             }
         }
     }
