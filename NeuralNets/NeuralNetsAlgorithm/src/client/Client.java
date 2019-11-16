@@ -490,7 +490,7 @@ public class Client {
             Set training_set = new Set(data.getSubsets(), i);
             Set testing_set = data.getSubsets()[i];
 
-            // Train and test the RBF network
+            // Train and test the MLP network
             MLP mlp = new MLP(num_hidden_layers, num_hidden_nodes, learning_rate,
                                 batch_size, momentum, convergence_threshold,
                                 max_iterations, data.getSimMatrices());
