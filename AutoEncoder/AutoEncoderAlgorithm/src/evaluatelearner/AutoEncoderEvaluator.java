@@ -5,6 +5,8 @@
  */
 package evaluatelearner;
 
+import datastorage.Example;
+import java.util.ArrayList;
 import datastorage.Set;
 import neuralnets.layer.Vector;
 
@@ -18,17 +20,29 @@ public class AutoEncoderEvaluator implements IEvaluator {
     private double mae;
     private double me;
     
-    public AutoEncoderEvaluator(Set predicted, Set actual) {
+    public AutoEncoderEvaluator(Vector[] predicted, Vector[] actual) {
+    //public AutoEncoderEvaluator(Set predicted, Set actual) {
         // An AutoEncoder looks only at the attributes of examples
         // we have normalized the attributes in preprocessing,
         // so there is no need to compute z-scores
         
-        int num_examples = actual.getNumExamples();
+        int num_examples = actual.length;
         
         for (int i = 0; i < num_examples; i++) {
             if (i % (num_examples / 5) == 0) {
-                System.out.println(predicted.getExample(i).toString());
+                /*System.out.println("------------ ACTUAL ------------");
                 System.out.println(actual.getExample(i).toString());
+                System.out.println("------------ PREDICTED ------------");
+                System.out.println(predicted.getExample(i).toString());*/
+                System.out.println("------------ DIFFERENCE ------------");
+                ArrayList<Double> differences = new ArrayList<Double>();
+                for (int j = 0; j < predicted[0].getLength(); j++) {
+                    double pred = predicted[i].get(j);
+                    double act = actual[i].get(j);
+                    differences.add(pred - act);
+                }
+                Example diff = new Example(-1.0, differences);
+                System.out.println(diff);
                 System.out.println();
             }
         }     
@@ -36,11 +50,11 @@ public class AutoEncoderEvaluator implements IEvaluator {
         Vector[] differences = new Vector[num_examples];
         // compute the difference of each attribute in each example
         for (int i = 0; i < num_examples; i++) {
-            differences[i] = new Vector(actual.getNumAttributes());
+            differences[i] = new Vector(actual[0].getLength());
             // iterate through attributes
-            for (int j = 0; j < actual.getNumAttributes(); j++) {
-                double pred = predicted.getExample(i).getAttributes().get(j);
-                double act = actual.getExample(i).getAttributes().get(j);
+            for (int j = 0; j < differences[0].getLength(); j++) {
+                double pred = predicted[i].get(j);
+                double act = actual[i].get(j);
                 double diff = pred - act;
                 differences[i].set(j, diff);
             }
@@ -50,7 +64,7 @@ public class AutoEncoderEvaluator implements IEvaluator {
         double[] maes = new double[num_examples];
         double[] mes = new double[num_examples]; 
         
-        int num_attr = actual.getNumAttributes();
+        int num_attr = actual[0].getLength();
         // populate metric arrays
         for (int i = 0; i < num_examples; i++) {
             // compute each metric for each example

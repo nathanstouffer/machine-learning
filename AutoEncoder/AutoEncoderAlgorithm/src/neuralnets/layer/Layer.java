@@ -108,6 +108,9 @@ public class Layer {
         return output;
     }
     
+    public void delRow(int index) { this.weights.delRow(index); }
+    public void delCol(int index) { this.weights.delCol(index); }
+    
     // change these method names
     public int getNumNodes() { return this.weights.getNumRows(); }
     public int getNumInputs() { return this.weights.getNumCol(); }

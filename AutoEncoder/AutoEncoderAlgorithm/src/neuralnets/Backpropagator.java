@@ -190,7 +190,7 @@ public class Backpropagator {
     
     /**
      * private method to apply penalty to the weights
-     * that go to the output layer of an autoencoder
+     * that go to the output layer of an auto encoder
      */
     private void sparsify() {
         // last index of gradient, this corresponds to the network

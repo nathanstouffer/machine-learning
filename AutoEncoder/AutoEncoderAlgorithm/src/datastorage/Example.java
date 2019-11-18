@@ -115,11 +115,10 @@ public class Example {
      * @return 
      */
     public String toString() {
-        String val = "------------ EXAMPLE ------------\n";
-        val += "VALUE: " + this.value + "\n";
-        val += "ATTRIBUTES: [ " + this.attr.get(0);
+        String val = "VALUE: " + this.value + "\n";
+        val += "ATTRIBUTES: [ " + String.format("%5f", this.attr.get(0));
         for (int i = 1; i < this.attr.size(); i++) {
-            val += ", " + this.attr.get(i);
+            val += ", " + String.format("%5f", this.attr.get(i));
         }
         val += "]";
         return val;

@@ -74,6 +74,7 @@ public class Vector {
                         else { this.set(i, 0.0); }
                         i++;        // increment i
                     }
+                    s++;
                 }
             }
         }

@@ -17,7 +17,7 @@ import neuralnets.layer.Matrix;
 
 /**
  * class that implements an AutoEncoder. The Auto encoder is trained using
- * Backpropagation
+ * Back propagation
  * 
  * 
  * @author natha
@@ -25,9 +25,10 @@ import neuralnets.layer.Matrix;
 public class AutoEncoder implements INeuralNet {
     
     private final double STARTING_WEIGHT_BOUND = 0.0001;
+    private final double IMPACT_THRESH = 0.0075;
     
     /**
-     * The sparsity penalty is the defining feature of an overcomplete autoencoder
+     * The sparsity penalty is the defining feature of an over complete auto encoder
      * The is the penalty we apply to the weights that go to the output layer so that
      * they tend toward 0
      */
@@ -68,7 +69,7 @@ public class AutoEncoder implements INeuralNet {
      * Feeding an example into the layers produces a prediction
      */
     private Layer[] layers;
-    private final int NUM_HIDDEN_LAYER = 1;
+    private final int HIDDEN_NODES_MULT = 2;
     
     public AutoEncoder(double sparsity_penalty, double _learning_rate, 
             double _momentum, double _batch_size, double _convergence_threshold, 
@@ -87,8 +88,10 @@ public class AutoEncoder implements INeuralNet {
     public void train(Set training_set) {
         // compute input dimensions
         int input_dim = this.computeInputDim(training_set.getExample(0));
-        layers[0] = new Layer(new Logistic(), 2*input_dim, input_dim + 1);  
-        layers[1] = new Layer(new Logistic(), input_dim, 2*input_dim+1); // THIS MAY NOT BE LOGISTIC, IT MIGHT BE LINEAR
+        layers[0] = new Layer(new Logistic(), HIDDEN_NODES_MULT*input_dim, input_dim+1);
+        layers[1] = new Layer(new Linear(), input_dim, HIDDEN_NODES_MULT*input_dim+1);
+        //layers[1] = new Layer(new Logistic(), input_dim, HIDDEN_NODES_MULT*input_dim+1);
+        // UNSURE IF THIS IS LOGISTIC OR LINEAR
         
         // randomly initialize weights
         for (int i = 0; i < layers.length; i++) {
@@ -131,6 +134,8 @@ public class AutoEncoder implements INeuralNet {
             }
             iterations++;
         }
+        
+        this.prune();
     }
 
     /**
@@ -139,12 +144,14 @@ public class AutoEncoder implements INeuralNet {
      * @param testing_set
      * @return 
      */
-    public Set testAutoEncoder(Set testing_set) {
-        Set outputs = new Set(testing_set.getNumAttributes(), testing_set.getNumClasses(), testing_set.getClassNames());
+    public Vector[] testAutoEncoder(Set testing_set) {
+        Vector[] outputs = new Vector[testing_set.getNumExamples()];
+        //Set outputs = new Set(testing_set.getNumAttributes(), testing_set.getNumClasses(), testing_set.getClassNames());
         ArrayList<Example> examples = testing_set.getExamples();
         for (int i = 0; i < testing_set.getNumExamples(); i++) {
-            Example recon = this.computeReconstructedOutput(examples.get(i));
-            outputs.addExample(recon);
+            //Example recon = this.computeReconstructedOutput(examples.get(n));
+            //outputs.addExample(recon);
+            outputs[i] = this.computeReconstructedOutput(testing_set.getExample(i));
         }
         return outputs;
     }
@@ -155,9 +162,10 @@ public class AutoEncoder implements INeuralNet {
      * @param ex
      * @return 
      */
-    protected Example computeReconstructedOutput(Example ex) { 
-        Vector output = this.genLayerOutputs(ex)[2];
-        return new Example(ex.getValue(), ex.getSubsetIndex(), output, this.sim);
+    protected Vector computeReconstructedOutput(Example ex) { 
+        return this.genLayerOutputs(ex)[2];
+        //Vector output = this.genLayerOutputs(ex)[2];
+        //return new Example(ex.getValue(), ex.getSubsetIndex(), output, this.sim);
     }
     
     /**
@@ -270,6 +278,48 @@ public class AutoEncoder implements INeuralNet {
         }
         // if we made it through the loops, the weights have converged
         return true;
+    }
+    
+    /**
+     * private method to prune out unnecessary hidden nodes
+     * 
+     * this is done by computing the average (absolute) value of 
+     * weights leaving that node, and then comparing that to an impact
+     * threshold
+     */
+    private void prune() {
+        // get weights to the output layer
+        Matrix last = this.layers[1].getWeights();
+        // indicative array of whether a node should be kept
+        int[] to_rm = new int[last.getNumCol()];
+        // store number of nodes we will keep
+        int kept = 0;
+        // identify which nodes to prune
+        for (int c = 1; c < last.getNumCol(); c++) {
+            double avg = 0.0;
+            // iterate through rows, computing average
+            for (int r = 0; r < last.getNumRows(); r++) {
+                avg += Math.abs(last.getRow(r).get(c));
+            }
+            avg /= last.getNumRows();
+            
+            if (avg > this.IMPACT_THRESH) { to_rm[c] = 0; kept++; }
+            else { to_rm[c] = 1; }
+        }
+        
+        System.out.println("\nKEPT " + kept + " OF " + to_rm.length + " HIDDEN NODES\n");
+        
+        // iterate through to_rm array
+        int num_del = 0;
+        // start at 1 to ignore bias node
+        for (int n = 1; n < to_rm.length; n++) {
+            if (to_rm[n] == 1) {
+                // we must remove the nth hidden node
+                this.layers[0].delRow(n - num_del - 1); // FOR NO BIAS NODE
+                this.layers[1].delCol(n - num_del);
+                num_del++;
+            }
+        }
     }
     
     /**
