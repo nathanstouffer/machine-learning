@@ -29,13 +29,13 @@ public class SAE { // implements INeuralNet {
     
     /** 
      * the final network that the SAE will build
-     * this will consist of some autoencoding layers
+     * this will consist of some auto encoding layers
      * as well as an MLP on top
     */
     private MLP network;
     
     /**
-     * array to store the autoencoders while in training
+     * array to store the auto encoders while in training
      */
     private AutoEncoder[] encoders;
     

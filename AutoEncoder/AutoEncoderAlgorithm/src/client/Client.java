@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import neuralnets.*;
+import neuralnets.layer.Vector;
 
 /**
  *
@@ -33,17 +34,17 @@ public class Client {
         for(int i = 0; i < data.length; i++) { data[i] = new DataReader(datafiles[i]); }
         
         String input = "none.csv";
-        int INDEX = 0;
+        int INDEX = 2;
         int num_encoders = 1;
         double learning_rate = 0.1;
-        double sparsity_penalty = 0.0005;
+        double sparsity_penalty = 0.05;
         double batch_size = 0.1;
         double momentum = 0.25;
         double convergence_threshold = 0.00000001;
         int max_iterations = 100000;
         int folds = 1;
         
-        debugAE("test-ae.csv", datafiles[INDEX], data[INDEX], sparsity_penalty,
+        debugAE("debug-ae.csv", datafiles[INDEX], data[INDEX], sparsity_penalty,
                 learning_rate, momentum, batch_size, convergence_threshold, 
                 max_iterations, folds);
         
@@ -139,10 +140,16 @@ public class Client {
                                         maximum_iterations, data.getSimMatrices());
             
             ae.train(training_set);
-            Set results = ae.testAutoEncoder(testing_set);
+            //Set results = ae.testAutoEncoder(testing_set);
+            Vector[] results = ae.testAutoEncoder(testing_set);
+            Vector[] actual = new Vector[testing_set.getNumExamples()];
+            for (int j = 0; j < actual.length; j++) {
+                actual[j] = new Vector(testing_set.getExample(j), data.getSimMatrices());
+            }
             
             // COMPUTE METRICS
-            AutoEncoderEvaluator eval = new AutoEncoderEvaluator(results, testing_set);
+            //AutoEncoderEvaluator eval = new AutoEncoderEvaluator(results, testing_set);
+            AutoEncoderEvaluator eval = new AutoEncoderEvaluator(results, actual);
             metric1 += eval.getMSE();
             metric2 += eval.getMAE();
         }

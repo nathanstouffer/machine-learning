@@ -140,6 +140,47 @@ public class Matrix {
         else { this.mtx[index] = row; }
     }
     
+    public void delRow(int index) { 
+        // test if row exists
+        if (index >= this.getNumRows()) { System.err.println("No such row"); }
+        else {
+            // create matrix with one less row than current matrix
+            Vector[] temp = new Vector[this.getNumRows()-1];
+            // index for old matrix
+            int old = 0;
+            for (int r = 0; r < temp.length; r++) {
+                // if r is the index, increment old by 1
+                if (r == index) { old++; }
+                // set current row to the old index
+                temp[r] = this.mtx[old];
+                old++;      // increment old
+            }
+            this.mtx = temp;
+        }
+    }
+        
+    public void delCol(int index) {
+        // test if column exists
+        if (index >= this.getNumCol()) { System.err.println("No such column"); }
+        else {
+            // iterate through rows
+            for (int r = 0; r < this.getNumRows(); r++) {
+                // create new row with one less slot than current row
+                Vector temp = new Vector(this.getNumCol()-1);
+                int old = 0;    // index for old matrix
+                for (int c = 0; c < temp.getLength(); c++) {
+                    // skip the index value in old matrix
+                    if (c == index) { old++; }
+                    temp.set(c, this.mtx[r].get(old));
+                    old++;
+                }
+                this.setRow(r, temp);
+            }
+            // decrement the number of columns
+            this.num_col--;
+        }
+    }
+    
     public int getNumCol() { return this.num_col; }
     public int getNumRows() { return this.mtx.length; }
     public Vector getRow(int index) { return this.mtx[index]; }
