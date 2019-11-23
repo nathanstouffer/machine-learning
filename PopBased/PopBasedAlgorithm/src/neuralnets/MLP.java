@@ -276,6 +276,24 @@ public class MLP implements INeuralNet {
             layers[i].randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
         }
     }
+    
+    /**
+     * public method to clone the current network
+     * @return 
+     */
+    public MLP clone() {
+        // build topology array
+        int len = this.num_hl + 3;
+        int[] topology = new int[len];
+        topology[0] = this.num_hl;
+        for (int t = 1; t < this.num_hl; t++) { topology[t] = this.num_hn[t]; }
+        topology[len-2] = this.layers[0].getNumInputs();
+        topology[len-1] = this.layers[this.layers.length-1].getNumNodes();
+        // create new network
+        MLP temp = new MLP(topology, this.sim);
+        temp.setWeights(this.toVec());
+        return temp;
+    }
 
     /**
      * method to initialize layers with correct dimensions

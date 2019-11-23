@@ -109,28 +109,6 @@ public class Vector {
     }
     
     /**
-     * method to add two Vectors together, the result is stored in the first vector
-     * 
-     * the two vectors must be of the same dimension, otherwise an error
-     * message is printed
-     * 
-     * @param to_add 
-     */
-    public void plusEquals(Vector to_add) {
-        // make sure Vectors are of the same dimension
-        if (this.getLength() != to_add.getLength()){ System.err.println("Vectors have different dimensions"); }
-        else {
-            // add the two vectors
-            for (int i = 0; i < this.getLength(); i++) {
-                // compute new value
-                double val = this.get(i) + to_add.get(i);
-                // update new value in the array
-                this.set(i, val);
-            }
-        }
-    }
-    
-    /**
      * method to randomly populate the vector with values
      * between lower and upper
      * 
@@ -177,10 +155,95 @@ public class Vector {
     }
     
     /**
+     * public method to add two vectors and return the diff
+ 
+ Neither input is changed in this process
+     * 
+     * @param to_add
+     * @return 
+     */
+    public Vector plus(Vector to_add) {
+        // check if Vectors have same dimension
+        if (this.getLength() != to_add.getLength()){ 
+            System.err.println("Vectors have different dimensions"); 
+            return null;
+        }
+        else {
+            // create new Vector
+            Vector sum = new Vector(this.getLength());
+            for (int s = 0; s < sum.getLength(); s++) { 
+                sum.set(s, this.get(s) + to_add.get(s)); 
+            }
+            return sum;
+        }
+    }
+    
+    /**
+     * method to add two Vectors together, the result is stored in the first vector
+     * 
+     * the two vectors must be of the same dimension, otherwise an error
+     * message is printed
+     * 
+     * @param to_add 
+     */
+    public void plusEquals(Vector to_add) {
+        // make sure Vectors are of the same dimension
+        if (this.getLength() != to_add.getLength()){ System.err.println("Vectors have different dimensions"); }
+        else {
+            // add the two vectors
+            for (int i = 0; i < this.getLength(); i++) {
+                // compute new value
+                double val = this.get(i) + to_add.get(i);
+                // update new value in the array
+                this.set(i, val);
+            }
+        }
+    }
+    
+    /**
+     * public method to subtract two vectors and return the difference
+     * 
+     * Neither input is changed in this process
+     * 
+     * @param to_sub
+     * @return 
+     */
+    public Vector minus(Vector to_sub) {
+        // check if Vectors have same dimension
+        if (this.getLength() != to_sub.getLength()){ 
+            System.err.println("Vectors have different dimensions"); 
+            return null;
+        }
+        else {
+            // create new Vector
+            Vector diff = new Vector(this.getLength());
+            for (int s = 0; s < diff.getLength(); s++) { 
+                diff.set(s, this.get(s) - to_sub.get(s)); 
+            }
+            return diff;
+        }
+    }
+    
+    /**
+     * public method to multiply a vector by a multiplier.
+     * A new vector is returned
+     * @param multiplier
+     * @return 
+     */
+    public Vector times(double multiplier) {
+        // instantiate new Vector
+        Vector prod = new Vector(this.getLength());
+        for (int p = 0; p < prod.getLength(); p++) {
+            prod.set(p, multiplier * this.get(p));
+        }
+        return prod;
+    }
+    
+    /**
      * method to multiply each value in the Vector by the multiplier
      * @param multiplier 
      */
-    protected void timesEquals(double multiplier) {
+    public void timesEquals(double multiplier) {
         // iterate through vector
         for (int i = 0; i < this.getLength(); i++) { this.set(i, multiplier * this.get(i)); }
     }
@@ -214,6 +277,12 @@ public class Vector {
             }
         }
         return max;
+    }
+    
+    public Vector clone() {
+        Vector clone = new Vector(this.getLength());
+        for (int i = 0; i < clone.getLength(); i++) { clone.set(i, this.get(i)); }
+        return clone;
     }
     
     public void set(int index, double val) { this.vals[index] = val; }
