@@ -14,6 +14,7 @@ import neuralnets.MLP;
  */
 public interface IPopTrain {
     
-    public MLP train(Set training);
+    public void train(Set training);
+    public MLP getBest();
     
 }

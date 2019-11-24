@@ -12,9 +12,11 @@ public class ClassificationEvaluator implements IEvaluator {
     private double mse; //Holds the mean squared error
     
     private double[] pred;
+    private Set act;
     
     public ClassificationEvaluator(double[] predicted, Set actual) {
         this.pred = predicted;
+        this.act = actual;
         
         int num_examples = actual.getNumExamples();
         
@@ -82,6 +84,21 @@ public class ClassificationEvaluator implements IEvaluator {
             }
         }
         output += pred[pred.length-1] + "]";
+        System.out.println(output);
+    }
+    
+    public void printAct() {
+        String output = "ACTUAL     :\n[";
+        int line_count = 0;
+        for (int i = 0; i < act.getNumExamples(); i++) {
+            line_count++;
+            output += act.getExample(i).getValue() + ", ";
+            if (line_count == 22) { 
+                output += "\n "; 
+                line_count = 0;
+            }
+        }
+        output += act.getExample(act.getNumExamples()-1).getValue() + "]";
         System.out.println(output);
     }
     

@@ -159,6 +159,7 @@ public class DataReader {
     private int getNumCatAttributes(){ return this.data_summary[3]; }
     
     // public getter methods
+    public String getFileName() { return this.FILE_NAME; }
     public String[] getClassNames(){ return this.class_names; }
     public Set[] getSubsets(){ return this.subsets; }
     public Set getValidationSet(){ return this.validation_set; }

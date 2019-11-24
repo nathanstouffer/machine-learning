@@ -25,7 +25,7 @@ public class MLP implements INeuralNet {
      * The absolute value of the bounds on the starting weights in the output
      * layer.
      */
-    private static final double STARTING_WEIGHT_BOUND = 0.0001;
+    private static final double STARTING_WEIGHT_BOUND = 0.1;
     
     /**
      * Private variable to store the number of weights in the MLP
@@ -46,32 +46,6 @@ public class MLP implements INeuralNet {
     private Layer[] layers;
     private final int num_hl;
     private final int[] num_hn;
-
-    /**
-     * Public constructor to create a new MLP with weights 
-     * initialized to 0.
-     * Weights can set using public methods in this class
-     * @param _num_hidden_layers
-     * @param _num_hidden_nodes
-     * @param _output_dim
-     * @param _input_dim
-     * @param _sim 
-     */
-    public MLP(int _num_hidden_layers, int[] _num_hidden_nodes, 
-            int _output_dim, int _input_dim, SimilarityMatrix[] _sim) {
-        this.num_hl = _num_hidden_layers;
-        this.num_hn = new int[num_hl];
-        this.sim = _sim;
-        // randomly populate layers
-        for (int i = 0; i < num_hn.length; i++) { num_hn[i] = _num_hidden_nodes[i]; }
-        this.layers = new Layer[num_hl + 1];
-        this.initializeLayers(_input_dim, _output_dim);
-        // set global variable for number of weights
-        this.num_weights = 0;
-        for (int l = 0; l < this.layers.length; l++) { 
-            this.num_weights += this.layers[l].getNumWeights(); 
-        }
-    }
     
     /**
      * constructor to create a new MLP with all weights initialized to 0.
@@ -105,10 +79,10 @@ public class MLP implements INeuralNet {
 
     @Override
     public double[] test(Set testing_set) {
-        ArrayList<Example> examples = testing_set.getExamples(); // Init empty array
+        ArrayList<Example> examples = testing_set.getExamples();
         double[] predictions = new double[examples.size()];
         for (int i = 0; i < examples.size(); i++) { // Iterate through all examples
-            predictions[i] = predict(examples.get(i));
+            predictions[i] = this.predict(examples.get(i));
         }
         return predictions;
     }
@@ -237,7 +211,7 @@ public class MLP implements INeuralNet {
      * @param vec 
      */
     public void setWeights(Vector vec) {
-        if (vec.getLength() != this.num_weights) { System.err.println("weights arg is not compatible with network"); }
+        if (vec.getLength() != this.num_weights) { System.err.println("weight arg is not compatible with network"); }
         else {
             // network and vector are compatible
             int v = 0;      // current index of vec
@@ -278,17 +252,27 @@ public class MLP implements INeuralNet {
     }
     
     /**
+     * Public method to compute and return the topology of this
+     * network
+     * @return 
+     */
+    public int[] getTopology() {
+        int len = this.num_hl + 3;
+        int[] topology = new int[len];
+        topology[0] = this.num_hl;
+        for (int t = 0; t < this.num_hl; t++) { topology[t+1] = this.num_hn[t]; }
+        topology[len-2] = this.layers[0].getNumInputs() - 1;        // subtract 1 for bias node
+        topology[len-1] = this.layers[this.layers.length-1].getNumNodes();
+        return topology;
+    }
+    
+    /**
      * public method to clone the current network
      * @return 
      */
     public MLP clone() {
         // build topology array
-        int len = this.num_hl + 3;
-        int[] topology = new int[len];
-        topology[0] = this.num_hl;
-        for (int t = 1; t < this.num_hl; t++) { topology[t] = this.num_hn[t]; }
-        topology[len-2] = this.layers[0].getNumInputs();
-        topology[len-1] = this.layers[this.layers.length-1].getNumNodes();
+        int[] topology = this.getTopology();
         // create new network
         MLP temp = new MLP(topology, this.sim);
         temp.setWeights(this.toVec());

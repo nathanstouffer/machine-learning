@@ -115,7 +115,7 @@ public class Vector {
      * @param lower
      * @param upper 
      */
-    protected void randPopulate(double lower, double upper) {
+    public void randPopulate(double lower, double upper) {
         // instantiate random generator
         Random rand = new Random();
         
@@ -156,8 +156,8 @@ public class Vector {
     
     /**
      * public method to add two vectors and return the diff
- 
- Neither input is changed in this process
+     * 
+     * Neither input is changed in this process
      * 
      * @param to_add
      * @return 
