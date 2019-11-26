@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import neuralnets.MLP;
 import poptrain.PSO;
 import java.util.Arrays;
+import poptrain.GeneticAlgorithm;
 
 /**
  *
@@ -35,10 +36,130 @@ public class Client {
         for(int i = 0; i < data.length; i++) { data[i] = new DataReader(datafiles[i]); }
         
         // ------------------------------------------------------------
+        // --- RUN FINAL GA TESTS WITH OPTIMAL PARAMETERS SELECTED ----
+        // ------------------------------------------------------------
+        finalGA();
+        
+        // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
 
-        finalPSO();
+        //finalPSO();
+    }
+    
+    /**
+     * private method to run PSO with the final configuration 
+     * which is specified in this method
+     */
+    private static void finalGA() throws FileNotFoundException {
+        System.out.println("--------- TESTING FINAL GA CONFIG ---------");
+
+        String fout = "../Output/" + "GA-final-out.csv";
+        clearFile(fout);
+        
+        // final configuration of variables listed here
+        double crossover_rate = 0.05;
+        double mutation_rate = 0.01;
+        int pop_size = 300;
+        int max_iter = 10000;
+        int folds = 2;
+        
+        // FOR TESTING ONLY
+        int TODO = 1;
+        int num_hl = 0;
+        runGA(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
+        
+        /*// iterate through data files
+        for (int f = 0; f < data.length; f++) {
+            // iterate through number of layers
+            for (int num_hl = 0; num_hl < 3; num_hl++) {
+                runPSO(fout, data[f], num_hl, cog_mult,
+                        soc_mult, pop_size, max_iter, folds);
+            }
+        }
+        */
+    }
+    
+    /**
+     * 
+     * @param fout
+     * @param data
+     * @param num_hl
+     * @param crossover_rate
+     * @param mutation_rate
+     * @param pop_size
+     * @param max_iter
+     * @param folds
+     * @throws FileNotFoundException 
+     */
+    private static void runGA(String fout, DataReader data, int num_hl,
+            double crossover_rate, double mutation_rate, int pop_size, int max_iter, 
+            int folds) throws FileNotFoundException {
+        System.out.println("---- RUNNING GA ON DATASET " + data.getFileName() + " WITH " + num_hl 
+                + " HIDDEN LAYERS ----");
+        System.out.print("------ POP SIZE: " + pop_size);
+        System.out.print(" ---- Pc: " + crossover_rate);
+        System.out.println(" ---- Pm: " + mutation_rate + " ------");
+        
+        double starttime = System.currentTimeMillis();
+        
+        double metric1 = 0;
+        double metric2 = 0;
+        
+        // build topology array
+        int[] topology = buildTop(data, num_hl);
+        
+        // instantiate GA class
+        GeneticAlgorithm ga = new GeneticAlgorithm(topology, max_iter, pop_size, crossover_rate, mutation_rate, data.getSimMatrices());
+        
+        // perform cross validation
+        for (int c = 0; c < folds; c++) {
+            System.out.println("Performing CV Fold #" + (c+1));
+            
+            Set training = new Set(data.getSubsets(), c);
+            Set testing = data.getSubsets()[c];
+            
+            // train the swarm
+            ga.train(training);
+            // get most fit member
+            MLP mlp = ga.getBest();
+            // test mlp
+            double[] results = mlp.test(testing);
+            
+            // Get metrics
+            if(training.getNumClasses() == -1) {
+                // Regression
+                RegressionEvaluator eval = new RegressionEvaluator(results, testing);
+                metric1 += eval.getMSE();
+                metric2 += eval.getME();
+                eval.printAct();
+                eval.printPred();
+            } else {
+                // Classification
+                ClassificationEvaluator eval = new ClassificationEvaluator(results, testing);
+                metric1 += eval.getAccuracy();
+                metric2 += eval.getMSE();
+                eval.printAct();
+                eval.printPred();
+            }
+        }
+        
+        // average metrics
+        metric1 /= folds;
+        metric2 /= folds;
+        
+        // output results
+        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + crossover_rate + "," 
+                + mutation_rate + "," + metric1 + "," + metric2;
+        // write to console
+        double endtime = System.currentTimeMillis();
+        double runtime = (endtime - starttime) / 1000;
+        System.out.println("\u001B[33m" + "GA trained and tested in " + runtime + " seconds");
+        System.out.println(output + "\u001B[0m");
+        // Write to file
+        //PrintWriter writer = new PrintWriter(new FileOutputStream(new File(fout), true /* append = true */));
+        //writer.println(output);
+        //writer.close();
     }
     
     /**
