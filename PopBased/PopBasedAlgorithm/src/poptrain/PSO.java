@@ -59,8 +59,11 @@ public class PSO implements IPopTrain {
      */
     private Particle[] pop;
     
+    /**
+     * private variable to store the particle with the best
+     * performance, regardless of time
+     */
     private Particle best;
-    
     
     /**
      * Public constructor to set up a population of particles
@@ -206,13 +209,14 @@ public class PSO implements IPopTrain {
         for (int p = 0; p < this.pop_size; p++) {
             String line = "";
             for (int l = 0; l < 10; l++) {
+                double temp_fit = Math.abs(this.pop[p].getFitness());
                 if (this.pop[p].getFitness() == Particle.getGenBest().getFitness()) {
-                    String num = String.format("\u001B[32m%-4s%.4f\u001B[0m   ", 
-                            p+": ", this.pop[p].getFitness());
+                    String num = String.format("\u001B[32m%-5s%.4f\u001B[0m   ", 
+                            p+": ", temp_fit);
                     line += num;
                 }
                 else if (p < this.pop_size) {
-                    String num = String.format("%-4s%.4f   ", p+": ", this.pop[p].getFitness());
+                    String num = String.format("%-5s%.4f   ", p+": ", temp_fit);
                     line += num;
                 }
                 p++;

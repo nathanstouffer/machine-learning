@@ -52,9 +52,9 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double cog_mult = 2;
-        double soc_mult = 2;
-        int pop_size = 100;
+        double cog_mult = 1;
+        double soc_mult = 1;
+        int pop_size = 200;
         int max_iter = 1000;
         int folds = 1;
         

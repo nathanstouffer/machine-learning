@@ -108,7 +108,7 @@ public class RegressionEvaluator implements IEvaluator{
     }
     
     public void printAct() {
-        String output = "ACTUAL     :\n[";
+        String output = "ACTUAL:\n[";
         int line_count = 0;
         for (int i = 0; i < act.getNumExamples(); i++) {
             line_count++;

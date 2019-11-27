@@ -169,7 +169,7 @@ public class Particle implements Comparable<Particle> {
     
     
     /**
-     * private method to compute the fitness of a network 
+     * private method to compute  and set the fitness of a network 
      */
     public void computeFitness() {
         if (Particle.data == null) { System.err.println("no data to test on"); }

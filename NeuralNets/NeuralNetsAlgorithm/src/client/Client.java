@@ -509,8 +509,8 @@ public class Client {
                 metric1 += eval.getAccuracy();
                 metric2 += eval.getMSE();
             }
-
-
+            
+            
         }
 
         // Take average of metrics
