@@ -21,18 +21,22 @@ import neuralnets.layer.Vector;
  *      -> Steady-state replacement (1/2 of population is replaced with children)
  * @author andy-
  */
-public class GeneticAlgorithm implements IPopTrain {
-    
-    /**
-     * The absolute value of the bounds on the starting weights in the layers.
-     */
-    private static final double STARTING_WEIGHT_BOUND = 0.0001;
-    
+public class GeneticAlgorithm implements IPopTrain {    
     /**
      * Determines the number of children generated each generation by the
      * population size divided by this divisor.
      */
     private static final int NUM_CHILDREN_DIVISOR = 3;
+    
+    /**
+     * Determines the minimum standard deviation of the creep mutation operator.
+     */
+    private static final double MIN_STD_DEV = 0.0001;
+    
+    /**
+     * The number of messages that will be printed out during the algorithm run.
+     */
+    private static final int NUM_MESSAGES = 100;
     
     /**
      * These parameters define the behavior of the algorithm. Topology describes
@@ -60,6 +64,7 @@ public class GeneticAlgorithm implements IPopTrain {
     private Vector[] population;
     private double[] population_fitnesses;
     private int[] population_rank;
+    private double[] population_std_devs;
     private Vector[] parents;
     private Vector[] children;
     
@@ -130,16 +135,20 @@ public class GeneticAlgorithm implements IPopTrain {
             selectParents();
             // Cross pairs of parents and place into children array
             crossParents();
+            // Compute std dev of each element (weight) in the vectors 
+            // (individuals) to be used during mutation
+            computeStdDevs();
             // Mutate all the children
             mutateChildren();
             // Replace (steady state) the children into the general population
             replaceChildren();
             
             // Print out what the current generation is
-            if(g % (max_generations/10) == 0) { 
+            if(g % (max_generations/NUM_MESSAGES) == 0) { 
                 System.out.println("~~~ GENERATION " + g + " ~~~"); 
-                printPopFitness();
-                printPopRank();
+                printPopFitness(100);
+                //printPopRank();
+                printPopStdDevs();
                 printAllTimeBest();
             }
         }
@@ -285,6 +294,39 @@ public class GeneticAlgorithm implements IPopTrain {
     }
     
     /**
+     * Compute the standard deviation of the each vector element in the
+     * population. 
+     */
+    private void computeStdDevs() {
+        population_std_devs = new double[population[0].getLength()];
+        for(int i = 0; i < population[0].getLength(); i++) {
+            // Make an array of all the vector elements at index i
+            double[] vector_elements = new double[population_size];
+            for(int j = 0; j < population_size; j++) {
+                vector_elements[j] = population[j].get(i);
+            }
+            // Compute mean
+            double mean = 0;
+            for(int j = 0; j < vector_elements.length; j++) {
+                mean += vector_elements[j];
+            }
+            mean /= vector_elements.length;
+            // Subtract mean from each element and square the result
+            for(int j = 0; j < vector_elements.length; j++) {
+                vector_elements[j] = Math.pow(vector_elements[j] - mean, 2);
+            }
+            // Compute this new mean
+            mean = 0;
+            for(int j = 0; j < vector_elements.length; j++) {
+                mean += vector_elements[j];
+            }
+            mean /= vector_elements.length;
+            // Square root it and place in the std dev array
+            population_std_devs[i] = Math.sqrt(mean);
+        }
+    }
+    
+    /**
      * Mutates a vector with uniform probability. Utilizes creep because the
      * vector elements are real valued.
      * @param a
@@ -293,7 +335,11 @@ public class GeneticAlgorithm implements IPopTrain {
     private Vector mutate(Vector a) {
         a = a.clone();
         for(int i = 0; i < a.getLength(); i++) {
-            double std_dev = 100;
+            // Determine the standard deviation to be used
+            double std_dev = population_std_devs[i];
+            if(std_dev < MIN_STD_DEV) { // Check against the minimum
+                std_dev = MIN_STD_DEV;
+            }
             // Generate a random double to see if mutation will occur
             if(rand.nextDouble() <= mutation_rate) {
                 // Mutate
@@ -345,6 +391,10 @@ public class GeneticAlgorithm implements IPopTrain {
         population_rank  = new int[population_size];
         population_fitnesses = new double[population_size];
         
+        // Initialize all time best info
+        all_time_best = null;
+        all_time_best_fitness = Double.MIN_VALUE;
+        
         // Fill the initial population
         for(int i = 0; i < population.length; i++) {
             MLP network = new MLP(topology, sim); // Create a network with a 
@@ -357,6 +407,14 @@ public class GeneticAlgorithm implements IPopTrain {
     }
     
     /* ---- DISPLAY / DEBUGGING FUNCTIONS ---- */
+    private void printPop() {
+        
+    }
+    
+    private void printParents() {
+        
+    }
+    
     private void printPopRank() {
         System.out.print("Current fitness rankings: [ ");
         for(int i = 0; i < population_rank.length; i++) {
@@ -366,11 +424,23 @@ public class GeneticAlgorithm implements IPopTrain {
         System.out.println("]");
     }
     
-    private void printPopFitness() {
+    private void printPopFitness(int numlines) {
         System.out.print("Current fitnesses: [ ");
-        for(int i = 0; i < population_fitnesses.length; i++) {
+        for(int i = 0; i < numlines; i++) {
             if(i%10 == 0) {System.out.println();}
             System.out.print(population_fitnesses[i] + " ");
+        }
+        System.out.println("\n]");
+    }
+    private void printPopFitness() {
+        printPopFitness(population_fitnesses.length);
+    }
+    
+    private void printPopStdDevs() {
+        System.out.print("Current Weight Std Devs: [ ");
+        for(int i = 0; i < population_std_devs.length; i++) {
+            if(i%10 == 0) {System.out.println();}
+            System.out.print(population_std_devs[i] + " ");
         }
         System.out.println("\n]");
     }
