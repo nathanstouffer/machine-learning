@@ -125,7 +125,7 @@ public class MLP implements INeuralNet {
             
             // Output progress to console and check for convergence
             if(iterations % (maximum_iterations/100) == 0) {
-                //System.out.print("-> Training MLP network iteration: " + iterations);
+                System.out.println("-> Training MLP network iteration: " + iterations);
                 converged = hasConverged(gradient, true); // Verbose to print status
             } else {
                 converged = hasConverged(gradient, false);

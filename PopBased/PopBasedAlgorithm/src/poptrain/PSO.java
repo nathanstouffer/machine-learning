@@ -60,8 +60,8 @@ public class PSO implements IPopTrain {
     private Particle[] pop;
     
     /**
-     * private variable to store the particle with the best
-     * performance, regardless of time
+     * private variable to store the particle with the best_idx
+ performance, regardless of time
      */
     private Particle best;
     
@@ -98,9 +98,8 @@ public class PSO implements IPopTrain {
         // set training examples
         Particle.setTrainingExamples(training);
         // initialize population
-        this.initializePop();
+        int prev_best = this.initializePop();
         
-        double avg = 0.0;
         boolean converged = false;
         // run for a number of iterations
         for (int iter = 0; iter < this.max_iter && !converged; iter++) {
@@ -117,10 +116,9 @@ public class PSO implements IPopTrain {
             
             // output to console
             if(iter % (this.max_iter/100) == 0) { 
-                double new_avg = this.printIterInfo(iter);
-                if (new_avg == avg) { converged = true; }
-                avg = new_avg;
-                this.printPop(iter);
+                double avg_dist = this.printIterInfo(iter);
+                if (avg_dist < 0.1) { converged = true; }
+                //prev_best = this.printPop(iter, prev_best);
             }
         }
     }
@@ -134,19 +132,19 @@ public class PSO implements IPopTrain {
      */
     private void setGenBest() {
         // assume the best_info is the 0th member
-        Particle curr_best = this.pop[0];
+        int curr_best = 0;
         // iterate thorugh population
         for (int p = 0; p < this.pop_size; p++) {
-            if (this.pop[p].compareTo(curr_best) >= 0) { curr_best = this.pop[p]; }
+            if (this.pop[p].compareTo(this.pop[curr_best]) >= 0) { curr_best = p; }
         }
         // set gen best_info in particle
-        Particle.setGenBest(curr_best);
+        Particle.setGenBest(curr_best, this.pop[curr_best]);
         
         //System.out.println(curr_best.getFitness());
         
         // change best_info member seen so far if necessary
-        if (curr_best.compareTo(this.best) >= 0) { 
-            this.best.setPos(curr_best.getNetwork().toVec());
+        if (this.pop[curr_best].compareTo(this.best) >= 0) { 
+            this.best.setPos(this.pop[curr_best].getNetwork().toVec());
         }
     }
     
@@ -155,7 +153,7 @@ public class PSO implements IPopTrain {
      * at random locations (random weight values)
      * 
      */
-    private void initializePop() {
+    private int initializePop() {
         // initialize members of population
         for (int p = 0; p < this.pop_size; p++) {
             // create network
@@ -173,7 +171,9 @@ public class PSO implements IPopTrain {
         this.setGenBest();
         
         // print population
-        this.printPop(-1);
+        // print pop returns the index with the best performance
+        //return this.printPop(-1, 0);
+        return 0;       // use above line for debuggin
     }
     
     @Override
@@ -182,48 +182,74 @@ public class PSO implements IPopTrain {
     /**
      * private method to print information about the current iteration
      * 
-     * the average fitness of the population is also computed and returned
+     * the average distance to generation best is computed and returned
      * @param iter 
      */
     private double printIterInfo(int iter) {
         String iter_info = "-> Training PSO iteration: " + iter;
-        String best_info = String.format("-> Best fitness so far: %.4f", this.best.getFitness());
+        String best_info = String.format("-> Best fitness so far: %.4f", Math.abs(this.best.getFitness()));
         String gen_info = String.format("-> Current generation best fitness: %.4f",
-                Particle.getGenBest().getFitness());
+                Math.abs(Particle.getGenBest().getFitness()));
         // compute average fitness
-        double avg = 0.0;
-        for (int p = 0; p < this.pop_size; p++) { avg += this.pop[p].getFitness(); }
-        avg /= this.pop_size;
-        String avg_info = String.format("-> Current generation avg fitness: %.4f", avg);
+        double avg_fit = 0.0;
+        double avg_dist = 0.0;
+        for (int p = 0; p < this.pop_size; p++) { 
+            avg_fit += Math.abs(this.pop[p].getFitness());
+            avg_dist += this.pop[p].distToGenBest();
+        }
+        avg_fit /= this.pop_size;
+        avg_dist /= this.pop_size;
+        String avg_info = String.format("-> Current generation avg fitness: %.4f", avg_fit);
         String info = String.format("%-35s%-35s%-47s%s", iter_info, best_info, gen_info, avg_info);
         System.out.println(info);
-        return avg;
+        return avg_dist;
     }
     
     /**
      * private method to output the current fitness
      * of each member of the population
      */
-    private void printPop(int iter) {
+    private int printPop(int iter, int prev_best) {
+        int best_idx = 0;
         System.out.println("------ POPULATION PERFORMANCE FOR ITERATION " + iter + " ------");
         for (int p = 0; p < this.pop_size; p++) {
-            String line = "";
+            String fit_line = "";
+            String dist_line = "";
             for (int l = 0; l < 10; l++) {
-                double temp_fit = Math.abs(this.pop[p].getFitness());
-                if (this.pop[p].getFitness() == Particle.getGenBest().getFitness()) {
-                    String num = String.format("\u001B[32m%-5s%.4f\u001B[0m   ", 
-                            p+": ", temp_fit);
-                    line += num;
-                }
-                else if (p < this.pop_size) {
-                    String num = String.format("%-5s%.4f   ", p+": ", temp_fit);
-                    line += num;
+                if (p < this.pop_size) {
+                    double temp_fit = Math.abs(this.pop[p].getFitness());
+                    double temp_dist = this.pop[p].distToGenBest();
+                    if (p == Particle.getGBestIndex()) {
+                        best_idx = p;
+                        String num = String.format("\u001B[32m%-5s%.4f\u001B[0m   ", 
+                                p+": ", temp_fit);
+                        String dist = String.format("\u001B[32m%-5s%6d\u001B[0m   ", 
+                                "d: ", 0);
+                        fit_line += num;
+                        dist_line += dist;
+                    }
+                    else if (p == prev_best) {
+                        String num = String.format("\u001B[33m%-5s%.4f\u001B[0m   ", 
+                                p+": ", temp_fit);
+                        String dist = String.format("\u001B[33m%-5s%6.0f\u001B[0m   ", 
+                                "d: ", temp_dist);
+                        fit_line += num;
+                        dist_line += dist;
+                    }
+                    else {
+                        String num = String.format("%-5s%.4f   ", p+": ", temp_fit);
+                        String dist = String.format("%-5s%6.0f   ", "d: ", temp_dist);
+                        fit_line += num;
+                        dist_line += dist;
+                    }
                 }
                 p++;
             }
             p--;
-            System.out.println(line);
+            System.out.println(fit_line);
+            System.out.println(dist_line);
         }
+        return best_idx;
     }
     
 }

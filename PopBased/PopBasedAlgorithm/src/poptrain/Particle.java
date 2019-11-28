@@ -5,6 +5,7 @@
  */
 package poptrain;
 
+import datastorage.Example;
 import datastorage.Set;
 import evaluatelearner.ClassificationEvaluator;
 import evaluatelearner.RegressionEvaluator;
@@ -30,7 +31,7 @@ public class Particle implements Comparable<Particle> {
     /**
      * bound on the magnitude of a component of the velocity vector
      */
-    private final double VELCLAMP = 0.0001;
+    private final double VELCLAMP = 0.1;
     
     /**
      * current network, the weights will be updated according
@@ -69,10 +70,15 @@ public class Particle implements Comparable<Particle> {
     private Particle pBest;
     
     /**
-     * Static Vector to store the vector form of the group's current 
+     * Static Particle to store the vector form of the group's current 
      * best performing network
      */
     private static Particle gBest;
+    
+    /**
+     * static integer to store the index of the generation best
+     */
+    private static int gBestIndx;
     
     /**
      * These are the testing examples used for evaluating the 
@@ -174,18 +180,63 @@ public class Particle implements Comparable<Particle> {
     public void computeFitness() {
         if (Particle.data == null) { System.err.println("no data to test on"); }
         else {   
-            double[] results = this.network.test(Particle.data);
             //System.out.println(Arrays.toString(results));
             if (Particle.data.getNumClasses() == -1) {
                 // data set is regression
-                RegressionEvaluator eval = new RegressionEvaluator(results, Particle.data);
-                this.fitness = -1 * eval.getMSE(); // multiply by -1 because of compareTo logic
+                this.maeFitness();
             }
             else {
                 // data set is classification
-                ClassificationEvaluator eval = new ClassificationEvaluator(results, Particle.data);
-                this.fitness = eval.getAccuracy();
+                this.accFitness();
+                //this.maeFitness();
             }
+        }
+    }
+    
+    /**
+     * private method to compute the accuracy of the particle. This method
+     * should only be called for classification datasets
+     */
+    private void accFitness() {
+        double[] results = this.network.test(Particle.data);
+        ClassificationEvaluator eval = new ClassificationEvaluator(results, Particle.data);
+        this.fitness = eval.getAccuracy();
+    }
+    
+    private void maeFitness() {
+        if (Particle.data.getNumClasses() == 1) {
+            double[] results = this.network.test(Particle.data);
+            RegressionEvaluator eval = new RegressionEvaluator(results, Particle.data);
+            this.fitness = -1 * eval.getMAE(); // multiply by -1 because of compareTo logic
+        }
+        else {
+            // data set is classification
+            double mae = 0.0;
+            int num_layers = this.network.getLayerDim().length;
+            // iterate through examples
+            for (int d = 0; d < Particle.data.getNumExamples(); d++) {
+                // current example
+                Example ex = Particle.data.getExample(d);
+                int actual = (int)ex.getValue();
+                // class probabilities for example
+                Vector output = this.network.genLayerOutputs(ex)[num_layers];
+                // create and populate target vector
+                Vector target = new Vector(output.getLength());
+                for (int t = 0; t < target.getLength(); t++) {
+                    if (t == actual) { target.set(t, 1.0); }
+                    else { target.set(t, 0.0); }
+                }
+                // compute summed mae for each class probability
+                double diff = 0.0;
+                for (int o = 0; o < output.getLength(); o++) {
+                    diff += Math.abs(output.get(o) - target.get(o));
+                }
+                mae += diff;
+            }
+            // average the ma
+            mae /= Particle.data.getNumExamples();
+            // set fitness
+            this.fitness = -1 * mae;
         }
     }
     
@@ -227,6 +278,25 @@ public class Particle implements Comparable<Particle> {
     }
     
     /**
+     * protected method to compute the distance from this vector to the
+     * generation best vector
+     * @return 
+     */
+    protected double distToGenBest() {
+        // current and gen best positions
+        Vector curr = this.network.toVec();
+        Vector best = Particle.gBest.getNetwork().toVec();
+        Vector diff = curr.minus(best);
+        double dist = 0.0;
+        // sum squared differences
+        for (int d = 0; d < diff.getLength(); d++) { 
+            dist += Math.abs(diff.get(d));
+        }
+        //dist = Math.sqrt(dist);
+        return dist;
+    }
+    
+    /**
      * public method to set the position of a particle
      * this also updates the associated network and fitness
      * @param temp 
@@ -237,10 +307,21 @@ public class Particle implements Comparable<Particle> {
         this.computeFitness();
     }
     
-    protected static void setTrainingExamples(Set temp) { data = temp; }
-    protected static void setGenBest(Particle best) { Particle.gBest = best; Particle.gBest.computeFitness(); }
-    protected static Particle getGenBest() { return Particle.gBest; }
+    /**
+     * protected method to set the generations current best performing
+     * particle
+     * @param best 
+     */
+    protected static void setGenBest(int index, Particle best) { 
+        Particle.gBestIndx = index;
+        Particle.gBest = best; 
+        Particle.gBest.computeFitness(); 
+    }
     
+    protected static void setTrainingExamples(Set temp) { data = temp; }
+    protected static Particle getGenBest() { return Particle.gBest; }
+    protected static int getGBestIndex() { return Particle.gBestIndx; }
+            
     protected double getFitness() { return this.fitness; }
     protected Vector getPos() { return this.pos; }
     protected MLP getNetwork() { return this.network; }

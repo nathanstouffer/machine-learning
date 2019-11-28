@@ -59,13 +59,13 @@ public class Client {
         // --- RUN FINAL MLP TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
 
-        //finalMLP();
+        finalMLP();
 
         // ------------------------------------------------------------
         // --- RUN FINAL RBF TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //finalRBF();
-        demo();
+        //demo();
 
     }
     private static void demo() 
@@ -136,6 +136,7 @@ public class Client {
         
         
     }
+    
     /**
      * method to run the final configuration of a MLP network
      * @param datafiles
@@ -153,12 +154,11 @@ public class Client {
         double final_batch_size = 0.1;
         double final_convergence_thresh =  0.0000000001;
         double final_hidden_nodes_mult = 2.0;         // multiply by the number of attributes to compute the number of hidden nodes
-        int[] final_max_iterations = { 500000, 500000, 500000, 500000, 500000, 500000, 500000 };
+        int final_max_iterations = 100000;
         int final_num_folds = 10;
 
         // iterate through data files
         for (int f = 0; f < data.length; f++) {
-        //for (int f = 0; f < data.length; f++) {
             // get current dataset
             DataReader curr_data = data[f];
             // iterate through number of layers
@@ -167,7 +167,7 @@ public class Client {
                 runMLP(output_file, datafiles[f], curr_data,
                         num_layers, final_hidden_nodes_mult, final_learning_rates[f],
                         final_batch_size, final_momentum, final_convergence_thresh,
-                        final_max_iterations[f], final_num_folds);
+                        final_max_iterations, final_num_folds);
             }
         }
     }

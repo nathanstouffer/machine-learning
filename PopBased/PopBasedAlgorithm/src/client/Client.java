@@ -38,12 +38,12 @@ public class Client {
         // ------------------------------------------------------------
         // --- RUN FINAL GA TESTS WITH OPTIMAL PARAMETERS SELECTED ----
         // ------------------------------------------------------------
-        finalGA();
+        //finalGA();
         
         // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
-
+        tunePSO();
         //finalPSO();
     }
     
@@ -166,6 +166,37 @@ public class Client {
      * private method to run PSO with the final configuration 
      * which is specified in this method
      */
+    private static void tunePSO() throws FileNotFoundException {
+        System.out.println("--------- TUNING PSO CONFIG ---------");
+
+        String fout = "../Output/" + "PSO-tuning-out.csv";
+        clearFile(fout);
+        
+        // final configuration of variables listed here
+        double[] cog_mult = { 1.0, 2.0, 3.0 };
+        double[] soc_mult = { 1.0, 2.0, 3.0 };
+        int pop_size = 100;
+        int max_iter = 1000;
+        int folds = 1;
+        
+        int num_hl = 1;
+        // iterate through data files
+        for (int f = 0; f < 3; f++) {//data.length; f++) {
+            // iterate through cog mult values
+            for (int c = 0; c < cog_mult.length; c++) {
+                // iterate through soc mult values
+                for (int s = 0; s < soc_mult.length; s++) {
+                    runPSO(fout, data[f], num_hl, cog_mult[c],
+                            soc_mult[s], pop_size, max_iter, folds);
+                }
+            }
+        }
+    }
+    
+    /**
+     * private method to run PSO with the final configuration 
+     * which is specified in this method
+     */
     private static void finalPSO() throws FileNotFoundException {
         System.out.println("--------- TESTING FINAL PSO CONFIG ---------");
 
@@ -173,15 +204,15 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double cog_mult = 1;
+        double cog_mult = 2;
         double soc_mult = 1;
-        int pop_size = 200;
+        int pop_size = 100;
         int max_iter = 1000;
         int folds = 1;
         
         // FOR TESTING ONLY
         int TODO = 1;
-        int num_hl = 0;
+        int num_hl = 2;
         runPSO(fout, data[TODO], num_hl, cog_mult, soc_mult, pop_size, max_iter, folds);
         
         /*// iterate through data files
@@ -272,9 +303,9 @@ public class Client {
         System.out.println("\u001B[33m" + "PSO trained and tested in " + runtime + " seconds");
         System.out.println(output + "\u001B[0m");
         // Write to file
-        //PrintWriter writer = new PrintWriter(new FileOutputStream(new File(fout), true /* append = true */));
-        //writer.println(output);
-        //writer.close();
+        PrintWriter writer = new PrintWriter(new FileOutputStream(new File(fout), true /* append = true */));
+        writer.println(output);
+        writer.close();
     }
     
     /**
