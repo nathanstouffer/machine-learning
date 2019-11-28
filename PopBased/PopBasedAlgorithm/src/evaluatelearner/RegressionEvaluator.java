@@ -97,18 +97,18 @@ public class RegressionEvaluator implements IEvaluator{
         int line_count = 0;
         for (int i = 0; i < pred.length; i++) {
             line_count++;
-            output += Double.toString(pred[i]) + ", ";
+            output += String.format("%.1f, ", pred[i]);
             if (line_count == 22) { 
                 output += "\n "; 
                 line_count = 0;
             }
         }
-        output += pred[pred.length-1] + "]";
+        output += String.format("%.1f", pred[pred.length-1]) + "]";
         System.out.println(output);
     }
     
     public void printAct() {
-        String output = "ACTUAL     :\n[";
+        String output = "ACTUAL:\n[";
         int line_count = 0;
         for (int i = 0; i < act.getNumExamples(); i++) {
             line_count++;

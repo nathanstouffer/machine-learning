@@ -22,10 +22,16 @@ import neuralnets.layer.Vector;
 public class MLP implements INeuralNet {
     
     /**
-     * The absolute value of the bounds on the starting weights in the output
-     * layer.
+     * The absolute value of the bounds on the starting weights all layers
+     * of a network
      */
-    private static final double STARTING_WEIGHT_BOUND = 0.1;
+    private static final double STARTING_WEIGHT_BOUND = 15;
+    
+    /**
+     * The absolute value of the bounds on the starting weights in the output
+     * layer for regression data sets only.
+     */
+    private static final double STARTING_REG_OUTPUT_WEIGHT_BOUND = 10;
     
     /**
      * Private variable to store the number of weights in the MLP
@@ -249,6 +255,11 @@ public class MLP implements INeuralNet {
         for (int i = 0; i < layers.length; i++) {
             layers[i].randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
         }
+        // repopulate output weights for regression datasets
+        if (layers[this.layers.length-1].getNumNodes() == 1) {
+            layers[this.layers.length-1].randPopulate(-STARTING_REG_OUTPUT_WEIGHT_BOUND,
+                    STARTING_REG_OUTPUT_WEIGHT_BOUND);
+        }
     }
     
     /**
@@ -286,7 +297,7 @@ public class MLP implements INeuralNet {
      */
     private void initializeLayers(int input_dim, int output_dim) {
         if (num_hn.length == 0) { 
-            if (output_dim == -1) { // The set is regression
+            if (output_dim == 1) { // The set is regression
                 // The output layer consists of one node with a linear activation function
                 layers[layers.length - 1] = new Layer(new Linear(), 1, input_dim + 1);
             } else { // The set is classification
@@ -300,7 +311,7 @@ public class MLP implements INeuralNet {
                 layers[i] = new Layer(new Logistic(), num_hn[i], layers[i - 1].getNumNodes() + 1);
             }
             // Construct the output layer
-            if (output_dim == -1) { // The set is regression
+            if (output_dim == 1) { // The set is regression
                 // The output layer consists of one node with a linear activation function
                 layers[layers.length - 1] = new Layer(new Linear(), 1, layers[layers.length - 2].getNumNodes() + 1);
             } else { // The set is classification
