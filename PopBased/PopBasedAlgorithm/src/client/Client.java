@@ -181,7 +181,7 @@ public class Client {
         
         int num_hl = 1;
         // iterate through data files
-        for (int f = 0; f < 3; f++) {//data.length; f++) {
+        for (int f = 4; f < data.length; f++) {//data.length; f++) {
             // iterate through cog mult values
             for (int c = 0; c < cog_mult.length; c++) {
                 // iterate through soc mult values
@@ -204,15 +204,15 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double cog_mult = 2;
+        double cog_mult = 3;
         double soc_mult = 1;
         int pop_size = 100;
-        int max_iter = 1000;
+        int max_iter = 1000;    // MAYBE TRY FINAL RUN WITH MORE INDIVIDUALS IN THE POPULATION?
         int folds = 1;
         
         // FOR TESTING ONLY
-        int TODO = 1;
-        int num_hl = 2;
+        int TODO = 4;
+        int num_hl = 1;
         runPSO(fout, data[TODO], num_hl, cog_mult, soc_mult, pop_size, max_iter, folds);
         
         /*// iterate through data files

@@ -31,7 +31,7 @@ public class Particle implements Comparable<Particle> {
     /**
      * bound on the magnitude of a component of the velocity vector
      */
-    private final double VELCLAMP = 0.1;
+    private final double VELCLAMP = 1;
     
     /**
      * current network, the weights will be updated according
@@ -204,7 +204,7 @@ public class Particle implements Comparable<Particle> {
     }
     
     private void maeFitness() {
-        if (Particle.data.getNumClasses() == 1) {
+        if (Particle.data.getNumClasses() == -1) {
             double[] results = this.network.test(Particle.data);
             RegressionEvaluator eval = new RegressionEvaluator(results, Particle.data);
             this.fitness = -1 * eval.getMAE(); // multiply by -1 because of compareTo logic
