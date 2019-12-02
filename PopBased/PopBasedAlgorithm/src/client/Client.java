@@ -58,10 +58,10 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double crossover_rate = 0.05;
+        double crossover_rate = 0.01;
         double mutation_rate = 0.01;
-        int pop_size = 300;
-        int max_iter = 10000;
+        int pop_size = 2000;
+        int max_iter = 1000;
         int folds = 2;
         
         // FOR TESTING ONLY
