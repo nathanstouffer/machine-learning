@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import neuralnets.MLP;
 import poptrain.PSO;
 import java.util.Arrays;
+import poptrain.DifferentialEvolution;
 import poptrain.GeneticAlgorithm;
 
 /**
@@ -45,6 +46,11 @@ public class Client {
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //tunePSO();
+<<<<<<< HEAD
+        //finalPSO();
+        //tuneDE();
+        finalDE();
+=======
         finalPSO();
     }
     /**
@@ -75,6 +81,7 @@ public class Client {
                 }
             }
         }
+>>>>>>> 5567599f82b740119b6d7947972a243f55f1adfe
     }
     
     
@@ -337,6 +344,129 @@ public class Client {
         PrintWriter writer = new PrintWriter(new FileOutputStream(new File(fout), true /* append = true */));
         writer.println(output);
         writer.close();
+    }
+    
+    private static void runDE(String fout, DataReader data, int num_hl,
+            double crossover_rate, double mutation_rate, int pop_size, int max_iter, 
+            int folds) throws FileNotFoundException {
+        System.out.println("---- RUNNING DE ON DATASET " + data.getFileName() + " WITH " + num_hl 
+                + " HIDDEN LAYERS ----");
+        System.out.print("------ POP SIZE: " + pop_size);
+        System.out.print(" ---- Crossover Rate: " + crossover_rate);
+        System.out.println(" ---- Mutation Rate: " + mutation_rate + " ------");
+        
+        double starttime = System.currentTimeMillis();
+        
+        double metric1 = 0;
+        double metric2 = 0;
+        
+        // build topology array
+        int[] topology = buildTop(data, num_hl);
+        
+        // instantiate GA class
+        DifferentialEvolution DE = new DifferentialEvolution(topology, pop_size, crossover_rate, mutation_rate, max_iter, data.getSimMatrices());
+        
+        // perform cross validation
+        for (int c = 0; c < folds; c++) {
+            System.out.println("Performing CV Fold #" + (c+1));
+            
+            Set training = new Set(data.getSubsets(), c);
+            Set testing = data.getSubsets()[c];
+            
+            // train the swarm
+            DE.train(training);
+            // get most fit member
+            MLP mlp = DE.getBest();
+            // test mlp
+            double[] results = mlp.test(testing);
+            
+            // Get metrics
+            if(training.getNumClasses() == -1) {
+                // Regression
+                RegressionEvaluator eval = new RegressionEvaluator(results, testing);
+                metric1 += eval.getMSE();
+                metric2 += eval.getME();
+                eval.printAct();
+                eval.printPred();
+            } else {
+                // Classification
+                ClassificationEvaluator eval = new ClassificationEvaluator(results, testing);
+                metric1 += eval.getAccuracy();
+                metric2 += eval.getMSE();
+                eval.printAct();
+                eval.printPred();
+            }
+        }
+        
+        // average metrics
+        metric1 /= folds;
+        metric2 /= folds;
+        
+        // output results
+        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + crossover_rate + "," 
+                + mutation_rate + "," + metric1 + "," + metric2;
+        // write to console
+        double endtime = System.currentTimeMillis();
+        double runtime = (endtime - starttime) / 1000;
+        System.out.println("\u001B[33m" + "DE trained and tested in " + runtime + " seconds");
+        System.out.println(output + "\u001B[0m");
+        // Write to file
+        PrintWriter writer = new PrintWriter(new FileOutputStream(new File(fout), true /* append = true */));
+        writer.println(output);
+        writer.close();
+    }
+    /**
+     * private method to run PSO with the final configuration 
+     * which is specified in this method
+     */
+    private static void finalDE() throws FileNotFoundException {
+        System.out.println("--------- TESTING FINAL DE CONFIG ---------");
+
+        String fout = "../Output/" + "DE-final-out.csv";
+        clearFile(fout);
+        
+        // final configuration of variables listed here
+        double crossover_rate = 0.1;
+        double mutation_rate = 0.5;
+        int pop_size = 10;
+        int max_iter = 1000;
+        int folds = 2;
+        
+        // FOR TESTING ONLY
+        int TODO = 0;
+        int num_hl = 0;
+        runDE(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
+        
+
+    }
+        /**
+     * private method to run PSO with the final configuration 
+     * which is specified in this method
+     */
+    private static void tuneDE() throws FileNotFoundException {
+        System.out.println("--------- TUNING DE CONFIG ---------");
+
+        String fout = "../Output/" + "DE-tuning-out.csv";
+        clearFile(fout);
+        
+        // final configuration of variables listed here
+        double[] beta = { .5, 1, 1.5, 2.0};
+        double[] cross = { .01, .25, .5, .75};
+        int pop_size = 100;
+        int max_iter = 100;
+        int folds = 2;
+        
+        int num_hl = 1;
+        // iterate through data files
+        for (int f = 0; f < 6; f++) {//data.length; f++) {
+            // iterate through cog mult values
+            for (int c = 0; c < beta.length; c++) {
+                // iterate through soc mult values
+                for (int s = 0; s < cross.length; s++) {
+                    runDE(fout, data[f], num_hl, cross[s], beta[c], pop_size, max_iter, folds);
+                }
+            }
+        }
     }
     
     /**

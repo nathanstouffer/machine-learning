@@ -14,20 +14,21 @@ import neuralnets.MLP;
 import neuralnets.layer.Vector;
 
 /**
- * Utilized Differential Evolution to train an MLP. Preforms cycles of mutation, 
- * crossover and replacement. Uses uniform crossover, random selection and 
+ * Utilized Differential Evolution to train an MLP. Preforms cycles of mutation,
+ * crossover and replacement. Uses uniform crossover, random selection and
  * single difference vector mutation.
+ *
  * @author Kevin
  */
 public class DifferentialEvolution implements IPopTrain {
-    
+
     /**
      * These parameters define the behavior of the algorithm. Topology describes
-     * the MLP's dimensions, layers, and general topology. Population size 
-     * can be tuned to affect the search capabilities. Crossover rate will 
-     * determine the rate at which crossover occurs, mutation rate will
-     * determine the rate at which mutation occurs. Max generations will be used
-     * to end the training.
+     * the MLP's dimensions, layers, and general topology. Population size can
+     * be tuned to affect the search capabilities. Crossover rate will determine
+     * the rate at which crossover occurs, mutation rate will determine the rate
+     * at which mutation occurs. Max generations will be used to end the
+     * training.
      */
     private final int[] topology;
     /*The array topology is expected to have the form
@@ -37,31 +38,31 @@ public class DifferentialEvolution implements IPopTrain {
     private final double crossover_rate;
     private final double mutation_rate;
     private final int max_generations;
-    
+
     /**
-     * These arrays contain the vectors that we will be manipulating
-     * to search through the hyperspace.
+     * These arrays contain the vectors that we will be manipulating to search
+     * through the hyperspace.
      */
     private Vector[] population;
     private double[] population_fitnesses;
-    
+
     /**
      * The set of data that will be used to evaluate the fitness.
      */
     private Set data;
-    
+
     /**
      * The similarity matrices used by various networks. Save to pass into
      * construction.
      */
     private final SimilarityMatrix[] sim;
-    
+
     /**
      * Best individual
      */
     private Vector all_time_best;
     private double all_time_best_fitness;
-    
+
     /**
      * The random number generator used during selection.
      */
@@ -81,7 +82,7 @@ public class DifferentialEvolution implements IPopTrain {
      * @param sim The similarity matrices used for handling categorical
      * features.
      */
-    DifferentialEvolution(int[] topology, int population_size, double crossover_rate, double mutation_rate, int max_generations, SimilarityMatrix[] sim) {
+    public DifferentialEvolution(int[] topology, int population_size, double crossover_rate, double mutation_rate, int max_generations, SimilarityMatrix[] sim) {
         this.topology = topology;
         this.population_size = population_size;
         this.crossover_rate = crossover_rate;
@@ -91,17 +92,22 @@ public class DifferentialEvolution implements IPopTrain {
         this.rand = new Random();
         this.all_time_best_fitness = 0;
     }
+
     /**
      * Trains an MLP using Differential Evolution
+     *
      * @param training Training data set
      */
     @Override
-    public void train(Set training){
+    public void train(Set training) {
+        data = training;
+        //initilize population
+        initializePopulation();
         //iterate for a specified number of generations
         int generation = 0;
-        while(generation < max_generations){
+        while (generation < max_generations) {
             //each generation when iterations is equal to pop size 
-            for(int i = 0; i < population_size; i++){
+            for (int i = 0; i < population_size; i++) {
                 //randomly select target vector and compute fitness
                 int target_index = rand.nextInt(population_size);
                 Vector target_vector = population[target_index];
@@ -112,26 +118,29 @@ public class DifferentialEvolution implements IPopTrain {
                 double trial_fitness = computeFitness(trial_vector);
                 //if trial fitness is greater than target fitness, replaces
                 //target with trial in general population
-                if(target_fitness < trial_fitness){
+                if (target_fitness < trial_fitness) {
                     population[target_index] = trial_vector;
                 }
             }
-            generation++;  
+            generation++;
         }
     }
+
     /**
      * Returns the best individual in the population
+     *
      * @return Best MLP in population
      */
     @Override
     public MLP getBest() {
+        population_fitnesses = new double[population_size];
         //calculate fitness for all members of population
-        for(int i = 0; i < population.length; i++) { 
+        for (int i = 0; i < population.length; i++) {
             population_fitnesses[i] = computeFitness(population[i]);
         }
         //determine most fit individual in population 
-        for(int i = 0; i < population.length; i++){
-            if(population_fitnesses[i] > all_time_best_fitness){
+        for (int i = 0; i < population.length; i++) {
+            if (population_fitnesses[i] > all_time_best_fitness) {
                 all_time_best_fitness = population_fitnesses[i];
                 all_time_best = population[i];
             }
@@ -141,39 +150,44 @@ public class DifferentialEvolution implements IPopTrain {
         network.setWeights(all_time_best);
         return network;
     }
+
     /**
-     * Creates trial vector with a single difference vector 
+     * Creates trial vector with a single difference vector
+     *
      * @return trial vector
      */
-    private Vector mutate(){
+    private Vector mutate() {
         //randomly selecting vectors from population
-        Vector[] trial_vector_components = {population[rand.nextInt(population_size)],population[rand.nextInt(population_size)],population[rand.nextInt(population_size)]};
+        Vector[] trial_vector_components = {population[rand.nextInt(population_size)], population[rand.nextInt(population_size)], population[rand.nextInt(population_size)]};
         //compute x1 + B(x2 - x3)
         Vector trial_vector = trial_vector_components[1].minus(trial_vector_components[2]);
         trial_vector = trial_vector.times(mutation_rate);
         trial_vector = trial_vector_components[0].plus(trial_vector);
         return trial_vector;
     }
+
     /**
-     * Crosses target and trial vector based on crossover rate using uniform 
+     * Crosses target and trial vector based on crossover rate using uniform
      * using uniform crossover
+     *
      * @param target Target vector
      * @param trial Trial vector
      * @return crossed trial vector
      */
     private Vector cross(Vector target, Vector trial) {
         // Clone the vectors
-        target = target.clone(); trial = trial.clone();
+        target = target.clone();
+        trial = trial.clone();
         // Iterate through each vector value, testing if the values will be
         // crossed
-        for(int i = 0; i < target.getLength(); i++) {
+        for (int i = 0; i < target.getLength(); i++) {
             // Generate a random double to see if crossover will occur
-            if(rand.nextDouble() <= crossover_rate) {
+            if (rand.nextDouble() <= crossover_rate) {
                 // Swap values
                 double temp = target.get(i);
                 target.set(i, trial.get(i));
                 trial.set(i, temp);
-            } 
+            }
         }
         Vector crossed = trial;
         return crossed;
