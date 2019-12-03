@@ -137,7 +137,7 @@ public class GeneticAlgorithm implements IPopTrain {
             crossParents();
             // Compute std dev of each element (weight) in the vectors 
             // (individuals) to be used during mutation
-            computeStdDevs();
+            // computeStdDevs();
             // Mutate all the children
             mutateChildren();
             // Replace (steady state) the children into the general population
@@ -337,7 +337,8 @@ public class GeneticAlgorithm implements IPopTrain {
         a = a.clone();
         for(int i = 0; i < a.getLength(); i++) {
             // Determine the standard deviation to be used
-            double std_dev = population_std_devs[i];
+            // double std_dev = population_std_devs[i];
+            double std_dev = 0;
             if(std_dev < MIN_STD_DEV) { // Check against the minimum
                 std_dev = MIN_STD_DEV;
             }
