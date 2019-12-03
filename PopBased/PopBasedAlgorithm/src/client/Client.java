@@ -25,7 +25,7 @@ import poptrain.GeneticAlgorithm;
  */
 public class Client {
     
-    private static String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv"}; //, "winequality-white.csv"};
+    private static String[] datafiles = { "abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv"}; //, "winequality-white.csv"};
     private static DataReader[] data = new DataReader[datafiles.length];
     
     /**
@@ -212,7 +212,7 @@ public class Client {
         
         int num_hl = 1;
         // iterate through data files
-        for (int f = 4; f < data.length; f++) {//data.length; f++) {
+        for (int f = 0; f < data.length; f++) {
             // iterate through cog mult values
             for (int c = 0; c < cog_mult.length; c++) {
                 // iterate through soc mult values

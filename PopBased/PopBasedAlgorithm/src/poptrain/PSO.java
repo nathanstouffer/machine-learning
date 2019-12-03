@@ -61,7 +61,7 @@ public class PSO implements IPopTrain {
     
     /**
      * private variable to store the particle with the best_idx
- performance, regardless of time
+     * performance, regardless of time
      */
     private Particle best;
     
@@ -133,7 +133,7 @@ public class PSO implements IPopTrain {
     private void setGenBest() {
         // assume the best_info is the 0th member
         int curr_best = 0;
-        // iterate thorugh population
+        // iterate through population
         for (int p = 0; p < this.pop_size; p++) {
             if (this.pop[p].compareTo(this.pop[curr_best]) >= 0) { curr_best = p; }
         }
@@ -161,11 +161,11 @@ public class PSO implements IPopTrain {
             // set weights to random values
             network.randPopWeights();
             // put network in population
-            this.pop[p] = new Particle(this.pc, this.gc, network);
+            this.pop[p] = new Particle(this.pc, this.gc, this.topology, this.sim);
         }
         
         // calculate best_info members
-        this.best = new Particle(this.pop[0].getNetwork());     // set dummy global best_info
+        this.best = new Particle(this.topology, this.sim, this.pop[0].getPos());     // set dummy global best_info
         //System.out.println("-> Original fitness: " + this.best_info.getFitness());
         // set generation best_info
         this.setGenBest();
