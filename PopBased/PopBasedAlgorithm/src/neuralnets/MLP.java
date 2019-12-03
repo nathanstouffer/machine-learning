@@ -25,7 +25,7 @@ public class MLP implements INeuralNet {
      * The absolute value of the bounds on the starting weights all layers
      * of a network
      */
-    private static final double STARTING_WEIGHT_BOUND = 15;
+    public static final double STARTING_WEIGHT_BOUND = 0.01;
     
     /**
      * The absolute value of the bounds on the starting weights in the output
