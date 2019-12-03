@@ -43,8 +43,8 @@ public class Client {
         // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
-        tunePSO();
-        //finalPSO();
+        //tunePSO();
+        finalPSO();
     }
     
     /**
@@ -326,7 +326,7 @@ public class Client {
         else { topology[len-1] = temp.getNumClasses(); }
         
         // populate hidden layer multiples
-        for (int t = 1; t < num_hl+1; t++) { topology[t] = 2 * topology[len-2]; }       
+        for (int t = 1; t < num_hl+1; t++) { topology[t] = 2 * temp.getNumAttributes(); }       
         return topology;
     }
     
