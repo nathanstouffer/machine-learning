@@ -43,14 +43,15 @@ public class Client {
         //finalGA();
         
         // ------------------------------------------------------------
+        // --- RUN FINAL DE TESTS WITH OPTIMUM PARAMETERS SELECTED ---
+        // ------------------------------------------------------------
+        //tuneDE();
+        //finalDE();
+        
+        // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //tunePSO();
-<<<<<<< HEAD
-        //finalPSO();
-        //tuneDE();
-        finalDE();
-=======
         finalPSO();
     }
     /**
@@ -81,7 +82,6 @@ public class Client {
                 }
             }
         }
->>>>>>> 5567599f82b740119b6d7947972a243f55f1adfe
     }
     
     
@@ -242,26 +242,20 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double cog_mult = 3;
-        double soc_mult = 1;
+        double[] cog_mult = { 3, 2, 2, 2, 1, 1 };
+        double[] soc_mult = { 2, 3, 1, 2, 3, 2 };
         int pop_size = 100;
-        int max_iter = 1000;    // MAYBE TRY FINAL RUN WITH MORE INDIVIDUALS IN THE POPULATION?
+        int max_iter = 1000;
         int folds = 1;
         
-        // FOR TESTING ONLY
-        int TODO = 4;
-        int num_hl = 1;
-        runPSO(fout, data[TODO], num_hl, cog_mult, soc_mult, pop_size, max_iter, folds);
-        
-        /*// iterate through data files
+        // iterate through data files
         for (int f = 0; f < data.length; f++) {
             // iterate through number of layers
             for (int num_hl = 0; num_hl < 3; num_hl++) {
-                runPSO(fout, data[f], num_hl, cog_mult,
-                        soc_mult, pop_size, max_iter, folds);
+                runPSO(fout, data[f], num_hl, cog_mult[f],
+                        soc_mult[f], pop_size, max_iter, folds);
             }
         }
-        */
     }
     
     /**
