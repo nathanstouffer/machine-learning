@@ -12,7 +12,7 @@
 
 \begin{document}
 
-\title{Learning with Neural Nets}
+\title{Learning with Neural Nets using Population Based Algorithms}
 
 \author{\name Andrew Kirby \email andy-kirby@live.com \AND
 		\name Kevin Browder \email browderkevin54@gmail.com \AND
@@ -37,19 +37,34 @@ The machine dataset predicts the performance of a CPU which has an even distribu
 
 \section{Algorithms}
 
+% TODO write a short description of neural networks and how they convert to vectors
+
+\subsection{Genetic Algorithm}
+
+\subsection{Differential Evolution}
+
+\subsection{Particle Swarm Optimization}
+
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
-First, all the examples in the data set are randomly scrambled and then assigned to sets
-for ten-fold cross validation. All categorical variables are converted to integers and the
-preprocessor also generates a similarity matrix for each categorical variable that is used for
-determining distances between categorical variables. All numerical variables are normalized
-between 0 and 1. The data sets did not contain any missing variables.
+
+	First, all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. 
+	All categorical variables are converted to integers 
+	and the preprocessor also generates a similarity matrix for each categorical variable that is used for
+	determining distances between categorical variables. 
+	All numerical variables are normalized
+	between 0 and 1. The data sets did not contain any missing variables.
 
 \subsection{Evaluation Metrics}
-Classification datasets are evaluated with accuracy and mean squared error (MSE). The MSE metric implemented measures the squared error between the predicted and actual class distributions. This is similar in concept to a Brier score but different in computation.  Accuracy indicates how well the algorithm individually classifies examples.
 
-To evaluate regression datasets, mean error (ME) and MSE will be used. MSE takes the distance between real and predicted values and squares it. ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over- or under-estimate the values in the test set. MSE and ME are computed using z-scores (the number of standard deviations from the mean) so that comparisons can be made between datasets.
+	Classification datasets are evaluated with accuracy and mean squared error (MSE). 
+	The MSE metric implemented measures the squared error between the predicted and actual class distributions. 
+	This is similar in concept to a Brier score but slightly different in computation. Accuracy indicates how well the algorithm individually classifies examples.
+	
+	To evaluate regression datasets, mean error (ME) and MSE will be used. MSE squares the distance between a real and predicted value, the squares are then averaged over the entire testing set. 
+	ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over or underestimate the values in the test set. 
+	MSE and ME are computed using z-scores (the number of standard deviations from the mean) so that comparisons can be made between datasets.
 
 \subsection{Tuning}
 
