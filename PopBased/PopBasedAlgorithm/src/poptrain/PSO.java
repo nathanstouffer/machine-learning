@@ -173,7 +173,7 @@ public class PSO implements IPopTrain {
         // print population
         // print pop returns the index with the best performance
         //return this.printPop(-1, 0);
-        return 0;       // use above line for debuggin
+        return 0;       // use above line for debugging
     }
     
     @Override
@@ -220,6 +220,7 @@ public class PSO implements IPopTrain {
                     double temp_fit = Math.abs(this.pop[p].getFitness());
                     double temp_dist = this.pop[p].distToGenBest();
                     if (p == Particle.getGBestIndex()) {
+                        // the best performing individual is printed in green
                         best_idx = p;
                         String num = String.format("\u001B[32m%-5s%.4f\u001B[0m   ", 
                                 p+": ", temp_fit);
@@ -229,6 +230,7 @@ public class PSO implements IPopTrain {
                         dist_line += dist;
                     }
                     else if (p == prev_best) {
+                        // the previous best performing individual is printed in yellow
                         String num = String.format("\u001B[33m%-5s%.4f\u001B[0m   ", 
                                 p+": ", temp_fit);
                         String dist = String.format("\u001B[33m%-5s%6.0f\u001B[0m   ", 
@@ -237,6 +239,7 @@ public class PSO implements IPopTrain {
                         dist_line += dist;
                     }
                     else {
+                        // all other individuals are printed in white
                         String num = String.format("%-5s%.4f   ", p+": ", temp_fit);
                         String dist = String.format("%-5s%6.0f   ", "d: ", temp_dist);
                         fit_line += num;

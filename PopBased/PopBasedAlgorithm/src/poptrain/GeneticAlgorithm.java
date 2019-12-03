@@ -26,17 +26,17 @@ public class GeneticAlgorithm implements IPopTrain {
      * Determines the number of children generated each generation by the
      * population size divided by this divisor.
      */
-    private static final int NUM_CHILDREN_DIVISOR = 3;
+    private static final int NUM_CHILDREN_DIVISOR = 4;
     
     /**
      * Determines the minimum standard deviation of the creep mutation operator.
      */
-    private static final double MIN_STD_DEV = 0.0001;
+    private static final double MIN_STD_DEV = MLP.STARTING_WEIGHT_BOUND * 100; //0.001;
     
     /**
      * The number of messages that will be printed out during the algorithm run.
      */
-    private static final int NUM_MESSAGES = 100;
+    private static final int NUM_MESSAGES = 10;
     
     /**
      * These parameters define the behavior of the algorithm. Topology describes
@@ -146,9 +146,10 @@ public class GeneticAlgorithm implements IPopTrain {
             // Print out what the current generation is
             if(g % (max_generations/NUM_MESSAGES) == 0) { 
                 System.out.println("~~~ GENERATION " + g + " ~~~"); 
-                printPopFitness(100);
+                printPop(10);
+                printPopFitness(30);
                 //printPopRank();
-                printPopStdDevs();
+                //printPopStdDevs();
                 printAllTimeBest();
             }
         }
@@ -346,7 +347,9 @@ public class GeneticAlgorithm implements IPopTrain {
                 double update = a.get(i);
                 // Creep takes from a normal distribution centered at 0 with
                 // a tuned/determined std deviation
-                update += rand.nextGaussian()*std_dev;
+                double creep  = rand.nextGaussian()*std_dev;
+                // System.out.println("CREEP VALUE: " + creep);
+                update += creep;
                 a.set(i, update);
             } 
         }
@@ -393,7 +396,7 @@ public class GeneticAlgorithm implements IPopTrain {
         
         // Initialize all time best info
         all_time_best = null;
-        all_time_best_fitness = Double.MIN_VALUE;
+        all_time_best_fitness = Double.NEGATIVE_INFINITY;
         
         // Fill the initial population
         for(int i = 0; i < population.length; i++) {
@@ -407,8 +410,15 @@ public class GeneticAlgorithm implements IPopTrain {
     }
     
     /* ---- DISPLAY / DEBUGGING FUNCTIONS ---- */
+    private void printPop(int numlines) {
+        System.out.println("Current Population: ");
+        for(int i = 0; i < numlines; i++) {
+            System.out.println(population[i]);
+        }
+    }
+    
     private void printPop() {
-        
+        printPop(population.length);
     }
     
     private void printParents() {
@@ -446,6 +456,8 @@ public class GeneticAlgorithm implements IPopTrain {
     }
     
     private void printAllTimeBest() {
+        System.out.print("ALL TIME BEST: ");
+        System.out.println(all_time_best);
         System.out.print("ALL TIME BEST FITNESS: ");
         System.out.println(all_time_best_fitness);
     }

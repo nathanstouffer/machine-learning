@@ -39,19 +39,54 @@ public class Client {
         // ------------------------------------------------------------
         // --- RUN FINAL GA TESTS WITH OPTIMAL PARAMETERS SELECTED ----
         // ------------------------------------------------------------
+        //tuneGA();
         //finalGA();
         
         // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //tunePSO();
+<<<<<<< HEAD
         //finalPSO();
         //tuneDE();
         finalDE();
+=======
+        finalPSO();
+    }
+    /**
+     * private method to tune GA
+     */
+    private static void tuneGA() throws FileNotFoundException {
+        System.out.println("--------- TUNING GA CONFIG ---------");
+
+        String fout = "../Output/" + "GA-tuning-out.csv";
+        clearFile(fout);
+        
+        // final configuration of variables listed here
+        double[] crossover = { 0.1, 0.05, 0.01, 0.005};
+        double[] mutation = { 0.05, 0.02, 0.01, 0.005};
+        int pop_size = 64;
+        int max_iter = 1000;
+        int folds = 1;
+        
+        int num_hl = 1;
+        // iterate through data files
+        for (int f = 3; f < 6; f++) {//data.length; f++) {
+            // iterate through crossover rates
+            for (int c = 0; c < crossover.length; c++) {
+                // iterate through mutation rates
+                for (int m = 0; m < mutation.length; m++) {
+                    runGA(fout, data[f], num_hl, crossover[c],
+                            mutation[m], pop_size, max_iter, folds);
+                }
+            }
+        }
+>>>>>>> 5567599f82b740119b6d7947972a243f55f1adfe
     }
     
+    
     /**
-     * private method to run PSO with the final configuration 
+     * private method to run GA with the final configuration 
      * which is specified in this method
      */
     private static void finalGA() throws FileNotFoundException {
@@ -63,12 +98,12 @@ public class Client {
         // final configuration of variables listed here
         double crossover_rate = 0.01;
         double mutation_rate = 0.01;
-        int pop_size = 2000;
-        int max_iter = 1000;
-        int folds = 2;
+        int pop_size = 104;
+        int max_iter = 100;
+        int folds = 1;
         
         // FOR TESTING ONLY
-        int TODO = 1;
+        int TODO = 0;
         int num_hl = 0;
         runGA(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
         
@@ -160,9 +195,9 @@ public class Client {
         System.out.println("\u001B[33m" + "GA trained and tested in " + runtime + " seconds");
         System.out.println(output + "\u001B[0m");
         // Write to file
-        //PrintWriter writer = new PrintWriter(new FileOutputStream(new File(fout), true /* append = true */));
-        //writer.println(output);
-        //writer.close();
+        PrintWriter writer = new PrintWriter(new FileOutputStream(new File(fout), true /* append = true */));
+        writer.println(output);
+        writer.close();
     }
     
     /**
@@ -184,7 +219,7 @@ public class Client {
         
         int num_hl = 1;
         // iterate through data files
-        for (int f = 0; f < 3; f++) {//data.length; f++) {
+        for (int f = 4; f < data.length; f++) {//data.length; f++) {
             // iterate through cog mult values
             for (int c = 0; c < cog_mult.length; c++) {
                 // iterate through soc mult values
@@ -207,15 +242,15 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double cog_mult = 2;
+        double cog_mult = 3;
         double soc_mult = 1;
         int pop_size = 100;
-        int max_iter = 1000;
+        int max_iter = 1000;    // MAYBE TRY FINAL RUN WITH MORE INDIVIDUALS IN THE POPULATION?
         int folds = 1;
         
         // FOR TESTING ONLY
-        int TODO = 1;
-        int num_hl = 2;
+        int TODO = 4;
+        int num_hl = 1;
         runPSO(fout, data[TODO], num_hl, cog_mult, soc_mult, pop_size, max_iter, folds);
         
         /*// iterate through data files
@@ -452,7 +487,7 @@ public class Client {
         else { topology[len-1] = temp.getNumClasses(); }
         
         // populate hidden layer multiples
-        for (int t = 1; t < num_hl+1; t++) { topology[t] = 2 * topology[len-2]; }       
+        for (int t = 1; t < num_hl+1; t++) { topology[t] = 2 * temp.getNumAttributes(); }       
         return topology;
     }
     

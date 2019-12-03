@@ -25,13 +25,7 @@ public class MLP implements INeuralNet {
      * The absolute value of the bounds on the starting weights all layers
      * of a network
      */
-    private static final double STARTING_WEIGHT_BOUND = 15;
-    
-    /**
-     * The absolute value of the bounds on the starting weights in the output
-     * layer for regression data sets only.
-     */
-    private static final double STARTING_REG_OUTPUT_WEIGHT_BOUND = 10;
+    public static final double STARTING_WEIGHT_BOUND = 0.01;
     
     /**
      * Private variable to store the number of weights in the MLP
@@ -254,11 +248,6 @@ public class MLP implements INeuralNet {
         // Randomly initialize the output layer weights
         for (int i = 0; i < layers.length; i++) {
             layers[i].randPopulate(-STARTING_WEIGHT_BOUND, STARTING_WEIGHT_BOUND);
-        }
-        // repopulate output weights for regression datasets
-        if (layers[this.layers.length-1].getNumNodes() == 1) {
-            layers[this.layers.length-1].randPopulate(-STARTING_REG_OUTPUT_WEIGHT_BOUND,
-                    STARTING_REG_OUTPUT_WEIGHT_BOUND);
         }
     }
     
