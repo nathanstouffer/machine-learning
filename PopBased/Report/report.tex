@@ -9,10 +9,11 @@
 \newcommand{\ith}{$i^{th}$ }
 \newcommand{\jth}{$j^{th}$ }
 \newcommand{\weight}{$w_{ji}$ }
+\newcommand{\Rw}{\mathbb{R}^w }
 
 \begin{document}
 
-\title{Learning with Neural Nets using Population Based Algorithms}
+\title{Learning with Neural Networks using Population Based Algorithms}
 
 \author{\name Andrew Kirby \email andy-kirby@live.com \AND
 		\name Kevin Browder \email browderkevin54@gmail.com \AND
@@ -24,6 +25,8 @@
 \begin{abstract}
 
 \end{abstract}
+
+% TODO make sure to abbreviate PBA and algorithm names
 
 \section{Problem Statement}
 
@@ -37,13 +40,27 @@
 
 \section{Algorithms}
 
-% TODO write a short description of neural networks and how they convert to vectors
+	Population Based Algorithms typically reference individual members of populations as vectors associated with a fitness value. Each element in a vector corresponds to some value in a model that is being trained by the PBA.
+	
+	Recall that the output of a Neural Network is entirely dependent on the values of the weights within in the network. 
+	So a neural network can be converted to vector form by listing its weights.
+	Since weights are real-valued, if $w$ represents the number of weights that a neural network contains then the vector is a point in the Euclidean Space $\mathbb{R}^w$. 
+	The fitness associated with the vector is the accuracy or MSE (respectively for classification and regression) of a network on a training data set. 
+	
+	This sets up the search space of weights and the objective function based on the network's fitness.
 
 \subsection{Genetic Algorithm}
 
 \subsection{Differential Evolution}
 
 \subsection{Particle Swarm Optimization}
+
+	PSO differs from the GA and DE in that there is no parent-offspring relationship. Instead, PSO consists of particles that interact and move around the search space to find the optimum solution. 
+	
+	A swarm consists of $N$ individuals each with a position $\vec{x} \in \Rw$ and a fitness value. 
+	PSO then uses an iterative update rule to change each individual's position. The update for an individual is named $\vec{v} \in \Rw$, which is composed of 3 summed components.
+	
+	The first component is inertia. For a given iteration's velocity $\vec{v}^t$ inertia is given as $\omega * \vec{v}^{t-1}$ where $\omega$ is typically in $(0,1)$ \citep{empirical-pso}.
 
 \section{Experiment}
 
