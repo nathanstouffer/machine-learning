@@ -46,12 +46,10 @@ public class Client {
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //tunePSO();
-<<<<<<< HEAD
         //finalPSO();
         //tuneDE();
         finalDE();
-=======
-        finalPSO();
+        //finalPSO();
     }
     /**
      * private method to tune GA
@@ -81,7 +79,6 @@ public class Client {
                 }
             }
         }
->>>>>>> 5567599f82b740119b6d7947972a243f55f1adfe
     }
     
     
@@ -428,12 +425,12 @@ public class Client {
         // final configuration of variables listed here
         double crossover_rate = 0.1;
         double mutation_rate = 0.5;
-        int pop_size = 10;
-        int max_iter = 1000;
+        int pop_size = 1000;
+        int max_iter = 50;
         int folds = 2;
         
         // FOR TESTING ONLY
-        int TODO = 0;
+        int TODO = 1;
         int num_hl = 0;
         runDE(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
         
