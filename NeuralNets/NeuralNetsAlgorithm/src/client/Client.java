@@ -159,6 +159,7 @@ public class Client {
 
         // iterate through data files
         for (int f = 0; f < data.length; f++) {
+            f = 4;
             // get current dataset
             DataReader curr_data = data[f];
             // iterate through number of layers
