@@ -18,7 +18,7 @@ import neuralnets.layer.Vector;
  *      -> Rank-based selection
  *      -> Uniform crossover
  *      -> Uniform mutation with real-valued creep
- *      -> Steady-state replacement (1/2 of population is replaced with children)
+ *      -> Steady-state replacement (1/4 of population is replaced with children)
  * @author andy-
  */
 public class GeneticAlgorithm implements IPopTrain {    

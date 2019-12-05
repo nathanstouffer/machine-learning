@@ -127,8 +127,8 @@ public class DifferentialEvolution implements IPopTrain {
     }
 
     /**
-     * Returns the best individual in the population
-     *
+     * Calculates and returns the best individual in the population.
+     * 
      * @return Best MLP in population
      */
     @Override
@@ -192,7 +192,10 @@ public class DifferentialEvolution implements IPopTrain {
         Vector crossed = trial;
         return crossed;
     }
-
+    /**
+     * Initialize the population of vectors based on the desired topology of the
+     * network.
+     */
     private void initializePopulation() {
         // Initialize the arrays that hold our populations
         population = new Vector[population_size];
@@ -211,7 +214,13 @@ public class DifferentialEvolution implements IPopTrain {
             // and store it in our array.
         }
     }
-
+    
+     /**
+     * Computes the fitness of a single individual. Greater value means greater
+     * fitness.
+     * @param individual The vector representation of an individual MLP
+     * @return The fitness of the individual.
+     */
     private double computeFitness(Vector individual) {
 
         // Create an MLP from the individual

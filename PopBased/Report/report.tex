@@ -1,5 +1,5 @@
-%\documentclass[twoside,11pt]{article}
-\documentclass[twoside,10pt]{article}
+\documentclass[twoside,11pt]{article}
+%\documentclass[twoside,10pt]{article}
 
 \usepackage{jmlr2e}
 \usepackage{spverbatim}
@@ -29,7 +29,6 @@
 % TODO make sure to abbreviate PBA and algorithm names
 
 \section{Problem Statement}
-
 	Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult.
 	The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 subjects of outdoor photographs with sets of attributes.
 	The rest of the datasets are regression.
@@ -51,8 +50,15 @@
 
 \subsection{Genetic Algorithm}
 
-\subsection{Differential Evolution}
+The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape.
 
+At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then9 completely or partially 
+
+
+
+
+\subsection{Differential Evolution}
+Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA because it uses crossover and mutation.  
 \subsection{Particle Swarm Optimization}
 
 	PSO differs from the GA and DE in that there is no parent-offspring relationship. Instead, PSO consists of particles that interact and move around the search space to find the optimum solution. 
