@@ -7,6 +7,7 @@ package poptrain;
 
 import datastorage.Example;
 import datastorage.Set;
+import datastorage.SimilarityMatrix;
 import evaluatelearner.ClassificationEvaluator;
 import evaluatelearner.RegressionEvaluator;
 import java.util.Random;
@@ -34,17 +35,23 @@ public class Particle implements Comparable<Particle> {
     private final double VELCLAMP = 1;
     
     /**
-     * current network, the weights will be updated according
-     * to the Vector pos as the velocity update rule is applied
-     */
-    private final MLP network;
-    
-    /**
      * Final constant multipliers for past experience and group experience.
      * These will be used in the velocity update rule
      */
     private final double pc;
     private final double gc;
+    
+    /**
+     * private integer array to store the topology of the network
+ that this particle represents
+     */
+    private int[] topology;
+    
+    /**
+     * private array of similarity matrices to be used when constructing
+     * the MLP that the pos Vector represents
+     */
+    private SimilarityMatrix[] sim;
     
     /**
      * private double to store the fitness of the network
@@ -98,14 +105,19 @@ public class Particle implements Comparable<Particle> {
      * @param gc
      * @param network 
      */
-    protected Particle(double pc, double gc, MLP network) {
+    protected Particle(double pc, double gc, int[] topology, SimilarityMatrix[] sim) {
         // set global variables
-        this.network = network;
+        this.topology = topology;
+        this.sim = sim;
+        // randomly initialize the network
+        MLP network = new MLP(this.topology, this.sim);
+        network.randPopWeights();
+        // set global variables
         this.pos = network.toVec();
-        this.computeFitness();
+        this.fitness = this.computeFitness();
         this.pc = pc;
         this.gc = gc;
-        this.pBest = new Particle(network);
+        this.pBest = new Particle(this.topology, this.sim, this.pos);
         this.vel = new Vector(this.pos.getLength());
         this.vel.randPopulate(-1*this.VELCLAMP, this.VELCLAMP);
         // set generation best variables to null
@@ -114,15 +126,17 @@ public class Particle implements Comparable<Particle> {
     }
     
     /**
-     * Protected constructor to store a current optimal 
+     * Protected constructor to store a current optimal
      * configuration of a network
      * 
      * @param network 
      */
-    protected Particle(MLP network) {
-        this.network = network.clone(); // clone so seperate memory addresses
-        this.pos = network.toVec();
-        this.computeFitness();
+    protected Particle(int[] topology, SimilarityMatrix[] sim, Vector pos) {
+        // set global variables
+        this.topology = topology;
+        this.sim = sim;
+        this.pos = pos.clone();
+        this.fitness = this.computeFitness();
         // dummy values for final variable
         this.pc = 0;
         this.gc = 0;
@@ -163,10 +177,9 @@ public class Particle implements Comparable<Particle> {
 
             // update position
             this.pos.plusEquals(this.vel);
-            this.network.setWeights(this.pos);
 
             // compute new fitness
-            this.computeFitness();
+            this.fitness = this.computeFitness();
 
             // compare to past best and act appropriately
             if (this.compareTo(this.pBest) >= 0) { this.pBest.setPos(this.pos); }
@@ -177,18 +190,18 @@ public class Particle implements Comparable<Particle> {
     /**
      * private method to compute  and set the fitness of a network 
      */
-    public void computeFitness() {
-        if (Particle.data == null) { System.err.println("no data to test on"); }
+    public double computeFitness() {
+        if (Particle.data == null) { System.err.println("no data to test on"); return 0.0; }
         else {   
             //System.out.println(Arrays.toString(results));
             if (Particle.data.getNumClasses() == -1) {
                 // data set is regression
-                this.maeFitness();
+                return this.maeFitness();
             }
             else {
                 // data set is classification
-                this.accFitness();
-                //this.maeFitness();
+                return this.accFitness();
+                //return this.maeFitness();
             }
         }
     }
@@ -197,29 +210,34 @@ public class Particle implements Comparable<Particle> {
      * private method to compute the accuracy of the particle. This method
      * should only be called for classification datasets
      */
-    private void accFitness() {
-        double[] results = this.network.test(Particle.data);
+    private double accFitness() {
+        MLP network = new MLP(this.topology, this.sim);
+        network.setWeights(this.pos);
+        double[] results = network.test(Particle.data);
         ClassificationEvaluator eval = new ClassificationEvaluator(results, Particle.data);
-        this.fitness = eval.getAccuracy();
+        return eval.getAccuracy();
     }
     
-    private void maeFitness() {
+    private double maeFitness() {
+        // construct temporary network
+        MLP network = new MLP(this.topology, this.sim);
+        network.setWeights(this.pos);
         if (Particle.data.getNumClasses() == -1) {
-            double[] results = this.network.test(Particle.data);
+            double[] results = network.test(Particle.data);
             RegressionEvaluator eval = new RegressionEvaluator(results, Particle.data);
-            this.fitness = -1 * eval.getMAE(); // multiply by -1 because of compareTo logic
+            return -1 * eval.getMAE(); // multiply by -1 because of compareTo logic
         }
         else {
             // data set is classification
             double mae = 0.0;
-            int num_layers = this.network.getLayerDim().length;
+            int num_layers = network.getLayerDim().length;
             // iterate through examples
             for (int d = 0; d < Particle.data.getNumExamples(); d++) {
                 // current example
                 Example ex = Particle.data.getExample(d);
                 int actual = (int)ex.getValue();
                 // class probabilities for example
-                Vector output = this.network.genLayerOutputs(ex)[num_layers];
+                Vector output = network.genLayerOutputs(ex)[num_layers];
                 // create and populate target vector
                 Vector target = new Vector(output.getLength());
                 for (int t = 0; t < target.getLength(); t++) {
@@ -236,7 +254,7 @@ public class Particle implements Comparable<Particle> {
             // average the ma
             mae /= Particle.data.getNumExamples();
             // set fitness
-            this.fitness = -1 * mae;
+            return -1 * mae;
         }
     }
     
@@ -272,7 +290,7 @@ public class Particle implements Comparable<Particle> {
             else if (temp.get(t) < -1*this.VELCLAMP) { temp.set(t, -1*this.VELCLAMP); }
         }
         
-        //System.out.println(temp.toString());
+        //System.out.println(network.toString());
         
         return temp;
     }
@@ -284,7 +302,7 @@ public class Particle implements Comparable<Particle> {
      */
     protected double distToGenBest() {
         // current and gen best positions
-        Vector curr = this.network.toVec();
+        Vector curr = this.pos;
         Vector best = Particle.gBest.getNetwork().toVec();
         Vector diff = curr.minus(best);
         double dist = 0.0;
@@ -303,8 +321,14 @@ public class Particle implements Comparable<Particle> {
      */
     protected void setPos(Vector temp) { 
         this.pos = temp.clone();
-        this.network.setWeights(this.pos);
-        this.computeFitness();
+        this.fitness = this.computeFitness();
+    }
+    
+    protected MLP getNetwork() { 
+        // construct network
+        MLP network = new MLP(this.topology, this.sim);
+        network.setWeights(this.pos);
+        return network; 
     }
     
     /**
@@ -314,16 +338,14 @@ public class Particle implements Comparable<Particle> {
      */
     protected static void setGenBest(int index, Particle best) { 
         Particle.gBestIndx = index;
-        Particle.gBest = best; 
-        Particle.gBest.computeFitness(); 
+        Particle.gBest = best;
     }
     
-    protected static void setTrainingExamples(Set temp) { data = temp; }
+    protected static void setTrainingExamples(Set temp) { Particle.data = temp; }
     protected static Particle getGenBest() { return Particle.gBest; }
     protected static int getGBestIndex() { return Particle.gBestIndx; }
             
     protected double getFitness() { return this.fitness; }
     protected Vector getPos() { return this.pos; }
-    protected MLP getNetwork() { return this.network; }
     
 }

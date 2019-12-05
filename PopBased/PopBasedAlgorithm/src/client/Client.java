@@ -26,7 +26,7 @@ import poptrain.GeneticAlgorithm;
  */
 public class Client {
     
-    private static String[] datafiles = {"abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv"}; //, "winequality-white.csv"};
+    private static String[] datafiles = { "abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv"}; //, "winequality-white.csv"};
     private static DataReader[] data = new DataReader[datafiles.length];
     
     /**
@@ -43,13 +43,20 @@ public class Client {
         //finalGA();
         
         // ------------------------------------------------------------
+        // --- RUN FINAL DE TESTS WITH OPTIMUM PARAMETERS SELECTED ---
+        // ------------------------------------------------------------
+        //tuneDE();
+        //finalDE();
+        
+        // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //tunePSO();
         //finalPSO();
         //tuneDE();
-        finalDE();
+        //finalDE();
         //finalPSO();
+
     }
     /**
      * private method to tune GA
@@ -216,7 +223,7 @@ public class Client {
         
         int num_hl = 1;
         // iterate through data files
-        for (int f = 4; f < data.length; f++) {//data.length; f++) {
+        for (int f = 0; f < data.length; f++) {
             // iterate through cog mult values
             for (int c = 0; c < cog_mult.length; c++) {
                 // iterate through soc mult values
@@ -239,26 +246,20 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double cog_mult = 3;
-        double soc_mult = 1;
+        double[] cog_mult = { 3, 2, 2, 2, 1, 1 };
+        double[] soc_mult = { 2, 3, 1, 2, 3, 2 };
         int pop_size = 100;
-        int max_iter = 1000;    // MAYBE TRY FINAL RUN WITH MORE INDIVIDUALS IN THE POPULATION?
+        int max_iter = 1000;
         int folds = 1;
         
-        // FOR TESTING ONLY
-        int TODO = 4;
-        int num_hl = 1;
-        runPSO(fout, data[TODO], num_hl, cog_mult, soc_mult, pop_size, max_iter, folds);
-        
-        /*// iterate through data files
+        // iterate through data files
         for (int f = 0; f < data.length; f++) {
             // iterate through number of layers
             for (int num_hl = 0; num_hl < 3; num_hl++) {
-                runPSO(fout, data[f], num_hl, cog_mult,
-                        soc_mult, pop_size, max_iter, folds);
+                runPSO(fout, data[f], num_hl, cog_mult[f],
+                        soc_mult[f], pop_size, max_iter, folds);
             }
         }
-        */
     }
     
     /**
