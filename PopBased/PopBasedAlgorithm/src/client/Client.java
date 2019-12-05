@@ -25,29 +25,29 @@ import poptrain.GeneticAlgorithm;
  * @author natha
  */
 public class Client {
-    
+
     private static String[] datafiles = { "abalone.csv", "car.csv", "segmentation.csv", "forestfires.csv", "machine.csv", "winequality-red.csv"}; //, "winequality-white.csv"};
     private static DataReader[] data = new DataReader[datafiles.length];
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
         // READ IN DATA
         for(int i = 0; i < data.length; i++) { data[i] = new DataReader(datafiles[i]); }
-        
+
         // ------------------------------------------------------------
         // --- RUN FINAL GA TESTS WITH OPTIMAL PARAMETERS SELECTED ----
         // ------------------------------------------------------------
         //tuneGA();
-        //finalGA();
-        
+        finalGA();
+
         // ------------------------------------------------------------
         // --- RUN FINAL DE TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //tuneDE();
         //finalDE();
-        
+
         // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
@@ -66,14 +66,14 @@ public class Client {
 
         String fout = "../Output/" + "GA-tuning-out.csv";
         clearFile(fout);
-        
+
         // final configuration of variables listed here
         double[] crossover = { 0.1, 0.05, 0.01, 0.005};
         double[] mutation = { 0.05, 0.02, 0.01, 0.005};
         int pop_size = 64;
         int max_iter = 1000;
         int folds = 1;
-        
+
         int num_hl = 1;
         // iterate through data files
         for (int f = 3; f < 6; f++) {//data.length; f++) {
@@ -87,10 +87,10 @@ public class Client {
             }
         }
     }
-    
-    
+
+
     /**
-     * private method to run GA with the final configuration 
+     * private method to run GA with the final configuration
      * which is specified in this method
      */
     private static void finalGA() throws FileNotFoundException {
@@ -98,32 +98,33 @@ public class Client {
 
         String fout = "../Output/" + "GA-final-out.csv";
         clearFile(fout);
-        
+
         // final configuration of variables listed here
-        double crossover_rate = 0.01;
-        double mutation_rate = 0.01;
-        int pop_size = 104;
-        int max_iter = 100;
-        int folds = 1;
-        
+        double[] crossover_rate = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+        double[] mutation_rate = {0.005, 0.005, 0.05, 0.05, 0.02, 0.02};
+        int pop_size = 64;
+        int max_iter = 1000;
+        int folds = 10;
+
         // FOR TESTING ONLY
-        int TODO = 0;
-        int num_hl = 0;
-        runGA(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
-        
-        /*// iterate through data files
+        //int TODO = 0;
+        //int num_hl = 0;
+        //runGA(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
+
+        // iterate through data files
         for (int f = 0; f < data.length; f++) {
             // iterate through number of layers
             for (int num_hl = 0; num_hl < 3; num_hl++) {
-                runPSO(fout, data[f], num_hl, cog_mult,
-                        soc_mult, pop_size, max_iter, folds);
+                runGA(fout, data[f], num_hl, crossover_rate[f], mutation_rate[f],
+                        pop_size, max_iter, folds);
+
             }
         }
-        */
+
     }
-    
+
     /**
-     * 
+     *
      * @param fout
      * @param data
      * @param num_hl
@@ -132,42 +133,42 @@ public class Client {
      * @param pop_size
      * @param max_iter
      * @param folds
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     private static void runGA(String fout, DataReader data, int num_hl,
-            double crossover_rate, double mutation_rate, int pop_size, int max_iter, 
+            double crossover_rate, double mutation_rate, int pop_size, int max_iter,
             int folds) throws FileNotFoundException {
-        System.out.println("---- RUNNING GA ON DATASET " + data.getFileName() + " WITH " + num_hl 
+        System.out.println("---- RUNNING GA ON DATASET " + data.getFileName() + " WITH " + num_hl
                 + " HIDDEN LAYERS ----");
         System.out.print("------ POP SIZE: " + pop_size);
         System.out.print(" ---- Pc: " + crossover_rate);
         System.out.println(" ---- Pm: " + mutation_rate + " ------");
-        
+
         double starttime = System.currentTimeMillis();
-        
+
         double metric1 = 0;
         double metric2 = 0;
-        
+
         // build topology array
         int[] topology = buildTop(data, num_hl);
-        
+
         // instantiate GA class
         GeneticAlgorithm ga = new GeneticAlgorithm(topology, max_iter, pop_size, crossover_rate, mutation_rate, data.getSimMatrices());
-        
+
         // perform cross validation
         for (int c = 0; c < folds; c++) {
             System.out.println("Performing CV Fold #" + (c+1));
-            
+
             Set training = new Set(data.getSubsets(), c);
             Set testing = data.getSubsets()[c];
-            
+
             // train the swarm
             ga.train(training);
             // get most fit member
             MLP mlp = ga.getBest();
             // test mlp
             double[] results = mlp.test(testing);
-            
+
             // Get metrics
             if(training.getNumClasses() == -1) {
                 // Regression
@@ -185,13 +186,13 @@ public class Client {
                 eval.printPred();
             }
         }
-        
+
         // average metrics
         metric1 /= folds;
         metric2 /= folds;
-        
+
         // output results
-        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + crossover_rate + "," 
+        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + crossover_rate + ","
                 + mutation_rate + "," + metric1 + "," + metric2;
         // write to console
         double endtime = System.currentTimeMillis();
@@ -203,9 +204,9 @@ public class Client {
         writer.println(output);
         writer.close();
     }
-    
+
     /**
-     * private method to run PSO with the final configuration 
+     * private method to run PSO with the final configuration
      * which is specified in this method
      */
     private static void tunePSO() throws FileNotFoundException {
@@ -213,14 +214,14 @@ public class Client {
 
         String fout = "../Output/" + "PSO-tuning-out.csv";
         clearFile(fout);
-        
+
         // final configuration of variables listed here
         double[] cog_mult = { 1.0, 2.0, 3.0 };
         double[] soc_mult = { 1.0, 2.0, 3.0 };
         int pop_size = 100;
         int max_iter = 1000;
         int folds = 1;
-        
+
         int num_hl = 1;
         // iterate through data files
         for (int f = 0; f < data.length; f++) {
@@ -234,9 +235,9 @@ public class Client {
             }
         }
     }
-    
+
     /**
-     * private method to run PSO with the final configuration 
+     * private method to run PSO with the final configuration
      * which is specified in this method
      */
     private static void finalPSO() throws FileNotFoundException {
@@ -244,14 +245,14 @@ public class Client {
 
         String fout = "../Output/" + "PSO-final-out.csv";
         clearFile(fout);
-        
+
         // final configuration of variables listed here
         double[] cog_mult = { 3, 2, 2, 2, 1, 1 };
         double[] soc_mult = { 2, 3, 1, 2, 3, 2 };
         int pop_size = 100;
         int max_iter = 1000;
         int folds = 1;
-        
+
         // iterate through data files
         for (int f = 0; f < data.length; f++) {
             // iterate through number of layers
@@ -261,7 +262,7 @@ public class Client {
             }
         }
     }
-    
+
     /**
      * private method to build a run of PSO with the specified parameters
      * @param fout
@@ -272,42 +273,42 @@ public class Client {
      * @param soc_mult
      * @param pop_size
      * @param max_iter
-     * @param folds 
+     * @param folds
      */
     private static void runPSO(String fout, DataReader data, int num_hl,
-            double cog_mult, double soc_mult, int pop_size, int max_iter, 
+            double cog_mult, double soc_mult, int pop_size, int max_iter,
             int folds) throws FileNotFoundException {
-        System.out.println("---- RUNNING PSO ON DATASET " + data.getFileName() + " WITH " + num_hl 
+        System.out.println("---- RUNNING PSO ON DATASET " + data.getFileName() + " WITH " + num_hl
                 + " HIDDEN LAYERS ----");
         System.out.print("------ POP SIZE: " + pop_size);
         System.out.print(" ---- COG MULT: " + cog_mult);
         System.out.println(" ---- SOC MULT: " + soc_mult + " ------");
-        
+
         double starttime = System.currentTimeMillis();
-        
+
         double metric1 = 0;
         double metric2 = 0;
-        
+
         // build topology array
         int[] topology = buildTop(data, num_hl);
-        
+
         // instantiate PSO class
         PSO pso = new PSO(cog_mult, soc_mult, topology, pop_size, max_iter, data.getSimMatrices());
-        
+
         // perform cross validation
         for (int c = 0; c < folds; c++) {
             System.out.println("Performing CV Fold #" + (c+1));
-            
+
             Set training = new Set(data.getSubsets(), c);
             Set testing = data.getSubsets()[c];
-            
+
             // train the swarm
             pso.train(training);
             // get most fit member
             MLP mlp = pso.getBest();
             // test mlp
             double[] results = mlp.test(testing);
-            
+
             // Get metrics
             if(training.getNumClasses() == -1) {
                 // Regression
@@ -325,13 +326,13 @@ public class Client {
                 eval.printPred();
             }
         }
-        
+
         // average metrics
         metric1 /= folds;
         metric2 /= folds;
-        
+
         // output results
-        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + cog_mult + "," 
+        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + cog_mult + ","
                 + soc_mult + "," + metric1 + "," + metric2;
         // write to console
         double endtime = System.currentTimeMillis();
@@ -343,41 +344,41 @@ public class Client {
         writer.println(output);
         writer.close();
     }
-    
+
     private static void runDE(String fout, DataReader data, int num_hl,
-            double crossover_rate, double mutation_rate, int pop_size, int max_iter, 
+            double crossover_rate, double mutation_rate, int pop_size, int max_iter,
             int folds) throws FileNotFoundException {
-        System.out.println("---- RUNNING DE ON DATASET " + data.getFileName() + " WITH " + num_hl 
+        System.out.println("---- RUNNING DE ON DATASET " + data.getFileName() + " WITH " + num_hl
                 + " HIDDEN LAYERS ----");
         System.out.print("------ POP SIZE: " + pop_size);
         System.out.print(" ---- Crossover Rate: " + crossover_rate);
         System.out.println(" ---- Mutation Rate: " + mutation_rate + " ------");
-        
+
         double starttime = System.currentTimeMillis();
-        
+
         double metric1 = 0;
         double metric2 = 0;
-        
+
         // build topology array
         int[] topology = buildTop(data, num_hl);
-        
+
         // instantiate GA class
         DifferentialEvolution DE = new DifferentialEvolution(topology, pop_size, crossover_rate, mutation_rate, max_iter, data.getSimMatrices());
-        
+
         // perform cross validation
         for (int c = 0; c < folds; c++) {
             System.out.println("Performing CV Fold #" + (c+1));
-            
+
             Set training = new Set(data.getSubsets(), c);
             Set testing = data.getSubsets()[c];
-            
+
             // train the swarm
             DE.train(training);
             // get most fit member
             MLP mlp = DE.getBest();
             // test mlp
             double[] results = mlp.test(testing);
-            
+
             // Get metrics
             if(training.getNumClasses() == -1) {
                 // Regression
@@ -395,13 +396,13 @@ public class Client {
                 eval.printPred();
             }
         }
-        
+
         // average metrics
         metric1 /= folds;
         metric2 /= folds;
-        
+
         // output results
-        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + crossover_rate + "," 
+        String output = data.getFileName() + "," + pop_size + "," + num_hl + "," + crossover_rate + ","
                 + mutation_rate + "," + metric1 + "," + metric2;
         // write to console
         double endtime = System.currentTimeMillis();
@@ -414,7 +415,7 @@ public class Client {
         writer.close();
     }
     /**
-     * private method to run PSO with the final configuration 
+     * private method to run PSO with the final configuration
      * which is specified in this method
      */
     private static void finalDE() throws FileNotFoundException {
@@ -422,23 +423,23 @@ public class Client {
 
         String fout = "../Output/" + "DE-final-out.csv";
         clearFile(fout);
-        
+
         // final configuration of variables listed here
         double crossover_rate = 0.1;
         double mutation_rate = 0.5;
         int pop_size = 1000;
         int max_iter = 50;
         int folds = 2;
-        
+
         // FOR TESTING ONLY
         int TODO = 1;
         int num_hl = 0;
         runDE(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
-        
+
 
     }
         /**
-     * private method to run PSO with the final configuration 
+     * private method to run PSO with the final configuration
      * which is specified in this method
      */
     private static void tuneDE() throws FileNotFoundException {
@@ -446,14 +447,14 @@ public class Client {
 
         String fout = "../Output/" + "DE-tuning-out.csv";
         clearFile(fout);
-        
+
         // final configuration of variables listed here
         double[] beta = { .5, 1, 1.5, 2.0};
         double[] cross = { .01, .25, .5, .75};
         int pop_size = 100;
         int max_iter = 100;
         int folds = 2;
-        
+
         int num_hl = 1;
         // iterate through data files
         for (int f = 0; f < 6; f++) {//data.length; f++) {
@@ -466,12 +467,12 @@ public class Client {
             }
         }
     }
-    
+
     /**
      * private static method to build the topology of a neural network
      * @param data
      * @param num_hl
-     * @return 
+     * @return
      */
     private static int[] buildTop(DataReader data, int num_hl) {
         // number of hidden layers
@@ -483,15 +484,15 @@ public class Client {
         topology[len-2] = computeInputDim(temp.getExample(0), data.getSimMatrices());
         if (temp.getNumClasses() == -1) { topology[len-1] = 1; }
         else { topology[len-1] = temp.getNumClasses(); }
-        
+
         // populate hidden layer multiples
-        for (int t = 1; t < num_hl+1; t++) { topology[t] = 2 * temp.getNumAttributes(); }       
+        for (int t = 1; t < num_hl+1; t++) { topology[t] = 2 * temp.getNumAttributes(); }
         return topology;
     }
-    
+
     /**
      * method to compute the dimensions of the input layer
-     * @return 
+     * @return
      */
     private static int computeInputDim(Example temp, SimilarityMatrix[] sim) {
         int input_dim = 0;
@@ -515,7 +516,7 @@ public class Client {
         }
         return input_dim;
     }
-    
+
     /**
      * method to clear file before writing
      * @param filename
@@ -526,5 +527,5 @@ public class Client {
         writer.print("");
         writer.close();
     }
-    
+
 }
