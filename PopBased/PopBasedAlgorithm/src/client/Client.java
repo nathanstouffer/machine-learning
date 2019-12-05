@@ -40,18 +40,16 @@ public class Client {
         // --- RUN FINAL GA TESTS WITH OPTIMAL PARAMETERS SELECTED ----
         // ------------------------------------------------------------
         //tuneGA();
-        //finalGA();
+        finalGA();
         
         // ------------------------------------------------------------
         // --- RUN FINAL PSO TESTS WITH OPTIMUM PARAMETERS SELECTED ---
         // ------------------------------------------------------------
         //tunePSO();
-<<<<<<< HEAD
         //finalPSO();
         //tuneDE();
-        finalDE();
-=======
-        finalPSO();
+        //finalDE();
+        //finalPSO();
     }
     /**
      * private method to tune GA
@@ -81,7 +79,6 @@ public class Client {
                 }
             }
         }
->>>>>>> 5567599f82b740119b6d7947972a243f55f1adfe
     }
     
     
@@ -96,26 +93,27 @@ public class Client {
         clearFile(fout);
         
         // final configuration of variables listed here
-        double crossover_rate = 0.01;
-        double mutation_rate = 0.01;
-        int pop_size = 104;
-        int max_iter = 100;
-        int folds = 1;
+        double[] crossover_rate = {0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
+        double[] mutation_rate = {0.005, 0.005, 0.05, 0.05, 0.02, 0.02};
+        int pop_size = 64;
+        int max_iter = 1000;
+        int folds = 10;
         
         // FOR TESTING ONLY
-        int TODO = 0;
-        int num_hl = 0;
-        runGA(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
+        //int TODO = 0;
+        //int num_hl = 0;
+        //runGA(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
         
-        /*// iterate through data files
+        // iterate through data files
         for (int f = 0; f < data.length; f++) {
             // iterate through number of layers
             for (int num_hl = 0; num_hl < 3; num_hl++) {
-                runPSO(fout, data[f], num_hl, cog_mult,
-                        soc_mult, pop_size, max_iter, folds);
+                runGA(fout, data[f], num_hl, crossover_rate[f], mutation_rate[f], 
+                        pop_size, max_iter, folds);
+        
             }
         }
-        */
+        
     }
     
     /**
