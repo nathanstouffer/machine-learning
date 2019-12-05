@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\title{Learning with Neural Networks using Population Based Algorithms}
+\title{Neural Networks Trained by Population Based Algorithms}
 
 \author{\name Andrew Kirby \email andy-kirby@live.com \AND
 		\name Kevin Browder \email browderkevin54@gmail.com \AND
@@ -58,20 +58,43 @@
 	PSO differs from the GA and DE in that there is no parent-offspring relationship. Instead, PSO consists of particles that interact and move around the search space to find the optimum solution. 
 	
 	A swarm consists of $N$ individuals each with a position $\vec{x} \in \Rw$ and a fitness value. 
-	PSO then uses an iterative update rule to change each individual's position. The update for an individual is named $\vec{v} \in \Rw$, which is composed of 3 summed components.
+	PSO then uses an iterative update rule to change each individual's position. The velocity for an individual is named $\vec{v} \in \Rw$, which is composed of 3 summed components.
 	
-	The first component is inertia. For a given iteration's velocity $\vec{v}^t$ inertia is given as $\omega * \vec{v}^{t-1}$ where $\omega$ is typically in $(0,1)$ \citep{empirical-pso}.
-
+	The first component is inertia. For a given iteration's velocity $\vec{v}_t$, inertia is given as $\omega * \vec{v}_{t-1}$ where $\omega \in \mathbb{R}$ can be referred to as the inertia weight. Note that a ``large inertia weight facilitates a global search while a small inertia weight facilitates a local search" \citep{empirical-pso}.
+	
+	Second, there is a cognitive component. 
+	Each particle records its own best performing position $\vec{x}_c \in \Rw$ across all iterations. 
+	With $\vec{x}$ still representing the particle's current position, this component is given as $c_c * r_c * (\vec{x}_c - \vec{x})$ where $r_c$ is randomly selected from $(0,1) \subset \mathbb{R}$ and $c_c$ is a tuned parameter \citep{og-pso}.
+	
+	The final component is social. 
+	For this component, a topology is declared on which particles can communicate between each other.
+	Where if two particles $a,b$ can communicate, then $a$ knows both the current position and fitness of $b$.
+	Similarly, $b$ knows the current position and fitness of $a$.
+	
+	Two common topologies are global and local. 
+	The global topology allows each particle to communicate with every other particle. 
+	The local topology declares that each particle can communicate with only two other particles.
+	Specifically, imagine ordering the particles in the order of initialization.
+	Then, particle $p_k$ communicates with both $p_{k-1}$ and $p_{k+1}$ where $p_{-1} \equiv p_N$ and $p_{N+1} \equiv p_{0}$.
+	This communication persists across all iterations \citep{og-pso}.
+	
+	Now, take an arbitrary particle $p$ and let $T_p$ denote the set of particles that can communicate with $p$.
+	Let $\vec{x}_s \in \Rw$ denote the position of the most fit particle $q \in T_p$. Then, the value of the social component is given as $c_s * r_s * (\vec{x}_s - \vec{x})$ where $r_s$ is randomly selected from $(0,1) \subset \mathbb{R}$ and $c_s$ is a tuned parameter
+	
+	Thus the velocity for each particle is given as the sum
+	$$\vec{v}_t = \omega * \vec{v}_{t-1} + c_c*r_c*(\vec{x}_c - \vec{x}) + c_s*r_s*(\vec{x}_s - \vec{x})$$
+	
+	The position of each particle is now updated according to $\vec{x}_t = \vec{x}_{t-1} + \vec{v}_t$. This process is iteratively repeated for each particle until the values of the vectors converge or a maximum number of iterations is reached \citep{og-pso}.
+		
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
 
 	First, all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. 
 	All categorical variables are converted to integers 
-	and the preprocessor also generates a similarity matrix for each categorical variable that is used for
-	determining distances between categorical variables. 
-	All numerical variables are normalized
-	between 0 and 1. The data sets did not contain any missing variables.
+	and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distances between categorical variables. 
+	All numerical variables are normalized between 0 and 1. 
+	The data sets did not contain any missing variables.
 
 \subsection{Evaluation Metrics}
 
