@@ -16,7 +16,14 @@ import neuralnets.layer.Vector;
 import java.util.Arrays;
 
 /**
- *
+ * This is a class to represent a particle in PSO algorithm. Each particle consists
+ * of a position vector as an element of a Euclidean Space and a fitness associated 
+ * with that position. In this case the position vector consists of weights and the 
+ * fitness is accuracy or MSE (respectively for classification and regression tasks).
+ * 
+ * The main functionality is store the position as well as update that position
+ * in each generation according to the update rule of PSO.
+ * 
  * @author natha
  */
 public class Particle implements Comparable<Particle> {
