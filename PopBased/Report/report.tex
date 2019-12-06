@@ -10,6 +10,7 @@
 \newcommand{\jth}{$j^{th}$ }
 \newcommand{\weight}{$w_{ji}$ }
 \newcommand{\Rw}{\mathbb{R}^w }
+\newcommand{\R}{\mathbb{R}}
 
 \begin{document}
 
@@ -26,14 +27,19 @@
 
 \end{abstract}
 
-% TODO make sure to abbreviate PBA and algorithm names
-
 \section{Problem Statement}
-	Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult.
-	The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 subjects of outdoor photographs with sets of attributes.
+	% TODO some type of intro about how PBA are considered to be global search methods
+	% TODO also mention exploration vs exploitation
+
+	Given datasets, the task is to compare the effectiveness a feed forward Multilayer Perceptron (MLP) trained by Population Based Algorithms (PBA) and Backpropagation. Specifically, there are three PBA: the Genetic Algorithm (GA), Differential Evolution (DE), and Particle Swarm Optimization (PSO). 
+	Each training algorithm will be implemented and tested on the following six data sets.
+		
+	The abalone dataset contains features paired with the age of an abalone (the class). The 28 ages are closely related, potentially making classification difficult.
+	The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 distinct subjects of outdoor photographs.
 	The rest of the datasets are regression.
 	The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
-	The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
+	The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. 
+	Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
 
 \subsection{Hypothesis}
 
@@ -101,6 +107,15 @@ Differential Evolution (DE) is another evolution inspired algorithm with  simila
 	and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distances between categorical variables. 
 	All numerical variables are normalized between 0 and 1. 
 	The data sets did not contain any missing variables.
+
+\subsection{Algorithm Choices}
+
+	% TODO write the choices/reasoning we made to avoid tuning, this should be done for each algorithm
+	
+	Two decisions were made for PSO. First, the global topology was declared on how particles in the swarm communicate. 
+	The global topology is the original topology used in PSO and was chosen over the local topology because it has been reported that the local topology requires more iterations to reach a specified error level \citep{og-pso}. 
+	Second, the $\omega$ term in the velocity equation decreases linearly over the course of a run. Experimentally, a linearly decreasing $\omega$ from 0.9 to 0.4 provides a nice exploration-exploitation balance for PSO \citep{inertia}.
+	
 
 \subsection{Evaluation Metrics}
 
