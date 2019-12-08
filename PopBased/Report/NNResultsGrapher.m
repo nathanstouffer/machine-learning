@@ -10,7 +10,102 @@
 % plotMLP_LR();
 % plotMLP_M();
 % plotRBF_final();
-plotMLP_final();
+% plotMLP_final();
+plotPop_final(0);
+plotPop_final(1);
+plotPop_final(2);
+
+function plotPop_final(num_hl)
+    [file, path] = uigetfile('*.csv','Select final data:');
+    data = readmatrix(strcat(path, file), 'OutputType','string');
+    
+    %%
+    colors = ["r", "g", "b", "c", "m", "k"];
+    textures = ["-", "--", ":"];
+    linewidth = 2.0;
+    
+    %%
+    % Make array types of values
+    datasets = unique(data(:,2), 'stable');       % column
+    method = unique(data(:,1), 'stable');
+%     hidden_layers = unique(data(:,3), 'stable');  % colors
+    hidden_layers = num_hl;
+    
+    %% PLOT CLASSIFICATION STUFF
+    figure();
+    for d = 1:3 % Go through datasets
+        p1 = data(data(:,2) == datasets(d), :);
+%         for h = 1:length(hidden_layers)
+        for m = 1:length(method)
+            p2 = p1(p1(:,1) == method(m), :); % filter by method
+            p2 = p2(p2(:,3) == num2str(hidden_layers), :); % filter by hidden layer
+%             p2 = p2(p2(:,3) == HIDDEN_NODES_TO_PLOT, :); % filter by number of hidden nodes
+            
+            accuracy = p2(:,7);
+            accuracy = str2double(accuracy);
+            mse = p2(:,8);
+            mse = str2double(mse);
+            
+            class_acc(d, m) = accuracy;
+            class_mse(d, m) = mse;
+        end
+    end
+     %% PLOT REGRESSION STUFF
+    for d = 4:6
+        p1 = data(data(:,2) == datasets(d), :);
+        for m = 1:length(method)
+            p2 = p1(p1(:,1) == method(m), :); % filter by method
+            p2 = p2(p2(:,3) == num2str(hidden_layers), :); % filter by hidden layer
+%             p2 = p1(p1(:,2) == hidden_layers(h), :);
+%             p2 = p2(p2(:,3) == HIDDEN_NODES_TO_PLOT, :); % filter by number of hidden nodes
+%             p2 = p2(p2(:,4) ~= "2", :); % filter out learning rate higher than 2 b/c its trash and messes up scaling
+            
+            mse = p2(:,7);
+            mse = str2double(mse);
+            me = p2(:,8);
+            me = str2double(me);
+            
+            reg_mse(d-3, m) = mse;
+            reg_me(d-3, m) = me;
+        end
+    end
+    
+%     hidden_layers(:,:) = strcat(hidden_layers(:,:), " Hidden Layers");
+%     hidden_layers = strcat(num2str(hidden_layers), " Hidden Layers");
+    figure();
+    subplot(2,2,1);
+    bar(class_acc)
+    xticklabels(datasets(1:3));
+    ylabel('Accuracy')
+    xlabel('Dataset')
+    legend(method,'FontSize', 10)
+    title('Classification')
+    
+    subplot(2,2,3);
+    bar(class_mse)
+    ylim([0, 60]);
+    xticklabels(datasets(1:3));
+    ylabel('MSE')
+    xlabel('Dataset')
+    legend(method,'FontSize', 10)
+    subplot(2,2,2);
+    bar(reg_mse)
+    xticklabels(datasets(4:6));
+    ylabel('MSE')
+    xlabel('Dataset')
+    legend(method,'FontSize', 10)
+    title('Regression')
+    subplot(2,2,4);
+    bar(reg_me)
+    xticklabels(datasets(4:6));
+    ylabel('ME')
+    xlabel('Dataset')
+    legend(method,'FontSize', 10)
+    
+    sgtitle(strcat("Final Results: ", num2str(hidden_layers) ," Hidden Layers"));
+
+end
+
 
 function plotMLP_final()
     [file, path] = uigetfile('../Output/*.csv','Select MLP final data:');
