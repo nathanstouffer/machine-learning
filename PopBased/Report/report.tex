@@ -66,7 +66,7 @@ At the beginning of a generation, individuals are selected for recombination. Re
 \subsection{Differential Evolution}
 Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA as both use crossover and mutation on chromosomes. It cycles through selection, mutation, crossover and replacement on individuals in the population.
 
-The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$. $\beta$ is a tuneable parameter. $$v_j = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-} - x_n)$$
+The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$ where $\beta$ is a tuneable parameter. $$v_p = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-1} - x_n)$$
 Uniform crossover is then applied to the target and trial vector according to a tuning parameter. The fitness for the target and trial vectors are then calculated and if the trial vector has a higher fitness it replaces the target vector. A generation is complete when this process has iterated through the size of the population. 
 
 \subsection{Particle Swarm Optimization}
@@ -132,7 +132,9 @@ Uniform crossover is then applied to the target and trial vector according to a 
 	MSE and ME are computed using z-scores (the number of standard deviations from the mean) so that comparisons can be made between datasets.
 
 \subsection{Tuning}
-
+	Tuning for DE requires tuning the crossover($P_c$) and mutation ($\beta$) parameters. A grid search was performed between $P_c$ and $\beta$ on each dataset with $P_c \in \{.25, .5, .75\}$ and $\beta \in \{.5, 1, 1.5\}$.
+	The optimum values were then selected for each dataset based on the results from this search. 
+	
 	Tuning for PSO requires setting the values of $c_c$ of $c_s$. 
 	Experimentally, PSO performs best with $c_c = c_s = 2$ \citep{empirical-pso}. 
 	As such, a grid search was performed on $ (c_c, c_s) \in \{ 1, 2, 3 \} \times \{ 1, 2, 3 \} $ for each dataset. 
