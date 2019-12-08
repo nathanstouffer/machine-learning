@@ -40,7 +40,7 @@ public class Client {
         // --- RUN FINAL GA TESTS WITH OPTIMAL PARAMETERS SELECTED ----
         // ------------------------------------------------------------
         //tuneGA();
-        finalGA();
+        //finalGA();
 
         // ------------------------------------------------------------
         // --- RUN FINAL DE TESTS WITH OPTIMUM PARAMETERS SELECTED ---
@@ -54,7 +54,7 @@ public class Client {
         //tunePSO();
         //finalPSO();
         //tuneDE();
-        //finalDE();
+        finalDE();
         //finalPSO();
 
     }
@@ -425,17 +425,17 @@ public class Client {
         clearFile(fout);
 
         // final configuration of variables listed here
-        double crossover_rate = 0.1;
-        double mutation_rate = 0.5;
-        int pop_size = 1000;
-        int max_iter = 50;
-        int folds = 2;
+        double[] crossover_rate = {0.5, .25, .25, .25, .5, .5};
+        double[] mutation_rate = {1.5, 1.5, 1.5, 1.5, .5, 1};
+        int pop_size = 100;
+        int max_iter = 100;
+        int folds = 10;
 
-        // FOR TESTING ONLY
-        int TODO = 1;
-        int num_hl = 0;
-        runDE(fout, data[TODO], num_hl, crossover_rate, mutation_rate, pop_size, max_iter, folds);
-
+        for (int f = 0; f < 6; f++) {//data.length; f++) {
+            for(int i = 0; i < 3; i++){
+                runDE(fout, data[f], i, crossover_rate[f], mutation_rate[f], pop_size, max_iter, folds);
+            } 
+        }
 
     }
         /**
@@ -449,15 +449,15 @@ public class Client {
         clearFile(fout);
 
         // final configuration of variables listed here
-        double[] beta = { .5, 1, 1.5, 2.0};
-        double[] cross = { .01, .25, .5, .75};
+        double[] beta = { .5, 1, 1.5};
+        double[] cross = {.25, .5, .75};
         int pop_size = 100;
         int max_iter = 100;
-        int folds = 2;
+        int folds = 1;
 
         int num_hl = 1;
         // iterate through data files
-        for (int f = 0; f < 6; f++) {//data.length; f++) {
+        for (int f = 3; f < 6; f++) {//data.length; f++) {
             // iterate through cog mult values
             for (int c = 0; c < beta.length; c++) {
                 // iterate through soc mult values
