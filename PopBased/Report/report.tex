@@ -31,18 +31,21 @@
 	% TODO some type of intro about how PBA are considered to be global search methods
 	% TODO also mention exploration vs exploitation
 
-	Given datasets, the task is to compare the effectiveness a feed forward Multilayer Perceptron (MLP) trained by Population Based Algorithms (PBA) and Backpropagation. Specifically, there are three PBA: the Genetic Algorithm (GA), Differential Evolution (DE), and Particle Swarm Optimization (PSO). 
+	Given data sets, the task is to compare the effectiveness a feed forward Multilayer Perceptron (MLP) trained by Population Based Algorithms (PBA) and Backpropagation. Specifically, there are three PBA: the Genetic Algorithm (GA), Differential Evolution (DE), and Particle Swarm Optimization (PSO). 
 	Each training algorithm will be implemented and tested on the following six data sets.
 		
-	The abalone dataset contains features paired with the age of an abalone (the class). The 28 ages are closely related, potentially making classification difficult.
-	The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 distinct subjects of outdoor photographs.
-	The rest of the datasets are regression.
+	The abalone data set contains features paired with the age of an abalone (the class). The 28 ages are closely related, potentially making classification difficult.
+	The car data set contains attributes corresponding to 4 possible conditions of a car while the segmentation data set details 6 distinct subjects of outdoor photographs.
+	The rest of the data sets are regression.
 	The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
-	The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. 
+	The machine data set predicts the performance of a CPU which has an even distribution across its regression values. 
 	Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
 
 \subsection{Hypothesis}
-Population based evolutionary algorithms are expected to outperform gradient decent because evolutionary algorithms are less prone to getting caught in local minima. Of the evolutionary algorithms, the Genetic Algorithm and Differential Evolution will perform best because it is the best at maintaining diversity in theory. This is because they both have a larger stochastic component than Particle Swarm Optimization. 
+
+	Population Based Algorithms are expected to outperform Backpropagation because PBA are less prone to getting caught in local minima. 
+	Of the PBA, the GA and DE will perform better than PSO because the mutation operator can introduces diversity at any point in a run. 
+	
 \section{Algorithms}
 
 	Population Based Algorithms typically reference individual members of populations as vectors associated with a fitness value. Each element in a vector corresponds to some value in a model that is being trained by the PBA.
@@ -123,23 +126,50 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \subsection{Evaluation Metrics}
 
-	Classification datasets are evaluated with accuracy and mean squared error (MSE). 
+	Classification data sets are evaluated with accuracy and mean squared error (MSE). 
 	The MSE metric implemented measures the squared error between the predicted and actual class distributions. 
 	This is similar in concept to a Brier score but slightly different in computation. Accuracy indicates how well the algorithm individually classifies examples.
 	
-	To evaluate regression datasets, mean error (ME) and MSE will be used. MSE squares the distance between a real and predicted value, the squares are then averaged over the entire testing set. 
+	To evaluate regression data sets, mean error (ME) and MSE will be used. MSE squares the distance between a real and predicted value, the squares are then averaged over the entire testing set. 
 	ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over or underestimate the values in the test set. 
-	MSE and ME are computed using z-scores (the number of standard deviations from the mean) so that comparisons can be made between datasets.
+	MSE and ME are computed using z-scores (the number of standard deviations from the mean) so that comparisons can be made between data sets.
 
 \subsection{Tuning}
 
-	Tuning for PSO requires setting the values of $c_c$ of $c_s$. 
+	Tuning for PSO requires setting the values of $c_c$ and $c_s$. 
 	Experimentally, PSO performs best with $c_c = c_s = 2$ \citep{empirical-pso}. 
-	As such, a grid search was performed on $ (c_c, c_s) \in \{ 1, 2, 3 \} \times \{ 1, 2, 3 \} $ for each dataset. 
+	As such, a grid search was performed on $ (c_c, c_s) \in \{ 1, 2, 3 \} \times \{ 1, 2, 3 \} $ for each data set. 
 	Then the optimum parameters were selected based on fitness of the produced networks (accuracy for classification and MSE for regression).
-	In general, the classification datasets performed best with $c_c > c_s$ while the regression datasets preferred $c_c < c_s$.
+	In general, the classification data sets performed best with $c_c > c_s$ while the regression data sets preferred $c_c < c_s$.
 
 \section{Results}
+
+	For the final run, optimal parameters were selected for each data set. In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation.
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[height=3in]{FINAL_FIGS/0_hl.jpg}
+		\caption{Final Results of a 0 Hidden Layer MLP. Color indicates training algorithm type.}
+		\label{0-hl}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[height=3in]{FINAL_FIGS/1_hl.jpg}
+		\caption{Final Results of a 1 Hidden Layer MLP. Color indicates training algorithm type.}
+		\label{1-hl}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[height=3in]{FINAL_FIGS/2_hl.jpg}
+		\caption{Final Results of a 2 Hidden Layer MLP. Color indicates training algorithm type.}
+		\label{2-hl}
+	\end{figure}
+
+	The greatest difference in performances between the two algorithms is shown on the forest fires data set in Fig. \ref{1-hl} where the MLP has 1 hidden layer. 
+	For a network trained with Backpropagation, the MSE was 26 while the MSE for networks trained with PBA is less than 3. 
+	The most likely explanation is that the PBA were able to pass by the local optima that Backpropagation found for the configuration of weights.
 
 \section{Summary}
 
