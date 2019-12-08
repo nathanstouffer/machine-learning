@@ -100,7 +100,7 @@ public class Layer {
         for (int i = 0; i < this.weights.getNumRows(); i++) {
             Vector row = this.weights.getRow(i);
             // iterate through the row
-            for (int j = 0; j < this.weights.getNumCol(); i++) {
+            for (int j = 0; j < this.weights.getNumCol(); j++) {
                 output += Double.toString(row.get(j)) + ",";
             }
             output += "\n";

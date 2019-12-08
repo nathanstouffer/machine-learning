@@ -24,7 +24,7 @@ import neuralnets.layer.Matrix;
  */
 public class AutoEncoder implements INeuralNet {
     
-    private final double STARTING_WEIGHT_BOUND = 0.0001;
+    private final double STARTING_WEIGHT_BOUND = 0.01;
     private final double IMPACT_THRESH = 0.0075;
     
     /**
@@ -88,8 +88,9 @@ public class AutoEncoder implements INeuralNet {
     public void train(Set training_set) {
         // compute input dimensions
         int input_dim = this.computeInputDim(training_set.getExample(0));
-        layers[0] = new Layer(new Logistic(), HIDDEN_NODES_MULT*input_dim, input_dim+1);
-        layers[1] = new Layer(new Linear(), input_dim, HIDDEN_NODES_MULT*input_dim+1);
+        int num_attr = training_set.getNumAttributes();
+        layers[0] = new Layer(new Logistic(), HIDDEN_NODES_MULT*num_attr, input_dim+1);
+        layers[1] = new Layer(new Linear(), input_dim, HIDDEN_NODES_MULT*num_attr+1);
         //layers[1] = new Layer(new Logistic(), input_dim, HIDDEN_NODES_MULT*input_dim+1);
         // UNSURE IF THIS IS LOGISTIC OR LINEAR
         

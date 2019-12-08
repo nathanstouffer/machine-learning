@@ -11,7 +11,8 @@ import java.util.Random;
  */
 public class Set implements Cloneable {
     
-    // global variables to store set variables
+    // global variables to store set variablesf
+    private String DATASET;
     private final int num_attributes;
     private final int num_classes;
     // array storing class names. in our input files, classes are assigned to
@@ -33,6 +34,7 @@ public class Set implements Cloneable {
         this.num_attributes = num_attributes;
         this.num_classes = num_classes;
         this.class_names = class_names;
+        this.DATASET = "error.csv";
     }
     
     /**
@@ -52,7 +54,8 @@ public class Set implements Cloneable {
         this.num_attributes = subsets[0].getNumAttributes();
         this.num_classes = subsets[0].getNumClasses();
         this.class_names = subsets[0].getClassNames();      
-
+        this.setDataSetName(subsets[exclude].getDataSetName());
+        
         // iterate through subsets
         for (int i = 0; i < subsets.length; i++){
             // add subset to set if subset should not be excluded
@@ -180,7 +183,10 @@ public class Set implements Cloneable {
         return largest;
     }
     
+    public void setDataSetName(String temp) { this.DATASET = temp; }
+    
     // getter methods
+    public String getDataSetName() { return this.DATASET; }
     public Example getExample(int index){ return this.examples.get(index); }
     public int getNumClasses(){ return this.num_classes; }
     public int getNumAttributes(){ return this.num_attributes; }

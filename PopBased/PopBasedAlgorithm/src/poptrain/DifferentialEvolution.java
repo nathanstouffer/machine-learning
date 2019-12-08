@@ -90,7 +90,7 @@ public class DifferentialEvolution implements IPopTrain {
         this.max_generations = max_generations;
         this.sim = sim;
         this.rand = new Random();
-        this.all_time_best_fitness = 0;
+        
     }
 
     /**
@@ -133,6 +133,7 @@ public class DifferentialEvolution implements IPopTrain {
      */
     @Override
     public MLP getBest() {
+        this.all_time_best_fitness = Double.NEGATIVE_INFINITY;
         population_fitnesses = new double[population_size];
         //calculate fitness for all members of population
         for (int i = 0; i < population.length; i++) {
@@ -145,6 +146,7 @@ public class DifferentialEvolution implements IPopTrain {
                 all_time_best = population[i];
             }
         }
+        
         //create MLP from most fit individual
         MLP network = new MLP(topology, sim);
         network.setWeights(all_time_best);
