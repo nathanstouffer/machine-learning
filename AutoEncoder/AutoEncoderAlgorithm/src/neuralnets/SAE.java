@@ -10,6 +10,8 @@ import datastorage.Set;
 import datastorage.SimilarityMatrix;
 import neuralnets.layer.Vector;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import neuralnets.layer.Layer;
 
 /**
  *
@@ -26,6 +28,7 @@ public class SAE { // implements INeuralNet {
     private final double momentum;
     private final double convergence_threshold;
     private final int maximum_iterations;
+    private SimilarityMatrix[] sim;
     
     /** 
      * the final network that the SAE will build
@@ -33,11 +36,6 @@ public class SAE { // implements INeuralNet {
      * as well as an MLP on top
     */
     private MLP network;
-    
-    /**
-     * array to store the auto encoders while in training
-     */
-    private AutoEncoder[] encoders;
     
     public SAE(int num_encoders, double sparsity_penalty, double learning_rate, 
             double batch_size, double momentum, double convergence_threshold, 
@@ -50,11 +48,10 @@ public class SAE { // implements INeuralNet {
         this.momentum = momentum;
         this.convergence_threshold = convergence_threshold;
         this.maximum_iterations = max_iterations;
+        this.sim = sim;
         
         this.network = new MLP(learning_rate, batch_size, momentum, convergence_threshold, 
                                 max_iterations, sim);
-        
-        this.encoders = new AutoEncoder[num_encoders];
     }
 
     /**
@@ -65,19 +62,45 @@ public class SAE { // implements INeuralNet {
      * call readExistingLayers(String fname) before training the network
      * @param training_set 
      */
-    public void train(Set training_set) {
+    public void train(Set training_set) throws FileNotFoundException {
+        SimilarityMatrix[] temp_sim = new SimilarityMatrix[] {};
+        if (this.network.getNumLayers() == 0) { temp_sim = this.sim; }
         // train next encoding layer
         System.out.println("-------------- TRAINING NEW ENCODING LAYER --------------");
+        // encode examples with current autoencoder state
+        Set encoded = this.encode(training_set);
         
-        // train mlp with output of encoder
-        //System.out.println("-------------- TRAINING PREDICTOR NETWORK --------------");
+        // create a new autoencoder
+        AutoEncoder ae = new AutoEncoder(this.sparsity_penalty, this.learning_rate,
+                            this.batch_size, this.momentum, this.convergence_threshold,
+                            this.maximum_iterations, temp_sim);
+        ae.train(encoded);
+        
+        // add new encoding layer to network
+        Layer layer = ae.getLayer(0);
+        this.network.addLayer(layer);
+        
+        // write new layers to a file
+        String fname = training_set.getDataSetName() + "-" + this.network.getNumLayers() 
+                        + "-layer-ae.csv";
+        NetworkIO.writeLayers(this.network, fname);
+        
+        System.out.println("-------------- TRAINING PREDICTOR NETWORK --------------");
+        // re-encode training data with new layer
+        encoded = this.encode(training_set);
+        MLP temp = new MLP(1, new int[] {2*encoded.getNumAttributes()}, this.learning_rate,
+                            this.batch_size, this.momentum, this.convergence_threshold,
+                            this.maximum_iterations, new SimilarityMatrix[] {});
+        temp.train(encoded);
+        
+        // add in prediction layer
+        for (int l = 0; l < temp.getNumLayers(); l++) { 
+            this.network.addLayer(temp.getLayer(l)); 
+        }
         
         // final training
-        //System.out.println("-------------- PERFORMING FINAL NETWORK TRAINING --------------");
-        
-        // SHIFT THIS AROUND
-        try { NetworkIO.writeLayers(network, "test.csv"); }
-        catch (FileNotFoundException e) { System.err.println("error"); }
+        System.out.println("-------------- PERFORMING FINAL NETWORK TRAINING --------------");
+        this.network.train(training_set);
     }
 
     /**
@@ -111,9 +134,14 @@ public class SAE { // implements INeuralNet {
      * @param network this should be a network with no layers
      * @param fname
      */
-    public void readExistingLayers(String fname) {
+    public void readExistingLayers(String fname) throws IOException {
         System.out.println("-------------- READING IN EXISTING AUTOENCODER --------------");
-        // code for reading in network goes here
+        
+        Layer[] temp = NetworkIO.readLayers(fname);
+        for (int t = 0; t < temp.length; t++) {
+            this.network.addLayer(temp[t]);
+        }
+        
         System.out.println("-------------- READ IN " + this.network.getNumLayers() 
                 + " LAYERS --------------");       
     }

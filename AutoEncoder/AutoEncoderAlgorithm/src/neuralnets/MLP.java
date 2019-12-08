@@ -25,7 +25,7 @@ public class MLP implements INeuralNet {
      * The absolute value of the bounds on the starting weights in the output
      * layer.
      */
-    private static final double STARTING_WEIGHT_BOUND = 0.0001;
+    private static final double STARTING_WEIGHT_BOUND = 0.1;
 
     /**
      * The learning rate for the network is a tunable parameter that affects
@@ -141,7 +141,9 @@ public class MLP implements INeuralNet {
         
         // compute input dimensions
         int input_dim = this.computeInputDim(training_set.getExample(0));
-        this.initializeLayers(training_set.getNumClasses(), input_dim);
+        if (this.layers[0] == null) { 
+            this.initializeLayers(training_set.getNumClasses(), input_dim); 
+        }
 
         // construct a backpropagator to train the network
         Backpropagator backprop = new Backpropagator(this);
