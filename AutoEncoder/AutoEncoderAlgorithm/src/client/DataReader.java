@@ -114,6 +114,12 @@ public class DataReader {
         // set validation_set as subset[0]
         this.validation_set = this.subsets[0];
         
+        String data_name = this.FILE_NAME.replace(".csv", "");
+        // add data set name to each subset
+        for (int s = 0; s < this.subsets.length; s++) {
+            this.subsets[s].setDataSetName(data_name);
+        }
+        
         // close buffered reader
         br.close();
     }
@@ -157,6 +163,7 @@ public class DataReader {
     private int getNumCatAttributes(){ return this.data_summary[3]; }
     
     // public getter methods
+    public String getFileName() { return this.FILE_NAME; }
     public String[] getClassNames(){ return this.class_names; }
     public Set[] getSubsets(){ return this.subsets; }
     public Set getValidationSet(){ return this.validation_set; }

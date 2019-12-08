@@ -79,17 +79,17 @@ public class NetworkIO {
             Matrix weights = new Matrix(num_rows, num_col);
             
             // populate matrix
-            for (int j = 0; j < num_rows; j++) {
+            for (int r = 0; r < num_rows; r++) {
                 String[] line = reader.readLine().split(",");
                 // construct empty row
                 Vector row = new Vector(num_col);
                 // populate row
-                for (int k = 0; k < num_col; k++) { 
-                    double weight = Double.parseDouble(line[k]);
-                    row.set(i, weight); 
+                for (int c = 0; c < num_col; c++) { 
+                    double weight = Double.parseDouble(line[c]);
+                    row.set(c, weight); 
                 }
                 // add row to weight matrix
-                weights.setRow(j, row);
+                weights.setRow(r, row);
             }
             // construct new layer and add to layers array
             layers[i] = new Layer(act_funct, weights);

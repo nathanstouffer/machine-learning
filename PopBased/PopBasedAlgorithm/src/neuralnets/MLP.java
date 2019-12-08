@@ -16,7 +16,16 @@ import neuralnets.layer.Matrix;
 import neuralnets.layer.Vector;
 
 /**
- *
+ * This class implements a feed forward multi-layer perceptron neural network. The weights
+ * to each layer are represented as matrices and input vectors are feed forward through
+ * an arbitrary number of layers until the output layer is reached.
+ * 
+ * The network can be used for either classification or regression tasks.
+ * 
+ * Because of how we structured our code, the training of a neural network is performed
+ * by another class. That class will implement a specific training method and should
+ * return and instance of MLP
+ * 
  * @author Kevin
  */
 public class MLP implements INeuralNet {
@@ -25,7 +34,7 @@ public class MLP implements INeuralNet {
      * The absolute value of the bounds on the starting weights all layers
      * of a network
      */
-    public static final double STARTING_WEIGHT_BOUND = 0.01;
+    public static final double STARTING_WEIGHT_BOUND = 15;
     
     /**
      * Private variable to store the number of weights in the MLP
