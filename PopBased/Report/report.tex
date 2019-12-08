@@ -59,17 +59,24 @@
 
 \subsection{Genetic Algorithm}
 
-The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape.
+	The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape \citep{ga_tutorial}.
 
-At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then9 completely or partially 
+	At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then completely or partially replaces the original population, completing the generation.
 
-
-
+	One-point, two-point, and uniform crossover are common crossover operators. With probability $P_c$, one-point crossover selects a random point in a chromosome, swapping all values of two parent individuals after the crossover point. Two-point crossover swaps values between two selected crossover points. Uniform crossover differs by swapping values at any given point with probability $P_c$. Each crossover operator helps the search by creating children that may inherit more ideal gene combinations from both parents \citep{ga_tutorial}.
+	
+	%TODO talk about implications of different crossover methods
+	
+	Mutation operators visit every gene, mutating with probability $P_m$. Specific mutation operators rely on the gene encoding. If genes are binary, mutation flips the bits. If genes are categorical, a new category is chosen from the domain. If genes are real-valued, mutation may generate a new random value or implement creep. With creep, the new gene value $x_i^\prime$ is given by
+	$$x_i^\prime = x_i + N(0, \sigma_i)$$
+	where $\sigma_i$ is a tunable standard deviation. Mutation helps the search by reinforcing diversity and potentially jumping chromosomes to a completely new spot in the search space \citep{ga_tutorial}.
+	
+	Replacing the original population with individuals from the intermediate population may follow generational or steady-state replacement. Generational replacement replaces the entire population with the intermediate population. This form of replacement may cause dramatic changes between generations and exhibits a high selection pressure. Steady-state replacement features a more gradual change between each generation by replacing only a proportion of the original population with individuals from the intermediate population.
 
 \subsection{Differential Evolution}
 Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA as both use crossover and mutation on chromosomes. It cycles through selection, mutation, crossover and replacement on individuals in the population.
 
-The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$. $\beta$ is a tuneable parameter. $$v_j = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-} - x_n)$$
+The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$ where $\beta$ is a tuneable parameter. $$v_p = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-1} - x_n)$$
 Uniform crossover is then applied to the target and trial vector according to a tuning parameter. The fitness for the target and trial vectors are then calculated and if the trial vector has a higher fitness it replaces the target vector. A generation is complete when this process has iterated through the size of the population. 
 
 \subsection{Particle Swarm Optimization}
@@ -107,23 +114,6 @@ Uniform crossover is then applied to the target and trial vector according to a 
 		
 \section{Experiment}
 
-\subsection{Preprocessing Choices}
-
-	First, all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. 
-	All categorical variables are converted to integers 
-	and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distances between categorical variables. 
-	All numerical variables are normalized between 0 and 1. 
-	The data sets did not contain any missing variables.
-
-\subsection{Algorithm Choices}
-
-	% TODO write the choices/reasoning we made to avoid tuning, this should be done for each algorithm
-	
-	Two decisions were made for PSO. First, the global topology was declared on how particles in the swarm communicate. 
-	The global topology is the original topology used in PSO and was chosen over the local topology because it has been reported that the local topology requires more iterations to reach a specified error level \citep{og-pso}. 
-	Second, the $\omega$ term in the velocity equation decreases linearly over the course of a run. Experimentally, a linearly decreasing $\omega$ from 0.9 to 0.4 provides a nice exploration-exploitation balance for PSO \citep{inertia}.
-	
-
 \subsection{Evaluation Metrics}
 
 	Classification data sets are evaluated with accuracy and mean squared error (MSE). 
@@ -134,9 +124,40 @@ Uniform crossover is then applied to the target and trial vector according to a 
 	ME is computed similarly, but will not square the difference. MSE emphasizes the effect of outliers while ME captures whether the learner tends to over or underestimate the values in the test set. 
 	MSE and ME are computed using z-scores (the number of standard deviations from the mean) so that comparisons can be made between data sets.
 
+\subsection{Preprocessing Choices}
+
+	First, all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. 
+	All categorical variables are converted to integers 
+	and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distances between categorical variables. 
+	All numerical variables are normalized between 0 and 1. 
+	The data sets did not contain any missing variables.
+
+\subsection{Algorithm Choices}
+
+\subsubsection{Genetic Algorithm}
+
+\subsubsection{Differential Evolution}
+
+\subsubsection{Particle Swarm Optimization}
+
+	% TODO write the choices/reasoning we made to avoid tuning, this should be done for each algorithm
+	
+	Two decisions were made for PSO. First, the global topology was declared on how particles in the swarm communicate. 
+	The global topology is the original topology used in PSO and was chosen over the local topology because it has been reported that the local topology requires more iterations to reach a specified error level \citep{og-pso}. 
+	Second, the $\omega$ term in the velocity equation decreases linearly over the course of a run. Experimentally, a linearly decreasing $\omega$ from 0.9 to 0.4 provides a nice exploration-exploitation balance for PSO \citep{inertia}.
+
 \subsection{Tuning}
 
-	Tuning for PSO requires setting the values of $c_c$ and $c_s$. 
+\subsubsection{Genetic Algorithm}
+
+\subsubsection{Differential Evolution}
+
+	Tuning for DE requires tuning the crossover($P_c$) and mutation ($\beta$) parameters. A grid search was performed between $P_c$ and $\beta$ on each dataset with $P_c \in \{.25, .5, .75\}$ and $\beta \in \{.5, 1, 1.5\}$.
+	The optimum values were then selected for each dataset based on the results from this search. 
+
+\subsubsection{Particle Swarm Optimization}	
+
+	Tuning for PSO requires setting the values of $c_c$ of $c_s$. 
 	Experimentally, PSO performs best with $c_c = c_s = 2$ \citep{empirical-pso}. 
 	As such, a grid search was performed on $ (c_c, c_s) \in \{ 1, 2, 3 \} \times \{ 1, 2, 3 \} $ for each data set. 
 	Then the optimum parameters were selected based on fitness of the produced networks (accuracy for classification and MSE for regression).
