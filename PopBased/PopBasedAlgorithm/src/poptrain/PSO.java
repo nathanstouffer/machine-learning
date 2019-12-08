@@ -10,8 +10,12 @@ import datastorage.SimilarityMatrix;
 import neuralnets.MLP;
 
 /**
- * Class to train a MLP feed-forward network using Particle
- * Swarm Optimization. 
+ * This class trains MLP networks using the PSO algorithm. A client of this 
+ * class should construct an instance by passing in appropriate values
+ * for the algorithm's hyper parameters, and then calling the train method.
+ * 
+ * After calling the train method, a client can retrieve the best-performing
+ * member of the swarm with a getter method.
  * 
  * @author natha
  */

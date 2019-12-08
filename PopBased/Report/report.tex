@@ -1,5 +1,5 @@
-%\documentclass[twoside,11pt]{article}
-\documentclass[twoside,10pt]{article}
+\documentclass[twoside,11pt]{article}
+%\documentclass[twoside,10pt]{article}
 
 \usepackage{jmlr2e}
 \usepackage{spverbatim}
@@ -10,10 +10,11 @@
 \newcommand{\jth}{$j^{th}$ }
 \newcommand{\weight}{$w_{ji}$ }
 \newcommand{\Rw}{\mathbb{R}^w }
+\newcommand{\R}{\mathbb{R}}
 
 \begin{document}
 
-\title{Learning with Neural Networks using Population Based Algorithms}
+\title{Neural Networks Trained by Population Based Algorithms}
 
 \author{\name Andrew Kirby \email andy-kirby@live.com \AND
 		\name Kevin Browder \email browderkevin54@gmail.com \AND
@@ -26,14 +27,19 @@
 
 \end{abstract}
 
-% TODO make sure to abbreviate PBA and algorithm names
-
 \section{Problem Statement}
-	Given datasets, the task is to find a model that predicts a real value or class based upon a feature set. The abalone dataset contains features paired with the age of an abalone (the class). This set has 28 closely related classes, making classification potentially difficult.
-	The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 subjects of outdoor photographs with sets of attributes.
+	% TODO some type of intro about how PBA are considered to be global search methods
+	% TODO also mention exploration vs exploitation
+
+	Given datasets, the task is to compare the effectiveness a feed forward Multilayer Perceptron (MLP) trained by Population Based Algorithms (PBA) and Backpropagation. Specifically, there are three PBA: the Genetic Algorithm (GA), Differential Evolution (DE), and Particle Swarm Optimization (PSO). 
+	Each training algorithm will be implemented and tested on the following six data sets.
+		
+	The abalone dataset contains features paired with the age of an abalone (the class). The 28 ages are closely related, potentially making classification difficult.
+	The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 distinct subjects of outdoor photographs.
 	The rest of the datasets are regression.
 	The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
-	The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
+	The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. 
+	Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
 
 \subsection{Hypothesis}
 
@@ -50,6 +56,13 @@
 
 \subsection{Genetic Algorithm}
 
+The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape.
+
+At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then9 completely or partially 
+
+
+
+
 \subsection{Differential Evolution}
 Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA as both use crossover and mutation.  
 \subsection{Particle Swarm Optimization}
@@ -57,20 +70,52 @@ Differential Evolution (DE) is another evolution inspired algorithm with  simila
 	PSO differs from the GA and DE in that there is no parent-offspring relationship. Instead, PSO consists of particles that interact and move around the search space to find the optimum solution. 
 	
 	A swarm consists of $N$ individuals each with a position $\vec{x} \in \Rw$ and a fitness value. 
-	PSO then uses an iterative update rule to change each individual's position. The update for an individual is named $\vec{v} \in \Rw$, which is composed of 3 summed components.
+	PSO then uses an iterative update rule to change each individual's position. The velocity for an individual is named $\vec{v} \in \Rw$, which is composed of 3 summed components.
 	
-	The first component is inertia. For a given iteration's velocity $\vec{v}^t$ inertia is given as $\omega * \vec{v}^{t-1}$ where $\omega$ is typically in $(0,1)$ \citep{empirical-pso}.
-
+	The first component is inertia. For a given iteration's velocity $\vec{v}_t$, inertia is given as $\omega * \vec{v}_{t-1}$ where $\omega \in \mathbb{R}$ can be referred to as the inertia weight. Note that a ``large inertia weight facilitates a global search while a small inertia weight facilitates a local search" \citep{empirical-pso}.
+	
+	Second, there is a cognitive component. 
+	Each particle records its own best performing position $\vec{x}_c \in \Rw$ across all iterations. 
+	With $\vec{x}$ still representing the particle's current position, this component is given as $c_c * r_c * (\vec{x}_c - \vec{x})$ where $r_c$ is randomly selected from $(0,1) \subset \mathbb{R}$ and $c_c$ is a tuned parameter \citep{og-pso}.
+	
+	The final component is social. 
+	For this component, a topology is declared on which particles can communicate between each other.
+	Where if two particles $a,b$ can communicate, then $a$ knows both the current position and fitness of $b$.
+	Similarly, $b$ knows the current position and fitness of $a$.
+	
+	Two common topologies are global and local. 
+	The global topology allows each particle to communicate with every other particle. 
+	The local topology declares that each particle can communicate with only two other particles.
+	Specifically, imagine ordering the particles in the order of initialization.
+	Then, particle $p_k$ communicates with both $p_{k-1}$ and $p_{k+1}$ where $p_{-1} \equiv p_N$ and $p_{N+1} \equiv p_{0}$.
+	This communication persists across all iterations \citep{og-pso}.
+	
+	Now, take an arbitrary particle $p$ and let $T_p$ denote the set of particles that can communicate with $p$.
+	Let $\vec{x}_s \in \Rw$ denote the position of the most fit particle $q \in T_p$. Then, the value of the social component is given as $c_s * r_s * (\vec{x}_s - \vec{x})$ where $r_s$ is randomly selected from $(0,1) \subset \mathbb{R}$ and $c_s$ is a tuned parameter
+	
+	Thus the velocity for each particle is given as the sum
+	$$\vec{v}_t = \omega * \vec{v}_{t-1} + c_c*r_c*(\vec{x}_c - \vec{x}) + c_s*r_s*(\vec{x}_s - \vec{x})$$
+	
+	The position of each particle is now updated according to $\vec{x}_t = \vec{x}_{t-1} + \vec{v}_t$. This process is iteratively repeated for each particle until the values of the vectors converge or a maximum number of iterations is reached \citep{og-pso}.
+		
 \section{Experiment}
 
 \subsection{Preprocessing Choices}
 
 	First, all the examples in the data set are randomly scrambled and then assigned to sets for ten-fold cross validation. 
 	All categorical variables are converted to integers 
-	and the preprocessor also generates a similarity matrix for each categorical variable that is used for
-	determining distances between categorical variables. 
-	All numerical variables are normalized
-	between 0 and 1. The data sets did not contain any missing variables.
+	and the preprocessor also generates a similarity matrix for each categorical variable that is used for determining distances between categorical variables. 
+	All numerical variables are normalized between 0 and 1. 
+	The data sets did not contain any missing variables.
+
+\subsection{Algorithm Choices}
+
+	% TODO write the choices/reasoning we made to avoid tuning, this should be done for each algorithm
+	
+	Two decisions were made for PSO. First, the global topology was declared on how particles in the swarm communicate. 
+	The global topology is the original topology used in PSO and was chosen over the local topology because it has been reported that the local topology requires more iterations to reach a specified error level \citep{og-pso}. 
+	Second, the $\omega$ term in the velocity equation decreases linearly over the course of a run. Experimentally, a linearly decreasing $\omega$ from 0.9 to 0.4 provides a nice exploration-exploitation balance for PSO \citep{inertia}.
+	
 
 \subsection{Evaluation Metrics}
 
