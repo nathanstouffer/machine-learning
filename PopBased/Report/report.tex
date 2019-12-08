@@ -56,12 +56,19 @@ Population based evolutionary algorithms are expected to outperform gradient dec
 
 \subsection{Genetic Algorithm}
 
-The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape.
+	The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape \citep{ga_tutorial}.
 
-At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then9 completely or partially 
+	At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then completely or partially replaces the original population, completing the generation.
 
-
-
+	One-point, two-point, and uniform crossover are common crossover operators. With probability $P_c$, one-point crossover selects a random point in a chromosome, swapping all values of two parent individuals after the crossover point. Two-point crossover swaps values between two selected crossover points. Uniform crossover differs by swapping values at any given point with probability $P_c$. Each crossover operator helps the search by creating children that may inherit more ideal gene combinations from both parents.
+	
+	%TODO talk about implications of different crossover methods
+	
+	Mutation operators visit every gene, mutating with probability $P_m$. Specific mutation operators rely on the gene encoding. If genes are binary, mutation flips the bits. If genes are categorical, a new category is chosen from the domain. If genes are real-valued, mutation may generate a new random value or implement creep. With creep, the new gene value $x_i^\prime$ is given by
+	$$x_i^\prime = x_i + N(0, \sigma_i)$$
+	where $\sigma_i$ is a tunable standard deviation. Mutation helps the search by reinforcing diversity and potentially jumping chromosomes to a completely new spot in the search space.
+	
+	Replacing the original population with individuals from the intermediate population may follow generational or steady-state replacement. Generational replacement replaces the entire population with the intermediate population. This form of replacement may cause dramatic changes between generations and exhibits a high selection pressure. Steady-state replacement features a more gradual change between each generation by replacing only a proportion of the original population with individuals from the intermediate population.
 
 \subsection{Differential Evolution}
 Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA as both use crossover and mutation on chromosomes. It cycles through selection, mutation, crossover and replacement on individuals in the population.
