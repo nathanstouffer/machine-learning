@@ -64,7 +64,11 @@ At the beginning of a generation, individuals are selected for recombination. Re
 
 
 \subsection{Differential Evolution}
-Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA because it uses crossover and mutation.  
+Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA as both use crossover and mutation on chromosomes. It cycles through selection, mutation, crossover and replacement.
+
+The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$.%TODO MATHHHHHHH 
+Uniform crossover is then applied to the target and trial vector according to a tuning parameter. The fitness for the target and trial vectors are then calculated and if the trial vector has a higher fitness it replaces the target vector. A generation is complete when this process has iterated through the size of the population. 
+
 \subsection{Particle Swarm Optimization}
 
 	PSO differs from the GA and DE in that there is no parent-offspring relationship. Instead, PSO consists of particles that interact and move around the search space to find the optimum solution. 
