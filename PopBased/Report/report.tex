@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-
+	Multilayer Perceptron networks are supervised learning models used for classification or regression. These networks are commonly trained using Backpropagation. Population Based Algorithms may be used to train models given the right encoding, including Multilayer Perceptron networks. Each training method requires careful tuning and no algorithm consistently outperforms the others. Selection of training method likely depends on the nature of the model and information to learn.
 \end{abstract}
 
 \section{Problem Statement}
@@ -246,6 +246,8 @@ Uniform crossover is then applied to the target and trial vector according to a 
 \section{Summary}
 
 Feed forward neural networks are complex models that can universally approximate functions. Training these networks with Backpropagation or Population Based Algorithms is effective. In general, no training method consistently outperforms the others. Every training method still requires critical tuning and suffers as model complexity increases.
+
+Ultimately, selection between training algorithms depends on the model and information to be learned. Certain data may be more conducive to hill climbers such as Backpropagation. Other data may benefit from the theoretically more ``global" search methods implemented in Population Based Algorithms.
 
 \newpage
 
