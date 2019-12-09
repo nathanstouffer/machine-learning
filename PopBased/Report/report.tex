@@ -209,28 +209,29 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \section{Results}
 
-	For the final run, optimal parameters were selected for each data set. Results are shown in Fig. \ref{0-hl}, \ref{1-hl}, and \ref{2-hl}. In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation. The PBAs may outperform Backpropagation on regression sets because the output layer weights often become very large, which may be difficult for Backpropagation to train quick enough.
-
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3.5in]{FINAL_FIGS/0_hl.jpg}
+		\includegraphics[height=3.4in]{FINAL_FIGS/0_hl.jpg}
 		\caption{Final Results of a 0 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{0-hl}
 	\end{figure}
-
+	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3.5in]{FINAL_FIGS/1_hl.jpg}
+		\includegraphics[height=3.4in]{FINAL_FIGS/1_hl.jpg}
 		\caption{Final Results of a 1 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{1-hl}
 	\end{figure}
-
+	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3.5in]{FINAL_FIGS/2_hl.jpg}
+		\includegraphics[height=3.4in]{FINAL_FIGS/2_hl.jpg}
 		\caption{Final Results of a 2 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{2-hl}
 	\end{figure}
+
+	For the final run, optimal parameters were selected for each data set. Results are shown in Fig. \ref{0-hl}, \ref{1-hl}, and \ref{2-hl}. In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation. The PBAs may outperform Backpropagation on regression sets because the output layer weights often become very large, which may be difficult for Backpropagation to train quick enough.
+
 
 	The greatest difference in performances between the two algorithms is shown on the forest fires data set in Fig. \ref{1-hl} where the MLP has 1 hidden layer.
 	For a network trained with Backpropagation, the MSE was 26 while the MSE for networks trained by PBAs is less than 3.
