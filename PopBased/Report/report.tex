@@ -28,10 +28,8 @@
 \end{abstract}
 
 \section{Problem Statement}
-	% TODO some type of intro about how PBA are considered to be global search methods
-	% TODO also mention exploration vs exploitation
 
-	Given data sets, the task is to compare the effectiveness a feed forward Multilayer Perceptron (MLP) trained by Population Based Algorithms (PBA) and Backpropagation. Specifically, there are three PBA: the Genetic Algorithm (GA), Differential Evolution (DE), and Particle Swarm Optimization (PSO). 
+	Given data sets, the task is to compare the effectiveness of a feed forward Multilayer Perceptron (MLP) trained by Population Based Algorithms (PBAs) and Backpropagation. Specifically, there are three PBAs: the Genetic Algorithm (GA), Differential Evolution (DE), and Particle Swarm Optimization (PSO). 
 	Each training algorithm will be implemented and tested on the following six data sets.
 		
 	The abalone data set contains features paired with the age of an abalone (the class). The 28 ages are closely related, potentially making classification difficult.
@@ -40,15 +38,18 @@
 	The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
 	The machine data set predicts the performance of a CPU which has an even distribution across its regression values. 
 	Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
+	
+	Backpropagation was implemented and discussed in a previous project so only its results are displayed in this paper. Population Based Algorithms operate on an exploration-exploitation framework. 
+	The general idea is that members of the population begin by exploring the search space and, as the run continues, they gradually shift to exploiting the most fit areas of the search space. In general, PBAs are considered to be methods for global optimization and do not get ``caught" in local minimums.
 
 \subsection{Hypothesis}
 
-	Population Based Algorithms are expected to outperform Backpropagation because PBA are less prone to getting caught in local minima. 
-	Of the PBA, the GA and DE will perform better than PSO because the mutation operator can introduces diversity at any point in a run. 
+	Population Based Algorithms are expected to outperform Backpropagation because PBAs are less prone to getting caught in local minima. 
+	Of the PBAs, the GA and DE will perform better than PSO because the mutation operator can introduces diversity at any point in a run. 
 	
 \section{Algorithms}
 
-	Population Based Algorithms typically reference individual members of populations as vectors associated with a fitness value. Each element in a vector corresponds to some value in a model that is being trained by the PBA.
+	Population Based Algorithms typically reference individual members of populations as vectors associated with a fitness value. Each element in a vector corresponds to some value in a model that is being trained by a PBA.
 	
 	Recall that the output of a Neural Network is entirely dependent on the values of the weights within in the network. 
 	So a neural network can be converted to vector form by listing its weights.
@@ -145,8 +146,6 @@ Uniform crossover is then applied to the target and trial vector according to a 
 \subsubsection{Differential Evolution}
 
 \subsubsection{Particle Swarm Optimization}
-
-	% TODO write the choices/reasoning we made to avoid tuning, this should be done for each algorithm
 	
 	Two decisions were made for PSO. First, the global topology was declared on how particles in the swarm communicate. 
 	The global topology is the original topology used in PSO and was chosen over the local topology because it has been reported that the local topology requires more iterations to reach a specified error level \citep{og-pso}. 
@@ -207,7 +206,7 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \section{Results}
 
-	For the final run, optimal parameters were selected for each data set. In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation.
+	For the final run, optimal parameters were selected for each data set. In general, Backpropagation outperformed each PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation.
 
 	\begin{figure}[h]
 		\centering
@@ -231,8 +230,8 @@ Uniform crossover is then applied to the target and trial vector according to a 
 	\end{figure}
 
 	The greatest difference in performances between the two algorithms is shown on the forest fires data set in Fig. \ref{1-hl} where the MLP has 1 hidden layer. 
-	For a network trained with Backpropagation, the MSE was 26 while the MSE for networks trained with PBA is less than 3. 
-	The most likely explanation is that the PBA were able to pass by the local optima that Backpropagation found for the configuration of weights.
+	For a network trained with Backpropagation, the MSE was 26 while the MSE for networks trained by PBAs is less than 3. 
+	The most likely explanation is that PBAs were able to pass by the local optima that Backpropagation found for the weight configuration.
 
 \section{Summary}
 
