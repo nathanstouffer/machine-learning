@@ -62,6 +62,10 @@
 	The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape \citep{ga_tutorial}.
 
 	At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then completely or partially replaces the original population, completing the generation.
+	
+	Selecting parents of the intermediate population often follows fitness proportionate selection, rank-based selection, or tournament selection. Fitness proportionate selection selects parents with probability equal to the fitness of the individual divided by the sum of the fitnesses of all individuals in the population. Rank-based selection selects parents with probability
+	$$P(\vec{x}_i) = \frac{2}{|P|} \times \frac{|P| - rank(\vec{x}_i)}{|P|+1}$$
+	where $|P|$ is the size of the population and $rank(\vec{x}_i)$ is the ranking of the individual $\vec{x}_i$ based on fitness. Ranked-based selection tries to minimize the high selection pressure exhibited by fitness proportionate selection. Another method that balances selection pressure is tournament selection, which selects $k$ individuals from the population at random and chooses the one with the best fitness.
 
 	One-point, two-point, and uniform crossover are common crossover operators. With probability $P_c$, one-point crossover selects a random point in a chromosome, swapping all values of two parent individuals after the crossover point. Two-point crossover swaps values between two selected crossover points. Uniform crossover differs by swapping values at any given point with probability $P_c$. Each crossover operator helps the search by creating children that may inherit more ideal gene combinations from both parents \citep{ga_tutorial}.
 	
@@ -136,6 +140,8 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \subsubsection{Genetic Algorithm}
 
+	Any GA implementation requires specific crossover, mutation, selection, and replacement methods. For this implementation, uniform crossover, creep mutation, rank-based selection, and steady-state replacement. Uniform crossover was selected for its more disruptive tendencies, a desirable trait for low population implementations \citep{ga_tutorial}. Creep mutation was selected for its stability. Rank-based selection is expected to provide practical convergence times while supporting diversity in the population. A bonus is that this method mitigates the large decrease in selective pressure as the members of the population approach similar fitnesses \citep{ga_tutorial}. Additionally, rank-based selection had no tunable parameters. Steady-state replacement was implemented by generating an intermediate population one fourth of the size of the original population. Then, intermediate population members replaced random members in the original population, but only if they had better fitness.	
+
 \subsubsection{Differential Evolution}
 	The main decision that needed to be made for DE was the number of difference vectors to used in mutation. A single difference vector was used for mutation because it is the standard for DE algorithms and has been shown to perform well \cite{gamperle2002parameter}. 
 
@@ -151,10 +157,37 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \subsubsection{Genetic Algorithm}
 
+	Tuning the GA required finding optimal standard deviations used for creep mutation, $P_c$, and $P_m$. Creep standard deviations were tested and a ratio of 100 times the initial starting weight bounds was optimal. A grid search for $(P_c, P_m) \in \{0.1, 0.05, 0.01, 0.005\} \times \{0.05, 0.02, 0.01, 0.005\}$. The optimal values are displayed in Table \ref{ga-tuning-table}. 
+
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|l|}
+			\hline
+			       & abalone & car & segmentation & forest fires & machine & wine quality  \\ \hline
+			$P_c$  &     0.1 & 0.1 &          0.1 &          0.1 &     0.1 &          0.1  \\ \hline
+			$P_m$  &   0.005 & 0.005 &       0.05 &         0.05 &    0.02 &         0.02  \\ \hline
+		\end{tabular}
+		\caption{Optimum Parameters for the Genetic Algorithm}
+		\label{ga-tuning-table}
+	\end{table}
+
 \subsubsection{Differential Evolution}
 
-	Tuning for DE requires tuning the crossover($P_c$) and mutation ($\beta$) parameters. A grid search was performed between $P_c$ and $\beta$ on each dataset with $P_c \in \{.25, .5, .75\}$ and $\beta \in \{.5, 1, 1.5\}$.
-	The optimum values were then selected for each dataset based on the results from this search. 
+	Tuning for DE requires tuning the crossover($P_c$) and mutation ($\beta$) parameters. A grid search for
+	$(P_c, \beta) \in \{ 0.25, 0.5, 0.75 \} \times \{ 0.5, 1, 1.5 \}$ 
+	each dataset.
+	The optimum values are displayed in Table \ref{de-tuning-table}. 
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|l|}
+			\hline
+			       & abalone & car & segmentation & forest fires & machine & wine quality  \\ \hline
+			$P_c$  &     0.5 & 0.25&         0.25 &         0.25 &     0.5 &          0.5  \\ \hline
+			$\beta$&     1.5 & 1.5 &          1.5 &          1.5 &     0.5 &            1  \\ \hline
+		\end{tabular}
+		\caption{Optimum Parameters for Differential Evolution}
+		\label{de-tuning-table}
+	\end{table}
 
 \subsubsection{Particle Swarm Optimization}	
 
@@ -162,7 +195,18 @@ Uniform crossover is then applied to the target and trial vector according to a 
 	Experimentally, PSO performs best with $c_c = c_s = 2$ \citep{empirical-pso}. 
 	As such, a grid search was performed on $ (c_c, c_s) \in \{ 1, 2, 3 \} \times \{ 1, 2, 3 \} $ for each data set. 
 	Then the optimum parameters were selected based on fitness of the produced networks (accuracy for classification and MSE for regression).
-	In general, the classification data sets performed best with $c_c > c_s$ while the regression data sets preferred $c_c < c_s$.
+	Specific values are shown in Table \ref{pso-tuning-table}.
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|l|}
+			\hline
+			       & abalone & car & segmentation & forest fires & machine & wine quality  \\ \hline
+			$c_c$  &       3 &   2 &            2 &            2 &       1 &            1  \\ \hline
+			$c_s$  &       2 &   3 &            1 &            2 &       3 &            2  \\ \hline
+		\end{tabular}
+		\caption{Optimum Parameters for Particle Swarm Optimization}
+		\label{pso-tuning-table}
+	\end{table}
 
 \section{Results}
 
@@ -170,21 +214,21 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3in]{FINAL_FIGS/0_hl.jpg}
+		\includegraphics[height=4in]{FINAL_FIGS/0_hl.jpg}
 		\caption{Final Results of a 0 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{0-hl}
 	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3in]{FINAL_FIGS/1_hl.jpg}
+		\includegraphics[height=4in]{FINAL_FIGS/1_hl.jpg}
 		\caption{Final Results of a 1 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{1-hl}
 	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3in]{FINAL_FIGS/2_hl.jpg}
+		\includegraphics[height=4in]{FINAL_FIGS/2_hl.jpg}
 		\caption{Final Results of a 2 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{2-hl}
 	\end{figure}
