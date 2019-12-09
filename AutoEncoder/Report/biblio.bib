@@ -4,16 +4,6 @@
 % if conference: proceedings, location
 % if journal: journal name, volume, issue
 
-% inertia citation
-@inproceedings{inertia,
-	title={Inertia weight strategies in particle swarm optimization},
-	author={Bansal, Jagdish Chand and Singh, PK and Saraswat, Mukesh and Verma, Abhishek and Jadon, Shimpi Singh and Abraham, Ajith},
-	booktitle={2011 Third world congress on nature and biologically inspired computing},
-	pages={633--640},
-	year={2011},
-	organization={IEEE}
-}
-
 % datasets reference
 @misc{datasets,
 	author = "Dua, Dheeru and Graff, Casey",
@@ -23,14 +13,16 @@
 	institution = "University of California, Irvine, School of Information and Computer Sciences"
 }
 
-% original PSO paper
-@inproceedings{og-pso,
-	title={A new optimizer using particle swarm theory},
-	author={Eberhart, Russell and Kennedy, James},
-	booktitle={MHS'95. Proceedings of the Sixth International Symposium on Micro Machine and Human Science},
-	pages={39--43},
-	year={1995},
-	organization={Ieee}
+% sparse AE paper
+@article{sparsity,
+	title={Sparse autoencoder},
+	author={Ng, Andrew and others},
+	journal={CS294A Lecture notes},
+	volume={72},
+	number={2011},
+	pages={1--19},
+	year={2011},
+	publisher={Stanford University}
 }
 
 % backpropagation paper
@@ -44,31 +36,6 @@
 	year={1988}
 }
 
-% paper describing empirical pso (includes linearly decreasing velocity)
-@inproceedings{empirical-pso,
-	title={Empirical study of particle swarm optimization},
-	author={Shi, Yuhui and Eberhart, Russell C},
-	booktitle={Proceedings of the 1999 Congress on Evolutionary Computation-CEC99 (Cat. No. 99TH8406)},
-	volume={3},
-	pages={1945--1950},
-	year={1999},
-	organization={IEEE}
-}
-
-% Differential Evolution
-@Article{Storn1997,
-	author="Storn, Rainer
-	and Price, Kenneth",
-	title="Differential Evolution -- A Simple and Efficient Heuristic for global Optimization over Continuous Spaces",
-	journal="Journal of Global Optimization",
-	year="1997",
-	month="Dec",
-	day="01",
-	volume="11",
-	number="4",
-	pages="341--359"
-}
-
 @article{svozil1997ffnn,
 	title={Introduction to multi-layer feed-forward neural networks},
 	author={Svozil, Daniel and Kvasnicka, Vladimir and Pospichal, Jiri},
@@ -78,4 +45,15 @@
 	pages={43--62},
 	year={1997},
 	publisher={Elsevier}
+}
+
+% AE paper
+@article{stacked-ae,
+	title={Stacked denoising autoencoders: Learning useful representations in a deep network with a local denoising criterion},
+	author={Vincent, Pascal and Larochelle, Hugo and Lajoie, Isabelle and Bengio, Yoshua and Manzagol, Pierre-Antoine},
+	journal={Journal of machine learning research},
+	volume={11},
+	number={Dec},
+	pages={3371--3408},
+	year={2010}
 }
