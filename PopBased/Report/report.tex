@@ -62,6 +62,10 @@
 	The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape \citep{ga_tutorial}.
 
 	At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then completely or partially replaces the original population, completing the generation.
+	
+	Selecting parents of the intermediate population often follows fitness proportionate selection, rank-based selection, or tournament selection. Fitness proportionate selection selects parents with probability equal to the fitness of the individual divided by the sum of the fitnesses of all individuals in the population. Rank-based selection selects parents with probability
+	$$P(\vec{x}_i) = \frac{2}{|P|} \times \frac{|P| - rank(\vec{x}_i)}{|P|+1}$$
+	where $|P|$ is the size of the population and $rank(\vec{x}_i)$ is the ranking of the individual $\vec{x}_i$ based on fitness. Ranked-based selection tries to minimize the high selection pressure exhibited by fitness proportionate selection. Another method that balances selection pressure is tournament selection, which selects $k$ individuals from the population at random and chooses the one with the best fitness.
 
 	One-point, two-point, and uniform crossover are common crossover operators. With probability $P_c$, one-point crossover selects a random point in a chromosome, swapping all values of two parent individuals after the crossover point. Two-point crossover swaps values between two selected crossover points. Uniform crossover differs by swapping values at any given point with probability $P_c$. Each crossover operator helps the search by creating children that may inherit more ideal gene combinations from both parents \citep{ga_tutorial}.
 	
@@ -135,6 +139,8 @@ Uniform crossover is then applied to the target and trial vector according to a 
 \subsection{Algorithm Choices}
 
 \subsubsection{Genetic Algorithm}
+
+	Any GA implementation requires specific crossover, mutation, selection, and replacement methods. For this implementation, uniform crossover, creep mutation, rank-based selection, and steady-state replacement. Uniform crossover was selected for its more disruptive tendencies, a desirable trait for low population implementations \citep{ga_tutorial}. Creep mutation was selected for its stability. Rank-based selection is expected to provide practical convergence times while supporting diversity in the population. A bonus is that this method mitigates the large decrease in selective pressure as the members of the population approach similar fitnesses \citep{ga_tutorial}. Additionally, rank-based selection had no tunable parameters. Steady-state replacement was implemented by generating an intermediate population one fourth of the size of the original population. Then, intermediate population members replaced random members in the original population, but only if they had better fitness.	
 
 \subsubsection{Differential Evolution}
 
