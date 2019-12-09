@@ -76,8 +76,8 @@
 \subsection{Differential Evolution}
 Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA as both use crossover and mutation on chromosomes. It cycles through selection, mutation, crossover and replacement on individuals in the population.
 
-The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$ where $\beta$ is a tuneable parameter. $$v_p = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-1} - x_n)$$
-Uniform crossover is then applied to the target and trial vector according to a tuning parameter. The fitness for the target and trial vectors are then calculated and if the trial vector has a higher fitness it replaces the target vector. A generation is complete when this process has iterated through the size of the population. 
+The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$ where $\beta$ is a tuneable parameter\cite{price2006differential}. $$v_p = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-1} - x_n)$$
+Uniform crossover is then applied to the target and trial vector according to a tuning parameter. The fitness for the target and trial vectors are then calculated and if the trial vector has a higher fitness it replaces the target vector. A generation is complete when this process has iterated through the size of the population \cite{price2006differential}. 
 
 \subsection{Particle Swarm Optimization}
 
@@ -137,6 +137,7 @@ Uniform crossover is then applied to the target and trial vector according to a 
 \subsubsection{Genetic Algorithm}
 
 \subsubsection{Differential Evolution}
+	The main decision that needed to be made for DE was the number of difference vectors to used in mutation. A single difference vector was used for mutation because it is the standard for DE algorithms and has been shown to perform well \cite{gamperle2002parameter}. 
 
 \subsubsection{Particle Swarm Optimization}
 
