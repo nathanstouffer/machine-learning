@@ -150,10 +150,35 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \subsubsection{Genetic Algorithm}
 
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|l|}
+			\hline
+			       & abalone & car & segmentation & forest fires & machine & wine quality  \\ \hline
+			$P_c$  &     0.1 & 0.1 &          0.1 &          0.1 &     0.1 &          0.1  \\ \hline
+			$P_m$  &   0.005 & 0.005 &       0.05 &         0.05 &    0.02 &         0.02  \\ \hline
+		\end{tabular}
+		\caption{Optimum Parameters for Differential Evolution}
+		\label{ga-tuning-table}
+	\end{table}
+
 \subsubsection{Differential Evolution}
 
-	Tuning for DE requires tuning the crossover($P_c$) and mutation ($\beta$) parameters. A grid search was performed between $P_c$ and $\beta$ on each dataset with $P_c \in \{.25, .5, .75\}$ and $\beta \in \{.5, 1, 1.5\}$.
-	The optimum values were then selected for each dataset based on the results from this search. 
+	Tuning for DE requires tuning the crossover($P_c$) and mutation ($\beta$) parameters. A grid search for
+	$(P_c, \beta) \in \{ 0.25, 0.5, 0.75 \} \times \{ 0.5, 1, 1.5 \}$ 
+	each dataset.
+	The optimum values are displayed in Table \ref{de-tuning-table}. 
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|l|}
+			\hline
+			       & abalone & car & segmentation & forest fires & machine & wine quality  \\ \hline
+			$P_c$  &     0.5 & 0.25&         0.25 &         0.25 &     0.5 &          0.5  \\ \hline
+			$\beta$&     1.5 & 1.5 &          1.5 &          1.5 &     0.5 &            1  \\ \hline
+		\end{tabular}
+		\caption{Optimum Parameters for Differential Evolution}
+		\label{de-tuning-table}
+	\end{table}
 
 \subsubsection{Particle Swarm Optimization}	
 
@@ -161,7 +186,18 @@ Uniform crossover is then applied to the target and trial vector according to a 
 	Experimentally, PSO performs best with $c_c = c_s = 2$ \citep{empirical-pso}. 
 	As such, a grid search was performed on $ (c_c, c_s) \in \{ 1, 2, 3 \} \times \{ 1, 2, 3 \} $ for each data set. 
 	Then the optimum parameters were selected based on fitness of the produced networks (accuracy for classification and MSE for regression).
-	In general, the classification data sets performed best with $c_c > c_s$ while the regression data sets preferred $c_c < c_s$.
+	Specific values are shown in Table \ref{pso-tuning-table}.
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|l|}
+			\hline
+			       & abalone & car & segmentation & forest fires & machine & wine quality  \\ \hline
+			$c_c$  &       3 &   2 &            2 &            2 &       1 &            1  \\ \hline
+			$c_s$  &       2 &   3 &            1 &            2 &       3 &            2  \\ \hline
+		\end{tabular}
+		\caption{Optimum Parameters for Particle Swarm Optimization}
+		\label{pso-tuning-table}
+	\end{table}
 
 \section{Results}
 
