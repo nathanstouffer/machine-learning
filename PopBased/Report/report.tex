@@ -35,17 +35,25 @@
 	The abalone data set contains features paired with the age of an abalone (the class). The 28 ages are closely related, potentially making classification difficult.
 	The car data set contains attributes corresponding to 4 possible conditions of a car while the segmentation data set details 6 distinct subjects of outdoor photographs.
 	The rest of the data sets are regression.
-	The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
-	The machine data set predicts the performance of a CPU which has an even distribution across its regression values.
+	The forest fires set contains the area burned by a forest fire. Most acreages are 0 with a few large values that might give the model trouble.
+	The machine data set predicts the performance of a CPU, theres is an even distribution across its regression values.
 	Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
 
 	Backpropagation was implemented and discussed in a previous project so only its results are displayed in this paper. Population Based Algorithms operate on an exploration-exploitation framework.
-	The general idea is that members of the population begin by exploring the search space and, as the run continues, they gradually shift to exploiting the most fit areas of the search space. In general, PBAs are considered to be methods for global optimization and do not get ``caught" in local minimums.
+	The general idea is that members of the population begin by exploring the search space and, as a run continues, they gradually shift to exploiting the most fit areas of the search space. 
+	In general, PBAs are considered to be methods for global optimization and do not get ``caught" in local minima.
 
 \subsection{Hypothesis}
 
 	Population Based Algorithms are expected to outperform Backpropagation because PBAs are less prone to getting caught in local minima.
-	Of the PBAs, the GA and DE will perform better than PSO because the mutation operator can introduces diversity at any point in a run.
+	Of the PBAs, the GA will perform better than DE and PSO because of its unique mutation operator. 
+	Mutation in the GA, through a creep term, introduces an entirely random component to the direction an ``offspring" takes from its ``parent." 
+	This is more likely to introduce diversity later in a run than the other two Population Based Algorithms. 
+	The stochastic portion of PSO affects only a step's magnitude in the search space while the direction a member of DE ``moves" in is determined by its difference vectors.
+	
+	While mutation in the GA has the possibility of introducing diversity, it also makes the GA more similar to a random walk. This will give the GA the slowest convergence rate. 
+	Differential Evolution will converge the quickest of the three PBAs. This is because DE only accepts a new member of the population if it is more fit than its direct parent. 
+	This gives quicker convergence than the other two PBAs. However, Backpropagation 
 
 \section{Algorithms}
 
@@ -53,36 +61,65 @@
 
 	Recall that the output of a Neural Network is entirely dependent on the values of the weights within in the network.
 	So a neural network can be converted to vector form by listing its weights.
-	Since weights are real-valued, if $w$ represents the number of weights that a neural network contains then the vector is a point in the Euclidean Space $\mathbb{R}^w$.
+	Since weights are real-valued, if $w$ represents the number of weights that a neural network contains, then the vector is a point in the Euclidean Space $\mathbb{R}^w$.
 	The fitness associated with the vector is the accuracy or MSE (respectively for classification and regression) of a network on a training data set.
 
 	This sets up the search space of weights and the objective function based on the network's fitness.
 
 \subsection{Genetic Algorithm}
 
-	The Genetic Algorithm (GA) is a evolution-inspired process often used for function optimization. The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape \citep{ga_tutorial}.
+	The Genetic Algorithm (GA) is an evolution-inspired process often used training a model. 
+	The algorithm represents possible solutions as chromosomes---vectors of genes values that parameterize a model. 
+	Given a population of randomly initialized chromosomes, the GA applies cycles of selection, recombination, mutation, and replacement to individuals within the population. 
+	Chromosomes with better fitness are expected to survive through these generations, preserving desirable genes as the population searches the fitness landscape \citep{ga_tutorial}.
 
-	At the beginning of a generation, individuals are selected for recombination. Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. The intermediate population then completely or partially replaces the original population, completing the generation.
+	In each generation, individuals are selected for recombination. 
+	Recombination generates an intermediate population by applying crossover between parents, an operator which randomly swaps genes between chromosomes at some rate $P_c$. 
+	Next, the mutation operator is applied to each individual in the intermediate population, randomly modifying genes at some rate $P_m$. 
+	The intermediate population then completely or partially replaces the original population, completing the generation.
 
-	Selecting parents of the intermediate population often follows fitness proportionate selection, rank-based selection, or tournament selection. Fitness proportionate selection selects parents with probability equal to the fitness of the individual divided by the sum of the fitnesses of all individuals in the population. Rank-based selection selects parents with probability
-	$$P(\vec{x}_i) = \frac{2}{|P|} \times \frac{|P| - rank(\vec{x}_i)}{|P|+1}$$
-	where $|P|$ is the size of the population and $rank(\vec{x}_i)$ is the ranking of the individual $\vec{x}_i$ based on fitness. Ranked-based selection tries to minimize the high selection pressure exhibited by fitness proportionate selection. Another method that balances selection pressure is tournament selection, which selects $k$ individuals from the population at random and chooses the one with the best fitness.
+	Selecting parents of the intermediate population often follows fitness proportionate selection, rank-based selection, or tournament selection. 
+	Fitness proportionate selection selects parents with probability equal to the fitness of the individual divided by the sum of the fitnesses of all individuals in the population. 
+	Rank-based selection selects parents with probability
+	$$P(\vec{x}_i) = \frac{2}{|P|} * \frac{|P| - rank(\vec{x}_i)}{|P|+1}$$
+	where $|P|$ is the size of the population and $rank(\vec{x}_i)$ is the ranking of the individual $\vec{x}_i$ based on fitness. 
+	Ranked-based selection tries to minimize the high selection pressure exhibited by fitness proportionate selection. 
+	Another method that balances selection pressure is tournament selection, which selects $k$ individuals from the population at random and chooses the one with the best fitness.
 
-	One-point, two-point, and uniform crossover are common crossover operators. With probability $P_c$, one-point crossover selects a random point in a chromosome, swapping all values of two parent individuals after the crossover point. Two-point crossover swaps values between two selected crossover points. Uniform crossover differs by swapping values at any given point with probability $P_c$. Each crossover operator helps the search by creating children that may inherit more ideal gene combinations from both parents \citep{ga_tutorial}.
+	One-point, two-point, and uniform crossover are common crossover operators. 
+	With probability $P_c$, one-point crossover selects a random point in a chromosome, swapping all values of two parent individuals after the crossover point. 
+	Two-point crossover swaps values between two selected crossover points. 
+	Uniform crossover differs by swapping values at any given point with probability $P_c$. 
+	Each crossover operator helps the search by creating children that may inherit more ideal gene combinations from both parents \citep{ga_tutorial}.
 
 	%TODO talk about implications of different crossover methods
 
-	Mutation operators visit every gene, mutating with probability $P_m$. Specific mutation operators rely on the gene encoding. If genes are binary, mutation flips the bits. If genes are categorical, a new category is chosen from the domain. If genes are real-valued, mutation may generate a new random value or implement creep. With creep, the new gene value $x_i^\prime$ is given by
+	Mutation operators visit every gene, mutating with probability $P_m$. 
+	Specific mutation operators rely on the gene encoding. 
+	If genes are binary, mutation flips the bits. 
+	If genes are categorical, a new category is chosen from the domain. 
+	If genes are real-valued, mutation may generate a new random value or implement creep. With creep, the new gene value $x_i^\prime$ is given by
 	$$x_i^\prime = x_i + N(0, \sigma_i)$$
-	where $\sigma_i$ is a tunable standard deviation. Mutation helps the search by reinforcing diversity and potentially jumping chromosomes to a completely new spot in the search space \citep{ga_tutorial}.
+	where $\sigma_i$ is a tunable standard deviation. 
+	Mutation helps the search by reinforcing diversity and potentially jumping chromosomes to a completely new spot in the search space \citep{ga_tutorial}.
 
-	Replacing the original population with individuals from the intermediate population may follow generational or steady-state replacement. Generational replacement replaces the entire population with the intermediate population. This form of replacement may cause dramatic changes between generations and exhibits a high selection pressure. Steady-state replacement features a more gradual change between each generation by replacing only a proportion of the original population with individuals from the intermediate population.
+	Replacing the original population with individuals from the intermediate population may follow generational or steady-state replacement. 
+	Generational replacement replaces the entire population with the intermediate population. 
+	This form of replacement may cause dramatic changes between generations and exhibits a high selection pressure. 
+	Steady-state replacement features a more gradual change between each generation by replacing only a proportion of the original population with individuals from the intermediate population.
 
 \subsection{Differential Evolution}
-Differential Evolution (DE) is another evolution inspired algorithm with  similarities to GA as both use crossover and mutation on chromosomes. It cycles through selection, mutation, crossover and replacement on individuals in the population.
-
-The DE begins with a population $P$ of vectors that are randomly generated. A target vector $v_t$ is randomly selected from the population. For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. These vectors are combined using the formula below to create a trial vector $v_p$ where $\beta$ is a tuneable parameter\cite{price2006differential}. $$v_p = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-1} - x_n)$$
-Uniform crossover is then applied to the target and trial vector according to a tuning parameter. The fitness for the target and trial vectors are then calculated and if the trial vector has a higher fitness it replaces the target vector. A generation is complete when this process has iterated through the size of the population \cite{price2006differential}.
+	
+	Differential Evolution (DE) is another evolution inspired algorithm with similarities to GA as both use crossover and mutation on chromosomes. 
+	It cycles through selection, mutation, crossover and replacement on individuals in the population.
+	
+	The DE begins with a population $P$ of vectors that are randomly generated. 
+	A target vector $v_t$ is randomly selected from the population. 
+	For mutation, a set number of vectors $v_1, v_2,.., v_n$ are randomly selected from the data set. 
+	These vectors are combined using the formula below to create a trial vector $v_p$ where $\beta$ is a tunable parameter\cite{price2006differential}. $$v_p = v_1 + \beta(x_2 - x_3) + ... + \beta(x_{n-1} - x_n)$$
+	Uniform crossover is then applied to the target and trial vector according to a tuning parameter. 
+	The fitness for the target and trial vectors are then calculated and if the trial vector has a higher fitness it replaces the target vector. 
+	A generation is complete when this process has iterated through the size of the population \cite{price2006differential}.
 
 \subsection{Particle Swarm Optimization}
 
@@ -139,12 +176,16 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \subsection{Algorithm Choices}
 
+% TODO talk about pop size
+
 \subsubsection{Genetic Algorithm}
 
 	Any GA implementation requires specific crossover, mutation, selection, and replacement methods. For this implementation, uniform crossover, creep mutation, rank-based selection, and steady-state replacement. Uniform crossover was selected for its more disruptive tendencies, a desirable trait for low population implementations \citep{ga_tutorial}. Creep mutation was selected for its stability. Rank-based selection is expected to provide practical convergence times while supporting diversity in the population. A bonus is that this method mitigates the large decrease in selective pressure as the members of the population approach similar fitnesses \citep{ga_tutorial}. Additionally, rank-based selection had no tunable parameters. Steady-state replacement was implemented by generating an intermediate population one fourth of the size of the original population. Then, intermediate population members replaced random members in the original population, but only if they had better fitness.
 
 \subsubsection{Differential Evolution}
-	The main decision that needed to be made for DE was the number of difference vectors to used in mutation. A single difference vector was used for mutation because it is the standard for DE algorithms and has been shown to perform well \cite{gamperle2002parameter}.
+	
+	The solitary decision to be made for Differential Evolution is the number of difference vectors  used in mutation. 
+	A single difference vector was selected because it has been experimentally shown to produce good results \cite{gamperle2002parameter}.
 
 \subsubsection{Particle Swarm Optimization}
 
@@ -209,7 +250,11 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \section{Results}
 
-	For the final run, optimal parameters were selected for each data set. Results are shown in Fig. \ref{0-hl}, \ref{1-hl}, and \ref{2-hl}. In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation. The PBAs may outperform Backpropagation on regression sets because the output layer weights often become very large, which may be difficult for Backpropagation to train quick enough.
+	For the final run, optimal parameters were selected for each data set. 
+	Results are shown in Fig. \ref{0-hl}, \ref{1-hl}, and \ref{2-hl}. 
+	In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. 
+	This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation. 
+	The PBAs may outperform Backpropagation on regression sets because the output layer weights often become very large, which may be difficult for Backpropagation to train quick enough.
 
 	\begin{figure}[h]
 		\centering
@@ -242,6 +287,8 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 	%TODO maybe add something about how PBAs want independent genes but MLP weights are dependent?
 	%TODO add comparisons between specific PBAs?????
+	
+	% TODO talk about convergence rate
 
 \section{Summary}
 
