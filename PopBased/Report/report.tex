@@ -156,7 +156,7 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \subsubsection{Genetic Algorithm}
 
-	Tuning the GA required finding optimal standard deviations used for creep mutation, $P_c$, and $P_m$. Creep standard deviations were tested and a ratio of 100 times the initial starting weight bounds was optimal. A grid search for $(P_c, P_m) \in \{0.1, 0.05, 0.01, 0.005\} \times \{0.05, 0.02, 0.01, 0.005\}$. The optimal values are displayed in Table \ref{ga-tuning-table}. 
+	Tuning the GA required finding optimal population size, standard deviations used for creep mutation, $P_c$, and $P_m$. A population of size 64 was used, providing sufficient performance. Creep standard deviations were tested and a ratio of 100 times the initial starting weight bounds was found to be optimal. A grid search for $(P_c, P_m) \in \{0.1, 0.05, 0.01, 0.005\} \times \{0.05, 0.02, 0.01, 0.005\}$ tuned crossover and mutation rates. The optimal values are displayed in Table \ref{ga-tuning-table}. 
 
 	\begin{table}[h]
 		\centering
@@ -209,34 +209,43 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \section{Results}
 
-	For the final run, optimal parameters were selected for each data set. In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation.
+	For the final run, optimal parameters were selected for each data set. Results are shown in Fig. \ref{0-hl}, \ref{1-hl}, and \ref{2-hl}. In general, Backpropagation outperformed the PBA on classification data sets while the opposite is true for regression data sets. This partially realized the hypothesis that Population Based Algorithms would perform better than Backpropagation. The PBAs may outperform Backpropagation on regression sets because the output layer weights often become very large, which may be difficult for Backpropagation to train quick enough. 
 
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=4in]{FINAL_FIGS/0_hl.jpg}
+		\includegraphics[height=3.5in]{FINAL_FIGS/0_hl.jpg}
 		\caption{Final Results of a 0 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{0-hl}
 	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=4in]{FINAL_FIGS/1_hl.jpg}
+		\includegraphics[height=3.5in]{FINAL_FIGS/1_hl.jpg}
 		\caption{Final Results of a 1 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{1-hl}
 	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=4in]{FINAL_FIGS/2_hl.jpg}
+		\includegraphics[height=3.5in]{FINAL_FIGS/2_hl.jpg}
 		\caption{Final Results of a 2 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{2-hl}
 	\end{figure}
 
-	The greatest difference in performances between the two algorithms is shown on the forest fires data set in Fig. \ref{1-hl} where the MLP has 1 hidden layer. 
+	The greatest difference in performances between the two algorithms is shown in the forest fires data set in Fig. \ref{1-hl} where the MLP has 1 hidden layer. 
 	For a network trained with Backpropagation, the MSE was 26 while the MSE for networks trained with PBA is less than 3. 
 	The most likely explanation is that the PBA were able to pass by the local optima that Backpropagation found for the configuration of weights.
+	
+	The performance of every training method with 2 hidden layers is particularly interesting. Every performed worse with 2 hidden layers, likely because of the increased dimensionality of the search space. Backpropagation and each PBA are not immune to this limitation, and there appears to be no clear winner as to which training method performs the best as the network depth is increased.
+	
+	In general, the results show that algorithm performance is highly situational. The relative performances of each algorithm could likely be changed by further tuning parameters. Thus, the PBAs may have underperformed because they had many decisions and tunable parameters, making tuning difficult.
+	
+	%TODO maybe add something about how PBAs want independent genes but MLP weights are dependent?
+	%TODO add comparisons between specific PBAs?????
 
 \section{Summary}
+
+Feed forward neural networks are complex models that can universally approximate functions. Training these networks with Backpropagation or Population Based Algorithms is effective. In general, no training method consistently outperforms the others. Every training method still requires critical tuning and suffers as model complexity increases.
 
 \newpage
 
