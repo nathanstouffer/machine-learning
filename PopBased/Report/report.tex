@@ -156,6 +156,8 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 \subsubsection{Genetic Algorithm}
 
+	Tuning the GA required finding optimal standard deviations used for creep mutation, $P_c$, and $P_m$. Creep standard deviations were tested and a ratio of 100 times the initial starting weight bounds was optimal. A grid search for $(P_c, P_m) \in \{0.1, 0.05, 0.01, 0.005\} \times \{0.05, 0.02, 0.01, 0.005\}$. The optimal values are displayed in Table \ref{ga-tuning-table}. 
+
 	\begin{table}[h]
 		\centering
 		\begin{tabular}{|l|l|l|l|l|l|l|}
@@ -164,7 +166,7 @@ Uniform crossover is then applied to the target and trial vector according to a 
 			$P_c$  &     0.1 & 0.1 &          0.1 &          0.1 &     0.1 &          0.1  \\ \hline
 			$P_m$  &   0.005 & 0.005 &       0.05 &         0.05 &    0.02 &         0.02  \\ \hline
 		\end{tabular}
-		\caption{Optimum Parameters for Differential Evolution}
+		\caption{Optimum Parameters for the Genetic Algorithm}
 		\label{ga-tuning-table}
 	\end{table}
 
@@ -211,21 +213,21 @@ Uniform crossover is then applied to the target and trial vector according to a 
 
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3in]{FINAL_FIGS/0_hl.jpg}
+		\includegraphics[height=4in]{FINAL_FIGS/0_hl.jpg}
 		\caption{Final Results of a 0 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{0-hl}
 	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3in]{FINAL_FIGS/1_hl.jpg}
+		\includegraphics[height=4in]{FINAL_FIGS/1_hl.jpg}
 		\caption{Final Results of a 1 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{1-hl}
 	\end{figure}
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[height=3in]{FINAL_FIGS/2_hl.jpg}
+		\includegraphics[height=4in]{FINAL_FIGS/2_hl.jpg}
 		\caption{Final Results of a 2 Hidden Layer MLP. Color indicates training algorithm type.}
 		\label{2-hl}
 	\end{figure}
