@@ -89,6 +89,15 @@
 
 \subsection{Algorithm Choices}
 	
+	Implementing an Auto-Encoder requires deciding between undercomplete/overcomplete and whether to include denoising.
+	For this project, an overcomplete AE was implemented. An overcomplete architecture was chosen so that a sparse AE could be formed that produces linearly independant features in a data set \citep{sparsity}. 
+	This reduces the complexity of data sets such as forest fires and wine quality, which have linearly dependant features, making the task of prediction model simpler \citep{datasets}.
+	Denoising was not implemented for time's sake.
+	
+	After the AE architecture has been chosen, there is still the task of choosing the structure of the prediction network.
+	For this, a single hidden layer was used. 
+	The number of hidden nodes in this layer was two times the dimension of the input vector. This was chosen based on results in a previous project. 
+	The number of output nodes was determined whether the data set was classification (with output nodes equal to the number of classes) or regression (with 1 output node).
 
 \subsection{Evaluation Metrics}
 
