@@ -30,6 +30,7 @@
 \section{Problem Statement}
 	% TODO talk about feature selection stuff
 	% TODO mention backprop and ff MLP's in general
+	% TODO mention uses of AE (compression and feature selection)
 	% TODO include abbreviations (AE)
 
 	Each training algorithm will be implemented and tested on the following six data sets.
@@ -46,9 +47,35 @@
 \section{Algorithms}
 
 	Since Backpropagation was explained in a previous project, this paper focuses on explaining an Auto-Encoder. 
-	An Auto-Encoder is feed forward MLP with a single hidden layer. 
+	An Auto-Encoder is a feed forward MLP with a single hidden layer. 
 	The weights to the hidden layer are often referred to as the encoding layer and the weights to the output layer are called the decoding layer. 
 	
+	An Auto-Encoder learns a function $f(\vec{v}) \approx \vec{v}$. 
+	This is process is now described in detail.
+	Take $d,k \in \mathbb{Z}^+$. 
+	The encoding layer maps an input vector $\vec{v}_i \in \mathbb{R}^d$ to an encoded vector $\vec{v}_e \in \mathbb{R}^k$.
+	The decoding layer then maps $\vec{v}_e$ to $\vec{v}_o \in \mathbb{R}^d$ such that the distance between $\vec{v}_i$ and $\vec{v}_o$ is minimized.
+	There is a sense in which the decoding layer is the function inverse of the encoding layer. 
+	However, this is not a true inverse relationship since the decoding layer does not produce the exact input given to the encoding layer.
+	
+	There are two types of Auto-Encoders: undercomplete and overcomplete. 
+	An under complete Auto-Encoder is one where $k < d$. This means that the dimensionality of $\vec{v}_e$ is smaller than the dimensionality of the input/output vectors. 
+	This forces the encoding layer to reduce the number of features, possibly eliminating linearly dependent features. 
+	An undercomplete AE requires tuning to select $k$.
+	The other type of AE is an overcomplete autoencoder. This is the case where $k \geq d$.
+	Learning this function seems trival since there is an inclusion map $\mathbb{R}^d \mapsto \mathbb{R}^k$.
+	However, a sparsity penalty $\lambda \in \mathbb{R}$ is introduced to tend weights in the decoding layer towards 0 (typically $\lambda$ is small).
+	That is, at each step in the gradient, each weight is moved towards 0 by a distance of $\lambda$ (subtracting $\lambda$ for positive weights and adding $\lambda$ for negative weights).
+	This produces a sparse Auto-Encoder, where some hidden nodes activations are not unnecessary because the weights leaving them have a magnitude close to 0.
+	At this point, prune out the unnecessary hidden nodes, and it is now be the case that the dimensionality of the hidden layer is less than that of the input/output layer.
+	Additionally, the values of hidden nodes are the linearly independent features of the data set \citep{sparsity}.
+	
+	A denoising component can also be added to an Auto-Encoder. To implement this, applies small, random changes to each value in the input vector and then attempt to approximate the original vector by sending the mutated vector through the AE. This will produce a network that denoises data \citep{stacked-ae}.
+	
+	Auto-Encoders can also be used in a prediction process. Given a trained AE, compute the encoded vector  $\vec{v}_e$ for each $\vec{v}_i$. 
+	Then train a feed forward prediction network (such as an MLP) with the encoded vectors. 
+	Furthermore, there is no constraint on the number of Auto-Encoders that can iteratively encode the data before a prediction network is trained. 
+	The process of iteratively encoding features with Auto-Encoders is called stacking, ideally, finds linearly independent features. Such features make the task of the prediction network simpler \citep{sparsity}.
 		
 \section{Experiment}
 
