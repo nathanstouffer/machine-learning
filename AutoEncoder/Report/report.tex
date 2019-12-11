@@ -24,7 +24,7 @@
 \maketitle
 
 \begin{abstract}
-Stacked auto-encoders are an unsupervised learning models that can be used for feature selection on unknown datasets. These networks are trained using Backpropagation and can have a supervised model placed on top of them for classification and regression once feature selection has been completed. They take a very long time to train and tune because each layer, including the predictor layer, must be trained individually and then trained again as a complete network
+Stacked Auto-Encoders are an unsupervised learning models that can be used for feature selection within datasets. These networks can be trained using Backpropagation and have the ability to place supervised model on top of them for classification and regression tasks. Since each layer (including the predictor network) must be trained, Auto-Encoders take a long time to train.
 \end{abstract}
 
 \section{Problem Statement}
@@ -32,7 +32,7 @@ Stacked auto-encoders are an unsupervised learning models that can be used for f
 	% TODO mention backprop and ff MLP's in general
 	% TODO mention uses of AE (compression and feature selection)
 	% TODO include abbreviations (AE)
-	Given data sets, the task is to compare the effectiveness and convergence rate for one, two and three layer auto-encoders (AE) with a prediction on top of the AE layers. Each version of the stacked auto-encoder (SAE) will be implemented and tested on the following six data sets.
+	Given data sets, the task is to compare the effectiveness and convergence rate for one, two and three layer Auto-Encoders (AE) with a prediction on top of the AE layers. Each version of the Stacked Auto-Encoder (SAE) will be implemented and tested on the following six data sets.
 		
 	The abalone dataset contains features paired with the age of an abalone (the class). The 28 ages are closely related, potentially making classification difficult.
 	The car dataset contains attributes corresponding to 4 possible conditions of a car while the segmentation dataset details 6 distinct subjects of outdoor photographs.
@@ -40,12 +40,12 @@ Stacked auto-encoders are an unsupervised learning models that can be used for f
 	The forest fires set contains the area burned by a forest fire. Most of the values are 0 with a few large values which might give the model trouble.
 	The machine dataset predicts the performance of a CPU which has an even distribution across its regression values. Wine quality contains the score of a wine with associated attributes. Several of the attributes are correlated, making regression more difficult \citep{datasets}.
 	
-	An AE is a type of neural network where the output layer is equal to the input layer and the AE tries to learn the function that makes the output as similar as possible to the input. In this case AE will be trained using backpropagation. The power of SAEs lies in their ability to perform feature selection on unknown data sets. These features are then passed into a supervised learning algorithm, an MLP in this case, for classification or regression. This is especially powerful in when features are difficult to obtain or a new application where nobody has identified features yet. 
+	An AE is a type of neural network where the output vector is an approximation of the input vector and the AE tries to learn the function that makes the output as similar as possible to the input. In this case, an AE will be trained using Backpropagation. The power of SAEs lies in their ability to perform feature selection on data sets. These features are then passed into a supervised learning algorithm, an MLP in this case, for classification or regression. This is especially powerful in when features are difficult to obtain or a new application where important features have not yet been identified. 
 	
 	
 
 \subsection{Hypothesis}
-	Fewer AE layers are expected to outperform more AE layers because the datasets used in training are relatively small and there is not enough data to train the deeper SAEs. The shallower SAEs will also converge quicker because they need less data to be trained and therefor converge quicker. 
+	Fewer AE layers are expected to outperform more AE layers because the datasets used in training are relatively small and there is not enough data to train the deeper SAEs. Additionally, the prediction networks trained will converge faster than the prediction networks trained in Project 3. This is because the features will be linearly independant, which reduces model complexity and training time.
 \section{Algorithms}
 
 	Since Backpropagation was explained in a previous project, this paper focuses on explaining an Auto-Encoder. 
@@ -53,7 +53,7 @@ Stacked auto-encoders are an unsupervised learning models that can be used for f
 	The weights to the hidden layer are often referred to as the encoding layer and the weights to the output layer are called the decoding layer. 
 	
 	An Auto-Encoder learns a function $f(\vec{v}) \approx \vec{v}$. 
-	This is process is now described in detail.
+	This is process is now described.
 	Take $d,k \in \mathbb{Z}^+$. 
 	The encoding layer maps an input vector $\vec{v}_i \in \mathbb{R}^d$ to an encoded vector $\vec{v}_e \in \mathbb{R}^k$.
 	The decoding layer then maps $\vec{v}_e$ to $\vec{v}_o \in \mathbb{R}^d$ such that the distance between $\vec{v}_i$ and $\vec{v}_o$ is minimized.
@@ -64,20 +64,20 @@ Stacked auto-encoders are an unsupervised learning models that can be used for f
 	An under complete Auto-Encoder is one where $k < d$. This means that the dimensionality of $\vec{v}_e$ is smaller than the dimensionality of the input/output vectors. 
 	This forces the encoding layer to reduce the number of features, possibly eliminating linearly dependent features. 
 	An undercomplete AE requires tuning to select $k$.
-	The other type of AE is an overcomplete autoencoder. This is the case where $k \geq d$.
+	The other type of AE is overcomplete. This is the case where $k \geq d$.
 	Learning this function seems trival since there is an inclusion map $\mathbb{R}^d \mapsto \mathbb{R}^k$.
 	However, a sparsity penalty $\lambda \in \mathbb{R}$ is introduced to tend weights in the decoding layer towards 0 (typically $\lambda$ is small).
 	That is, at each step in the gradient, each weight is moved towards 0 by a distance of $\lambda$ (subtracting $\lambda$ for positive weights and adding $\lambda$ for negative weights).
-	This produces a sparse Auto-Encoder, where some hidden nodes activations are not unnecessary because the weights leaving them have a magnitude close to 0.
+	This produces a sparse Auto-Encoder, where some hidden nodes activations are unnecessary because the weights leaving them have a magnitude close to 0.
 	At this point, prune out the unnecessary hidden nodes, and it is now be the case that the dimensionality of the hidden layer is less than that of the input/output layer.
-	Additionally, the values of hidden nodes are the linearly independent features of the data set \citep{sparsity}.
+	Additionally, the hidden nodes represent the linearly independent features of the data set \citep{sparsity}.
 	
-	A denoising component can also be added to an Auto-Encoder. To implement this, applies small, random changes to each value in the input vector and then attempt to approximate the original vector by sending the mutated vector through the AE. This will produce a network that denoises data \citep{stacked-ae}.
+	A denoising component can also be added to an Auto-Encoder. To implement this, apply small, random changes to each value in the input vector and then attempt to approximate the original vector by sending the mutated vector through the AE. This will produce a network that denoises data \citep{stacked-ae}.
 	
 	Auto-Encoders can also be used in a prediction process. Given a trained AE, compute the encoded vector  $\vec{v}_e$ for each $\vec{v}_i$. 
 	Then train a feed forward prediction network (such as an MLP) with the encoded vectors. 
 	Furthermore, there is no constraint on the number of Auto-Encoders that can iteratively encode the data before a prediction network is trained. 
-	The process of iteratively encoding features with Auto-Encoders is called stacking, ideally, finds linearly independent features. Such features make the task of the prediction network simpler \citep{sparsity}.
+	The process of iteratively encoding features with Auto-Encoders is called stacking \citep{stacked-ae}.
 		
 \section{Experiment}
 
@@ -112,21 +112,21 @@ Stacked auto-encoders are an unsupervised learning models that can be used for f
 	MSE and ME are computed using z-scores (the number of standard deviations from the mean) so that comparisons can be made between datasets.
 
 \subsection{Tuning}
-	 The parameters to tune are sparsity, denoted $\lambda$, learning rate, denoted $\eta$ and momentum. Due to time constraints there was not time to run tuning. As such, learning rate and momentum were chosen based off of the tuning done in project three. Learning rate was chosen to be .1 and momentum was chosen to be .25. For sparsity, values are usually close to zero, .001 was chosen based on this \cite{sparsity}.
+	 The parameters to tune are sparsity, denoted $\lambda$, learning rate, denoted $\eta$, and momentum. Due to time constraints there was not time to run tuning. As such, learning rate and momentum were chosen based off of the tuning done in Project 3. Learning rate was chosen to be 0.1 and momentum as 0.25. For sparsity, values are usually close to zero, 0.001 was chosen based on this \citep{sparsity}.
 \section{Results}
-	For the final run, the parameters chosen for all data sets. The results are shown in Fig. In general, one AE layer performed best on both regression and classification. This realizes our hypothesis the fewer AE layers would perform better. Fewer layers may outperform more layers because of the size of the datasets. All of the datasets are fairly small and there is not enough data in each dataset to train a two layer, much less a three layer stacked AE. 
+	For the final run, the parameters chosen for all data sets. The results are shown in Fig. \ref{auto-encoder}. In general, one AE layer performed best on both regression and classification. This realizes the hypothesis that fewer AE layers would perform better. Fewer layers may outperform more layers because of the size of the datasets. All of the datasets are fairly small and there is not enough data in each dataset to train a two layer, much less a three layer, stacked AE. 
 	\begin{figure}[h]
 		\centering
 		\includegraphics[height=3.4in]{AEresults.jpg}
-		\caption{Final Results of 1, 2 and 3 autoencoder layers. Color indicates number of autoencoder layers.}
-		\label{2-hl}
+		\caption{Final Results of 1, 2 and 3 Auto-Encoder layers. Color indicates number of encoding layers.}
+		\label{auto-encoder}
 	\end{figure}
-	The results on car, segmentation and machine perfectly demonstrate the hypothesis. The adding of each AE layer past one shows a significant decrease in performance on all three of these data sets. Abalone and wine quality results were not affected at all by adding AE layers. Abalone performed very poorly across the board while wine quality performed very well. It is likly that the large number of classes in abalone caused event the one layer AE to have insignificant data to train on.  Forest fires was the only dataset where three AE layers outperformed two AE layers. This was interesting but the  single layer AE still outperformed both the two and three layers AE's on forest fires.
+	The results on car, segmentation and machine perfectly demonstrate the hypothesis. More than one encoding layer significantly decreases performance on all three of these data sets. Abalone and wine quality results were not affected at all by adding AE layers. Abalone performed poorly across the board while wine quality performed quite well. It is likly that the large number of classes in abalone caused even the one layer AE to have insufficient data to train on. Forest fires was the only dataset where three AE layers outperformed two AE layers. This was interesting but the single layer AE still outperformed both the two and three layers AE's on forest fires.
 	
 \section{Conclusion}
-	Stacked auto-encoders are unsupervised learning models that excel at feature selection. These networks are trained with Backpropagation. On the assigned datasets, SAEs with one AE layer performed the best. Training of these networks takes a very long time due to the large number of layers that need to be trained before the network is trained as a whole. 
+	Stacked Auto-Encoders are unsupervised learning models that excel at feature selection. These networks are trained with Backpropagation. On the assigned datasets, SAEs with one AE layer performed the best. Training of these networks takes a very long time due to the large number of layers that need to be trained before the network is trained as a whole. 
 	
-	For the assigned datasets a single AE layer was sufficient and more layers caused a degradation in performance. Larger datasets could benefit from additional AE layers. It all depends on the dataset which brings it back to no free lunch.
+	For the assigned datasets a single, AE layer was sufficient and more layers caused a degradation in performance. Larger datasets could benefit from additional AE layers. It all depends on the dataset which brings it back to no free lunch.
 \newpage
 
 \bibliography{biblio}
