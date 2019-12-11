@@ -53,8 +53,8 @@ public class Client {
         double batch_size = 0.1;
         double momentum = 0.25;
         double convergence_threshold = 0.00000001;
-        int max_iterations = 50000;
-        int folds = 2;
+        int max_iterations = 5000;
+        int folds = 10;
         
         // iterate through files
         for (int f = 0; f < datafiles.length; f++) {
