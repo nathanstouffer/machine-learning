@@ -19,7 +19,7 @@ Output: This directory contains files that summarize the performance of the lear
 
 *Algorithm: This directory contains the java files for the project. We did not produce a .jar and instead ran the project in our IDE.
 
-There were 4 projects (with 1 extra credit) in this class.
+There were 4 projects (with 1 extra credit project) in this class.
 
 The first two projects were an implementation of Naive Bayes Classification as well as K-Nearest Neighbor (K-NN). We also implemented a number of clustering algorithms for K-Nearest Neighbor. These two projects, along with discussions of SVM and Decision Trees, occupied the first half of the semester.
 
