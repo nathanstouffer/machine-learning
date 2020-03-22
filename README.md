@@ -1,6 +1,6 @@
 This repository contains coursework for CSCI 447 (Machine Learning)
 
-The code was written primarily in Java and all files are our own work. To be specific, this group consisted of Nathan Stouffer, Andrew Kirby, Kevin Browder, and Eric Kempf. The only exception to this is that all data files are from the UCE Machine Learning Repository (https://archive.ics.uci.edu/ml/datasets.php).
+The code was written primarily in Java and all files are our own work. To be specific, this group consisted of Nathan Stouffer, Andrew Kirby, Kevin Browder, and Eric Kempf. The only exception to this is that all data files are from the UCE Machine Learning Repository (https://archive.ics.uci.edu/ml/datasets.php) and any files found in a ''research'' directory are published papers we read and used in our report.
 
 File Structure of the Repository
 
